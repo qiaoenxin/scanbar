@@ -15,5 +15,15 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	<servlet>
+		<servlet-name>ApiService</servlet-name>
+		<servlet-class>com.sudytech.scanbar.web.jservice.ApiService</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ApiService</servlet-name>
+		<url-pattern>/apiservice/*</url-pattern>
+	</servlet-mapping>
   
 </web-app>

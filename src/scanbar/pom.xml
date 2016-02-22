@@ -15,6 +15,7 @@
 		<hibernate.version>4.3.10.Final</hibernate.version>
 		<validator.version>5.1.1.Final</validator.version>
 		<slf4j.version>1.7.6</slf4j.version>
+		<fastjson.version>1.2.7</fastjson.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -54,6 +55,12 @@
 		     <artifactId>druid</artifactId>
 		     <version>${druid.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+		
 		
 		<dependency>
 			<groupId>org.hibernate</groupId>
