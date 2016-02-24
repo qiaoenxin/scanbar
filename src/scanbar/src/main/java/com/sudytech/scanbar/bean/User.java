@@ -10,6 +10,10 @@ import javax.persistence.Table;
 public class User extends BaseBean{
 
 	@Column(length=60)
+	private String account;
+	
+	private String password;
+	
 	private String name;
 	
 	private int age;
@@ -39,4 +43,21 @@ public class User extends BaseBean{
 	public void setInfo(String info) {
 		this.info = info;
 	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 }

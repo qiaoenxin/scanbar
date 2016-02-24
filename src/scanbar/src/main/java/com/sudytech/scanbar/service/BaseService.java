@@ -3,7 +3,7 @@ package com.sudytech.scanbar.service;
 import java.io.Serializable;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+
 
 /**
  * service 基础接口
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
  *
  * @param <T>
  */
-@Service
 public interface BaseService<T> {
 
 	/**
