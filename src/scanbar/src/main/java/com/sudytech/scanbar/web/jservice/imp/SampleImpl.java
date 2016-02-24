@@ -1,37 +1,46 @@
 package com.sudytech.scanbar.web.jservice.imp;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sudytech.scanbar.bean.User;
+import com.sudytech.scanbar.service.UserService;
 import com.sudytech.scanbar.web.jservice.api.BasicService;
-import com.sudytech.scanbar.web.jservice.api.PageRequest;
-import com.sudytech.scanbar.web.jservice.api.ParameterDef;
+import com.sudytech.scanbar.web.jservice.api.Request;
 import com.sudytech.scanbar.web.jservice.api.Response;
-import com.sudytech.scanbar.web.jservice.api.ReturnCode;
 
 public class SampleImpl{
 	
+	@Service
 	public static class SampleService extends BasicService<SampleRequest, SampleResponse>{
 
+		@Autowired
+		private UserService userService;
 		@Override
 		protected void service(SampleRequest request, SampleResponse response) {
-			String keyword = request.getKeyWords();
-			System.out.println(request);
-			response.setReturnCode(ReturnCode.SUCCESS);
-			response.setDescription("操蛋");
+//			UserService service = SpringContextHolder.getContext().getBean(UserService.class);
+			User user = new User();
+			user.setAccount("12346");
+			userService.save(user);
+			System.out.println("243234");
 		}
 		
+		public UserService getUserService() {
+			return userService;
+		}
+
+		public void setUserService(UserService userService) {
+			this.userService = userService;
+		}
 	}
+	
+	
 
 	
-	public static class SampleRequest extends PageRequest{
-		@ParameterDef(required=true, defaultValue="", regex="")
-		private String keyWords;
+	
 
-		public String getKeyWords() {
-			return keyWords;
-		}
-
-		public void setKeyWords(String keyWords) {
-			this.keyWords = keyWords;
-		}
+	public static class SampleRequest extends Request{
+		
 	}
 	
 	public static class SampleResponse extends Response{

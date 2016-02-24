@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.sudytech.scanbar.util.SpringContextHolder;
 import com.sudytech.scanbar.web.jservice.api.BasicService;
 import com.sudytech.scanbar.web.jservice.api.Interfaces;
 import com.sudytech.scanbar.web.jservice.api.ParameterDef;
@@ -119,7 +120,8 @@ public class ServiceBuilder {
 		}
 		
 		private void init(){
-			impl = (BasicService) newInstance(interfaceDef.getImpl());
+			impl = (BasicService)SpringContextHolder.getContext().getBean(interfaceDef.getImpl());
+//			impl = (BasicService) newInstance(interfaceDef.getImpl());
 			Class<?> cls = interfaceDef.getRequest();
 			requestBean = ConstructorBean.getConstructorBean(interfaceDef.getRequest());
 			responseBean = ConstructorBean.getConstructorBean(interfaceDef.getResponse());

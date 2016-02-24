@@ -31,4 +31,7 @@ public class SpringContextHolder implements ApplicationContextAware{
 		context = applicationContext;
 	}
 
+	public static void destroy(){
+		context = null;
+	}
 }

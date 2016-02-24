@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.sudytech.scanbar.util.SpringContextHolder;
 import com.sudytech.scanbar.util.StringUtils;
 import com.sudytech.scanbar.web.jservice.ServiceBuilder.FieldResovler;
 import com.sudytech.scanbar.web.jservice.ServiceBuilder.Service;
@@ -123,15 +124,15 @@ public class ApiService extends HttpServlet{
 			}
 			
 			BasicService<Request, Response> impl = (BasicService<Request, Response>) service.getImpl();
-			impl.setContext(context);
+//			impl.setContext(context);
 			long begin = System.currentTimeMillis();
 			impl.doService(context.getRequest(), resp);
 			long spent = System.currentTimeMillis() - begin;
 			
 			if(spent > 6000){
-				LOGGER.info("interface [{}] spent: {} ms", impl.getContext(), spent);
+				LOGGER.info("interface [{}] spent: {} ms", context, spent);
 			}else{
-				LOGGER.info("interface [{}] spent: {} ms", impl.getContext(), spent);
+				LOGGER.info("interface [{}] spent: {} ms", context, spent);
 			}
 			return;
 		} catch (Exception e) {
@@ -261,6 +262,7 @@ public class ApiService extends HttpServlet{
 		super.destroy();
 		Interfaces.getInstance().clear();
 		BeanClassLoader.destroy();
+		SpringContextHolder.destroy();
 	}
 	
 	
