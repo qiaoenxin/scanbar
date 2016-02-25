@@ -2,12 +2,17 @@ package com.sudytech.scanbar.bean;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Entity
 public class Device extends BaseBean{
 
+	public static final int status_online = 1;
+	
+	public static final int status_offline = 0;
+	
+	@Column(nullable=false, unique= true)
 	private String deviceKey;
 	
 	private int status;

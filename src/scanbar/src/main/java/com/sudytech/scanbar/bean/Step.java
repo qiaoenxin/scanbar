@@ -4,6 +4,7 @@ package com.sudytech.scanbar.bean;
 
 public class Step{
 
+	/**作业，端末 加工，弯曲，组立*/
 	public static String start = "";
 	
 	public static String end = "";

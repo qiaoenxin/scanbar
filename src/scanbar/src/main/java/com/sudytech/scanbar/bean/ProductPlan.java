@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 @Entity
 public class ProductPlan extends BaseBean{
 
+	/**
+	 * 品番
+	 */
 	private String kindType;
 	
 	private int number;

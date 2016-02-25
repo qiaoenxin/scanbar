@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Table(name="t_user")
 public class User extends BaseBean{
 
-	@Column(length=60)
+	@Column(length=60, unique=true,nullable=false)
 	private String account;
 	
 	private String password;

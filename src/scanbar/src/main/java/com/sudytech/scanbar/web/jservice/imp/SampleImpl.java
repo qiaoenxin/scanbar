@@ -22,6 +22,8 @@ public class SampleImpl{
 			User user = new User();
 			user.setAccount("12346");
 			userService.save(user);
+			user.setName("werew");
+			userService.update(user);
 			System.out.println("243234");
 		}
 		

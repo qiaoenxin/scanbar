@@ -1,5 +1,6 @@
 package com.sudytech.scanbar.bean;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @Entity
 public class ProducingList extends BaseBean{
 
+	@Column(nullable=false, unique= true)
 	private String listNO;
 	
 	private int count;

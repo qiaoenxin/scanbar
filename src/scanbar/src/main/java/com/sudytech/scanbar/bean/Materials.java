@@ -1,5 +1,6 @@
 package com.sudytech.scanbar.bean;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 @Entity
 public class Materials extends BaseBean{
 
+	@Column(unique=true,nullable=false)
 	private String barCode;
 	
 	private String name;
@@ -40,5 +42,4 @@ public class Materials extends BaseBean{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 }
