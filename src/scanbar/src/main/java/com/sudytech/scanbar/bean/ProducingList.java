@@ -18,6 +18,10 @@ public class ProducingList extends BaseBean{
 	
 	private int count;
 	
+	private int producingCount;
+	
+	private int step = 1;
+	
 	@ManyToOne
 	private ProductPlan plan;
 
@@ -35,5 +39,29 @@ public class ProducingList extends BaseBean{
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public int getProducingCount() {
+		return producingCount;
+	}
+
+	public void setProducingCount(int producingCount) {
+		this.producingCount = producingCount;
+	}
+
+	public int getStep() {
+		return step;
+	}
+
+	public void setStep(int step) {
+		this.step = step;
+	}
+
+	public ProductPlan getPlan() {
+		return plan;
+	}
+
+	public void setPlan(ProductPlan plan) {
+		this.plan = plan;
 	}
 }

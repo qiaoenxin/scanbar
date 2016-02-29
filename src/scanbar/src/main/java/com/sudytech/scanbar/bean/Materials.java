@@ -2,7 +2,6 @@ package com.sudytech.scanbar.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * 原材料
@@ -17,7 +16,9 @@ public class Materials extends BaseBean{
 	
 	private String name;
 	
-	private int status;
+	private int status = -1;
+	
+	private int currentStep;
 
 	public String getBarCode() {
 		return barCode;
@@ -41,5 +42,13 @@ public class Materials extends BaseBean{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getCurrentStep() {
+		return currentStep;
+	}
+
+	public void setCurrentStep(int currentStep) {
+		this.currentStep = currentStep;
 	}
 }

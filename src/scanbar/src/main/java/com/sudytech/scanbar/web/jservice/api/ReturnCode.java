@@ -50,4 +50,13 @@ public interface ReturnCode {
 	 * 鉴权失败
 	 */
 	int AUTH_ERROR = 301;
+	
+	/**
+	 * 扫描会话不存在
+	 */
+	int SCAN_SESSION_NOT_EXIST = 400;
+	/**
+	 * 扫描状态错误
+	 */
+	int STATUS_ERROR = 401;
 }

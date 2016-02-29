@@ -3,6 +3,9 @@ package com.sudytech.scanbar.service;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
+
 
 
 /**
@@ -46,4 +49,12 @@ public interface BaseService<T> {
 	 * @return
 	 */
 	List<T> findAll(int begin, int length);
+	
+
+	/**
+	 * 创建条件
+	 * @param criterions
+	 * @return
+	 */
+	Criteria createCriteria(Criterion... criterions);
 }

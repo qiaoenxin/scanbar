@@ -6,7 +6,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ProducingStep extends BaseBean{
 	
-	private String step;
+	private int step;
 	
 	private String workerNO;
 	
@@ -19,11 +19,11 @@ public class ProducingStep extends BaseBean{
 	@ManyToOne
 	private Device device;
 
-	public String getStep() {
+	public int getStep() {
 		return step;
 	}
 
-	public void setStep(String step) {
+	public void setStep(int step) {
 		this.step = step;
 	}
 

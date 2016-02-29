@@ -5,9 +5,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +75,18 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 
 	public Session getSession() {
 		return factory.getCurrentSession();
+	}
+
+	@Override
+	public Criteria createCriteria(Criterion... criterions) {
+		Session session = getSession();
+		Criteria criteria = session.createCriteria(cls);
+		if(criterions != null){
+			for (Criterion criterion : criterions) {
+				criteria.add(criterion);
+			}
+		}
+		return criteria;
 	}
 
 }

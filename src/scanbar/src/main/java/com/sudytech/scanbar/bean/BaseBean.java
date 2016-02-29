@@ -14,7 +14,7 @@ public class BaseBean {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private Date createDate;
+	private Date createDate = new Date();
 
 	public int getId() {
 		return id;
