@@ -37,6 +37,8 @@ public class Scan {
 				response.setDescription("扫描会话不存在。");
 				return;
 			}
+			
+			
 			Materials materials = materialsService.findByCode(request.getBarcode());
 			materials = materials == null ? new Materials() : materials;
 			int step = StringUtils.toInt(request.getStep(), 0);
@@ -92,6 +94,12 @@ public class Scan {
 		@ParameterDef(required=true)
 		private String barcode;
 		
+		@ParameterDef
+		public int count;
+		
+		@ParameterDef(required = false)
+		public String kindType;
+		
 		public String getStep() {
 			return step;
 		}
@@ -104,6 +112,18 @@ public class Scan {
 		}
 		public void setBarcode(String barcode) {
 			this.barcode = barcode;
+		}
+		public int getCount() {
+			return count;
+		}
+		public void setCount(int count) {
+			this.count = count;
+		}
+		public String getKindType() {
+			return kindType;
+		}
+		public void setKindType(String kindType) {
+			this.kindType = kindType;
 		}
 
 	}

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sudytech.scanbar.bean.User;
 import com.sudytech.scanbar.service.UserService;
+import com.sudytech.scanbar.util.Config;
 import com.sudytech.scanbar.util.StringUtils;
 
 @RequestMapping("/user")
@@ -27,17 +28,30 @@ public class UserController {
 		}
 	}
 	
+	@RequestMapping("form")
+	public String form(User user, Model model){
+		model.addAttribute("user", user);
+		return "userform";
+	}
+	
+	@RequestMapping("list")
+	public String list(User user, Model model){
+		model.addAttribute("user", user);
+		return "userList";
+	}
 	
 	@RequestMapping("save")
 	public String save(User user, Model model, RedirectAttributes redirectAttributes){
 		userService.save(user);
-		return null;
+		
+		System.out.println("redirect:" + Config.getPath() +"user/list");
+		return "redirect:" + Config.getPath() +"user/list";
 	}
 	
 	@RequestMapping("delete")
 	public String delete(String id, RedirectAttributes redirectAttributes){
 		
-		return null;
+		return "redirect:" + Config.getPath() +"user/list";
 	}
 
 

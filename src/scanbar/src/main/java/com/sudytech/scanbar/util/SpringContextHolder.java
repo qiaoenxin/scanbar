@@ -17,6 +17,8 @@ public class SpringContextHolder implements ApplicationContextAware{
 	
 	private static ApplicationContext context;
 	
+	
+	
 
 	public static ApplicationContext getContext(){
 		if(context == null){
@@ -29,6 +31,7 @@ public class SpringContextHolder implements ApplicationContextAware{
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		context = applicationContext;
+		Config.init(context);
 	}
 
 	public static void destroy(){
