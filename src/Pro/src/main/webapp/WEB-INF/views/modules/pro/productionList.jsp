@@ -1,0 +1,81 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<html>
+<head>
+	<title>生产管理管理</title>
+	<meta name="decorator" content="default"/>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		});
+		function page(n,s){
+			$("#pageNo").val(n);
+			$("#pageSize").val(s);
+			$("#searchForm").submit();
+        	return false;
+        }
+        
+        function printView(id){
+        	var url = "iframe:${ctx}/pro/production/printView?id="+id;
+	    	var buttons = {"打印":"print","关闭":false};
+	    	top.$.jBox.open(url, "明细预览", 800, 500,{
+				buttons:buttons, submit:function(v, h, f){
+					var win = h.find("iframe")[0].contentWindow;
+					if(v=="print"){
+						var ok = win.print();
+						if(ok == true){
+							top.$.jBox.tip("保存成功！","",{persistent:true,opacity:0});
+							//打印
+							top.$.jBox.close();
+						}else{
+							top.$.jBox.tip("保存失败","error",{persistent:true,opacity:0});
+						}
+					}else{
+						return true;
+					}
+					return false;
+				}, loaded:function(h){
+					$(".jbox-content", top.document).css("overflow-y","hidden");
+				}
+			});
+        	
+        }
+	</script>
+</head>
+<body>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="${ctx}/pro/production/">生产列表</a></li>
+		<shiro:hasPermission name="pro:production:edit"><li><a href="${ctx}/pro/production/form">生产添加</a></li></shiro:hasPermission>
+	</ul>
+	<form:form id="searchForm" modelAttribute="production" action="${ctx}/pro/production/" method="post" class="breadcrumb form-search">
+		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+		<label>生产编号 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>产品编号 ：</label><form:input path="product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>优先级 ：</label><form:radiobuttons path="priority" items="${fns:getDictList('production_priority') }" itemLabel="label" itemValue="value"/>
+		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+	</form:form>
+	<tags:message content="${message}"/>
+	<table id="contentTable" class="table table-striped table-bordered table-condensed">
+		<thead><tr><th>生产编号</th><th>产品编号</th><th>生产目标</th><th>计划开始时间</th><th>计划完成时间</th><th>优先级</th><shiro:hasPermission name="pro:production:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<tbody>
+		<c:forEach items="${page.list}" var="production">
+			<tr>
+				<td>${production.serialNum}</td>
+				<td>${production.product.serialNum}</td>
+				<td>${production.number}</td>
+				<td>${fns:formatDate(production.beginDate,'yyyy-MM-dd')}</td>
+				<td>${fns:formatDate(production.endDate,'yyyy-MM-dd')}</td>
+				<td>${fns:getDictLabel(production.priority,'production_priority','') }</td>
+				<shiro:hasPermission name="pro:production:edit"><td>
+    				<a href="${ctx}/pro/production/form?id=${production.id}">修改</a>
+					<a href="${ctx}/pro/production/delete?id=${production.id}" onclick="return confirmx('确认要删除该生产管理吗？', this.href)">删除</a>
+					<a href="javascript:printView('${production.id }');">投产</a>
+				</td></shiro:hasPermission>
+			</tr>
+		</c:forEach>
+		</tbody>
+	</table>
+	<div class="pagination">${page}</div>
+</body>
+</html>
