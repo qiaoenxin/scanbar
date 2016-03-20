@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
@@ -78,16 +81,23 @@ public class ProductController extends BaseController {
 	public String flow(Product product, Model model, RedirectAttributes redirectAttributes) {
 		model.addAttribute("product", product);
 		
-		List<Dict> flowList = Lists.newArrayList();
-		String[] flows = product.getFlow().split(",");
-		for(String flow : flows){
-			if(StringUtils.isBlank(flow)){
-				continue;
+		JSONArray flows = new JSONArray();
+		try {
+			if(StringUtils.isNotBlank(product.getFlow())){
+				flows = JSONObject.parseArray(StringEscapeUtils.unescapeHtml4(product.getFlow()));
+				for(int i = 0;i<flows.size();i++){
+					JSONObject flow = flows.getJSONObject(i);
+					String id = flow.getString("id");
+					String label = DictUtils.getDictLabel(id, "flow_type", "");
+					flow.put("label", label);
+				}
 			}
-			String label = DictUtils.getDictLabel(flow, "flow_type", "");
-			flowList.add(new Dict(label,flow));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		model.addAttribute("flowList", flowList);
+		
+		model.addAttribute("flowList", flows);
 		
 		return "modules/pro/productFlow";
 	}

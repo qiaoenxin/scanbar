@@ -20,16 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.thinkgem.jeesite.common.config.Global;
-import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
-import com.thinkgem.jeesite.modules.sys.entity.User;
-import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
+import com.thinkgem.jeesite.modules.pro.entity.page.ProductTreePage;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 
@@ -59,15 +60,34 @@ public class ProductTreeController extends BaseController {
 	
 	@RequiresPermissions("pro:productTree:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(ProductTree productTree, HttpServletRequest request, HttpServletResponse response, Model model) {
-		User user = UserUtils.getUser();
-		if (!user.isAdmin()){
-			productTree.setCreateBy(user);
+	public String list(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		List<ProductTreePage> list = Lists.newArrayList();
+		
+		List<ProductTree> roots = productTreeService.findRoots();
+		for(ProductTree root : roots){
+			String id = IdGen.uuid();
+			list.add(new ProductTreePage(root.getId(),id,"",root.getProduct().getSerialNum(),root.getNumber()));
+			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
+			for(ProductTree c : childrens){
+				recursiveChildren(id,c,list);
+			}
 		}
-        Page<ProductTree> page = productTreeService.find(new Page<ProductTree>(request, response), productTree); 
-        model.addAttribute("page", page);
+        model.addAttribute("list", list);
+        
 		return "modules/pro/productTreeList";
 	}
+	
+	public void recursiveChildren(String parentId,ProductTree productTree,List<ProductTreePage> list){
+		String id = IdGen.uuid();
+		list.add(new ProductTreePage(productTree.getId(),id,parentId,productTree.getProduct().getSerialNum(),productTree.getNumber()));
+		
+		List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
+		for(ProductTree c : childrens){
+			recursiveChildren(id,c,list);
+		}
+	}
+	
 
 	@RequiresPermissions("pro:productTree:view")
 	@RequestMapping(value = "form")
@@ -75,6 +95,7 @@ public class ProductTreeController extends BaseController {
 		model.addAttribute("productTree", productTree);
 		
 		List<Product> productList = productService.findAll();
+		productList.add(0, new Product());
 		model.addAttribute("productList", productList);
 		return "modules/pro/productTreeForm";
 	}
@@ -98,23 +119,95 @@ public class ProductTreeController extends BaseController {
 		return "redirect:"+Global.getAdminPath()+"/pro/productTree/?repage";
 	}
 
+	
 	@RequiresUser
 	@ResponseBody
-	@RequestMapping(value = "treeData")
-	public List<Map<String, Object>> treeData(String module, @RequestParam(required=false) String extId, HttpServletResponse response) {
+	@RequestMapping(value = "getProductList")
+	public List<Map<String, Object>> getProductList(String module, @RequestParam(required=false) String id, HttpServletResponse response) {
 		response.setContentType("application/json; charset=UTF-8");
 		List<Map<String, Object>> mapList = Lists.newArrayList();
-		List<ProductTree> list = productTreeService.findAll();
-		for (int i=0; i<list.size(); i++){
-			ProductTree e = list.get(i);
-			if (extId == null || (extId!=null && !extId.equals(e.getId())) && e.getParentIds().indexOf(","+extId+",")==-1){
-				Map<String, Object> map = Maps.newHashMap();
-				map.put("id", e.getId());
-				map.put("pId", e.getParent()!=null?e.getParent().getId():0);
-				map.put("name", e.getId().equals(ProductTree.SYS_ID)?"产品树":e.getProduct().getSerialNum());
-				mapList.add(map);
+		
+		List<Product> productList = productService.findAll();
+		
+		List<Product> list = Lists.newArrayList();
+		//获取当前产品下的所有子节点
+		List<ProductTree> childList = productTreeService.findChildrensByProductId(id);
+		for(ProductTree productTree : childList){
+			list.add(productTree.getProduct());
+		}
+		//获取当前产品的所有父节点
+		List<ProductTree> parentList = productTreeService.findParentsByProductId(id);
+		for(ProductTree productTree : parentList){
+			if(productTree.getParent()==null){
+				continue;
 			}
+			recursiveParent(productTree.getParent(),list);
+		}
+		//可选择的不能包含自身
+		list.add(new Product(id));
+		
+		List<Product> _productList = Lists.newArrayList();
+		_productList.addAll(productList);
+		
+		
+		for(Product product : list){
+			for(Product p : productList){
+				if(product.getId().equals(p.getId())){
+					_productList.remove(p);
+					break;
+				}
+			}
+		}
+		
+		for(Product p : _productList){
+			Map<String, Object> map = Maps.newHashMap();
+			map.put("id", p.getId());
+			map.put("serialNum", p.getSerialNum());
+			mapList.add(map);
 		}
 		return mapList;
 	}
+	
+	
+	public void recursiveParent(Product product,List<Product> list){
+		list.add(product);
+		List<ProductTree> parentList = productTreeService.findParentsByProductId(product.getId());
+		for(ProductTree productTree : parentList){
+			if(productTree.getParent()==null){
+				continue;
+			}
+			recursiveParent(productTree.getParent(),list);
+		}
+	}
+	
+	
+	public static class Tree {
+
+		private int id;
+		
+		private ProductTree productTree;
+		
+		private Tree parent;
+		
+		List<Tree> children;
+		
+		public Tree(ProductTree productTree){
+			this.productTree = productTree;
+			children = findChildren(this);
+		}
+		private List<Tree> findChildren(Tree tree) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		void showList(List<Tree> list){
+			list.add(this);
+			
+			for(Tree tree: children){
+				tree.showList(list);
+			}
+		}
+		
+	}
+	
 }

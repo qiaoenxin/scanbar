@@ -4,6 +4,7 @@
 package com.thinkgem.jeesite.modules.pro.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.math.RandomUtils;
@@ -37,13 +38,22 @@ public class ProductionService extends BaseService {
 		return productionDao.get(id);
 	}
 	
+	
+	public List<Production> findByPlanId(String planId) {
+		DetachedCriteria dc = productionDao.createDetachedCriteria();
+		dc.add(Restrictions.eq("plan.id", planId));
+		dc.add(Restrictions.eq(Production.FIELD_DEL_FLAG, Production.DEL_FLAG_NORMAL));
+		dc.addOrder(Order.desc("id"));
+		return productionDao.find(dc);
+	}
+	
 	public Page<Production> find(Page<Production> page, Production production) {
 		DetachedCriteria dc = productionDao.createDetachedCriteria();
 		if(StringUtils.isNotBlank(production.getSerialNum())){
 			dc.add(Restrictions.eq("serialNum", production.getSerialNum()));
 		}
-		if(production.getProduct()!=null && StringUtils.isNotBlank(production.getProduct().getSerialNum())){
-			dc.add(Restrictions.eq("product.serialNum", production.getProduct().getSerialNum()));
+		if(production.getPlan()!=null && StringUtils.isNotBlank(production.getPlan().getId())){
+			dc.add(Restrictions.eq("plan.id", production.getPlan().getId()));
 		}
 		if(production.getPriority()!=0){
 			dc.add(Restrictions.eq("priority", production.getPriority()));

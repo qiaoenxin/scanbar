@@ -17,6 +17,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
  * @author ThinkGem
@@ -162,4 +165,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return v.split(s);
 	}
 	
+	public static JSONArray parseArray(String val){
+		
+		JSONArray array = new JSONArray();
+		
+		try {
+			array = JSONObject.parseArray(StringEscapeUtils.unescapeHtml4(val));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+		}
+		
+		return array;
+		
+	}
 }

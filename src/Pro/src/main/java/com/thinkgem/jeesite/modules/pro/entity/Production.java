@@ -4,13 +4,13 @@
 package com.thinkgem.jeesite.modules.pro.entity;
 
 
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
@@ -35,6 +35,8 @@ public class Production extends IdEntity<Production> {
 	private int number;		//生产目标数量
 	private int priority;	//优先级	1:高;2:中;3:低
 	private	String serialNum;	//编号	20位数
+	
+	private int completeNum;
 	
 	public Production() {
 		super();
@@ -80,6 +82,19 @@ public class Production extends IdEntity<Production> {
 
 	public void setSerialNum(String serialNum) {
 		this.serialNum = serialNum;
+	}
+	
+	public int getCompleteNum() {
+		return completeNum;
+	}
+
+	public void setCompleteNum(int completeNum) {
+		this.completeNum = completeNum;
+	}
+	
+	@Transient
+	public void addCompleteNum(int completeNum){
+		this.completeNum += completeNum;
 	}
 
 }

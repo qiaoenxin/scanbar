@@ -15,6 +15,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
 
 /**
@@ -83,8 +84,12 @@ public class Product extends IdEntity<Product> {
 		List<Flow> list = new ArrayList<Product.Flow>();
 		Flow prev = null;
 		for(int i =0, len = arrays.size(); i < len;i++){
+			JSONObject json = arrays.getJSONObject(i);
+			String id = json.getString("id");
+			String value = json.getString("value");
 			Flow flow = new Flow();
-			//TODO
+			flow.setId(id);
+			flow.setValue(value);
 			
 			flow.prev = prev;
 			if(prev != null){

@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -33,10 +35,13 @@ import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
+import com.thinkgem.jeesite.modules.pro.entity.ProductionPlan;
 import com.thinkgem.jeesite.modules.pro.entity.Stock;
+import com.thinkgem.jeesite.modules.pro.entity.page.ProductTreePage;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
+import com.thinkgem.jeesite.modules.pro.service.ProductionPlanService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionService;
 import com.thinkgem.jeesite.modules.pro.service.StockService;
 
@@ -53,7 +58,7 @@ public class ProductionController extends BaseController {
 	private ProductionService productionService;
 	
 	@Autowired
-	private ProductService productService;
+	private ProductionPlanService productionPlanService;
 	
 	@Autowired
 	private ProductionDetailService productionDetailService;
@@ -61,8 +66,6 @@ public class ProductionController extends BaseController {
 	@Autowired
 	private ProductTreeService productTreeService;
 	
-	@Autowired
-	private StockService stockService;
 	
 	@ModelAttribute
 	public Production get(@RequestParam(required=false) String id) {
@@ -91,38 +94,60 @@ public class ProductionController extends BaseController {
 	public String printView(Production production, HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("production", production);
         
-    	List <ProductionDetail> list = productionDetailService.findByProductionId(production.getId());
 		//检查是否投产
-		boolean isProduction = list.size()>0?true:false;
+		boolean isProduction = productionDetailService.findByProductionId(production.getId()).size()>0?true:false;
 		
 		
         int number = production.getNumber();//生产目标
         //获取需要投产的产品
-        Product product = production.getProduct();
-        List<ProductTree> productTreeList = productTreeService.find(product.getId());
+        List<ProductTreePage> list = Lists.newArrayList();
         
+        Product product = production.getPlan().getProduct();
+        List<ProductTree> productTreeList =  productTreeService.findChildrensByProductId(product.getId());;
+       
         if(productTreeList.size() == 0){
-        	ProductTree productTree = new ProductTree();
-            productTree.setProduct(product);
-            productTree.setParent(new ProductTree(ProductTree.SYS_ID));
-            productTree.setNumber(number);
-            productTreeList.add(productTree);
+        	String id = IdGen.uuid();
+            list.add(new ProductTreePage(product.getId(),id,"",product.getSerialNum(),number));
         }else{
             for(ProductTree productTree : productTreeList){
-            	if(product.getId().equals(productTree.getProduct().getId())){
-            		productTree.setNumber(number);
-            		continue;
-            	}
-            	int cNumber = productTree.getNumber();
-            	productTree.setNumber(cNumber*number);
-            }
+            	
+            	ProductTreePage productTreePage = new ProductTreePage();
+            	String id = IdGen.uuid();
+    			productTreePage.setTreeId(productTree.getId());
+    			productTreePage.setId(id);
+    			productTreePage.setParent("");
+    			productTreePage.setName(productTree.getProduct().getSerialNum());
+    			
+    			productTreePage.setNumber(productTree.getNumber()*number);
+    			
+    			list.add(productTreePage);
+    			List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
+    			for(ProductTree c : childrens){
+    				recursiveChildren(id,c,productTree.getNumber(),list);
+    			}
+    		}
         }
         
-        
-        model.addAttribute("productTreeList", productTreeList);
+        model.addAttribute("list", list);
         model.addAttribute("isProduction", isProduction);
         
 		return "modules/pro/productionPrintView";
+	}
+	
+	public void recursiveChildren(String parentId,ProductTree productTree,int number,List<ProductTreePage> list){
+		ProductTreePage productTreePage = new ProductTreePage();
+    	String id = IdGen.uuid();
+		productTreePage.setTreeId(productTree.getId());
+		productTreePage.setId(id);
+		productTreePage.setParent(parentId);
+		productTreePage.setName(productTree.getProduct().getSerialNum());
+		productTreePage.setNumber(productTree.getNumber()*number);
+		list.add(productTreePage);
+		
+		List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
+		for(ProductTree c : childrens){
+			recursiveChildren(id,c,productTree.getNumber(),list);
+		}
 	}
 	
 	
@@ -142,7 +167,6 @@ public class ProductionController extends BaseController {
 			}
 			
 			List<ProductionDetail> productionDetailList = Lists.newArrayList();
-			List<String> productIds = Lists.newArrayList();
 			List<Integer> useNumbers = Lists.newArrayList();
 			
 			Production production = productionService.get(productionId);
@@ -151,7 +175,6 @@ public class ProductionController extends BaseController {
 			int index = 0;
 			for(String productTreeId : productTreeAry){
 				ProductTree productTree = productTreeService.get(productTreeId);
-				Product product = productTree.getProduct();
 				int number = StringUtils.toInteger(numberAry[index]);
 				
 				index += 1;
@@ -159,15 +182,12 @@ public class ProductionController extends BaseController {
 				ProductionDetail detail = new ProductionDetail();
 				detail.setProduction(production);
 				detail.setSerialNum(production.getSerialNum()+RandomUtils.nextInt(10000));
-				detail.setProduct(product);
+				detail.setProductTree(productTree);
 				detail.setNumber(number);
 				productionDetailList.add(detail);
 				
-				productIds.add(product.getId());
 				useNumbers.add(number);
 			}
-			
-			stockService.updateUseNumber(productIds,useNumbers);
 			productionDetailService.save(productionDetailList);
 			
 			
@@ -185,8 +205,8 @@ public class ProductionController extends BaseController {
 	public String form(Production production, Model model) {
 		model.addAttribute("production", production);
 		
-		List<Product> productList = productService.findAll();
-        model.addAttribute("productList", productList);
+		List<ProductionPlan> productionPlanList = productionPlanService.findAll();
+        model.addAttribute("productionPlanList", productionPlanList);
         
 		return "modules/pro/productionForm";
 	}
@@ -201,6 +221,19 @@ public class ProductionController extends BaseController {
 		List<ProductionDetail> productionDetailList = productionDetailService.findByProductionId(production.getId());
 		if(productionDetailList.size()>0){
 			addMessage(redirectAttributes, "保存失败！该生成计划已经进入生产状态！");
+			return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
+		}
+		
+		//判断增加的生产总数是否超出计划范围
+		int number = production.getNumber();
+		ProductionPlan plan = productionPlanService.get(production.getPlan().getId());
+		int planNumber = plan.getNumber();
+		List<Production> productions = productionService.findByPlanId(plan.getId());
+		for(Production production2 : productions){
+			number+=production2.getNumber();
+		}
+		if(number>planNumber){
+			addMessage(redirectAttributes, "超出计划范围!");
 			return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
 		}
 		

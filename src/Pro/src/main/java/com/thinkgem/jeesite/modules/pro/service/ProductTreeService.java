@@ -41,18 +41,33 @@ public class ProductTreeService extends BaseService {
 		return productTreeDao.findAll();
 	}
 	
-	public List<ProductTree> find(String productId){
-		ProductTree productTree = productTreeDao.getByHql("from ProductTree where product.id=:p1 and delFlag=:p2",new Parameter(productId,ProductTree.DEL_FLAG_NORMAL));
-		if(productTree==null){
-			return Lists.newArrayList();
-		}
+	public List<ProductTree> findRoots(){
 		DetachedCriteria dc = productTreeDao.createDetachedCriteria();
-		dc.add(Restrictions.or(Restrictions.like("parentIds", "%,"+productTree.getId()+",%"),Restrictions.eq("id",productTree.getId())));
-		dc.add(Restrictions.not(Restrictions.eq("id", ProductTree.SYS_ID)));
+		dc.add(Restrictions.isNull("parent.id"));
+		//dc.add(Restrictions.not(Restrictions.eq("id", ProductTree.SYS_ID)));
 		dc.add(Restrictions.eq(ProductTree.FIELD_DEL_FLAG, ProductTree.DEL_FLAG_NORMAL));
 		dc.addOrder(Order.asc("createDate"));
 		return productTreeDao.find(dc);
 	}
+	
+	public List<ProductTree> findParentsByProductId(String productId){
+		DetachedCriteria dc = productTreeDao.createDetachedCriteria();
+		dc.add(Restrictions.eq("product.id", productId));
+		//dc.add(Restrictions.not(Restrictions.eq("id", ProductTree.SYS_ID)));
+		dc.add(Restrictions.eq(ProductTree.FIELD_DEL_FLAG, ProductTree.DEL_FLAG_NORMAL));
+		dc.addOrder(Order.asc("createDate"));
+		return productTreeDao.find(dc);
+	}
+	
+	public List<ProductTree> findChildrensByProductId(String productId){
+		DetachedCriteria dc = productTreeDao.createDetachedCriteria();
+		dc.add(Restrictions.eq("parent.id", productId));
+		//dc.add(Restrictions.not(Restrictions.eq("id", ProductTree.SYS_ID)));
+		dc.add(Restrictions.eq(ProductTree.FIELD_DEL_FLAG, ProductTree.DEL_FLAG_NORMAL));
+		dc.addOrder(Order.asc("createDate"));
+		return productTreeDao.find(dc);
+	}
+	
 	
 	public Page<ProductTree> find(Page<ProductTree> page, ProductTree productTree) {
 		DetachedCriteria dc = productTreeDao.createDetachedCriteria();
@@ -67,10 +82,9 @@ public class ProductTreeService extends BaseService {
 	
 	@Transactional(readOnly = false)
 	public void save(ProductTree productTree) {
-		if(productTree.getParent()!=null){
-			productTree.setParentIds((ProductTree.SYS_ID.equals(productTree.getParent().getId())?"0,":productTree.getParentIds()) + productTree.getParent().getId() + ",");
+		if(productTree.getParent()==null || StringUtils.isBlank(productTree.getParent().getId())){
+			productTree.setParent(null);
 		}
-		
 		productTreeDao.save(productTree);
 	}
 	

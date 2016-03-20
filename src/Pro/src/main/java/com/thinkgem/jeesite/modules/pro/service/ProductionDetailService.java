@@ -52,8 +52,8 @@ public class ProductionDetailService extends BaseService {
 		if(productionDetail.getProduction()!=null && StringUtils.isNotBlank(productionDetail.getProduction().getSerialNum())){
 			dc.add(Restrictions.eq("production.serialNum", productionDetail.getProduction().getSerialNum()));
 		}
-		if(productionDetail.getProduct()!=null && StringUtils.isNotBlank(productionDetail.getProduct().getSerialNum())){
-			dc.add(Restrictions.eq("product.serialNum", productionDetail.getProduct().getSerialNum()));
+		if(productionDetail.getProductTree()!=null && productionDetail.getProductTree().getProduct()!=null && StringUtils.isNotBlank(productionDetail.getProductTree().getProduct().getSerialNum())){
+			dc.add(Restrictions.eq("productTree.product.serialNum", productionDetail.getProductTree().getProduct().getSerialNum()));
 		}
 		if(StringUtils.isNotBlank(productionDetail.getStatus())){
 			dc.add(Restrictions.eq("status", productionDetail.getStatus()));

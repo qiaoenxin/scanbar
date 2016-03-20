@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.persistence.Parameter;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
@@ -40,7 +41,8 @@ public class ProductService extends BaseService {
 	}
 	
 	public List<Product> findAll(){
-		return productDao.findAll();
+		String hql = "from Product where delFlag=:p1";
+		return productDao.find(hql, new Parameter(Product.DEL_FLAG_NORMAL));
 	}
 	
 	public Page<Product> find(Page<Product> page, Product product) {
@@ -52,6 +54,7 @@ public class ProductService extends BaseService {
 		dc.addOrder(Order.desc("id"));
 		return productDao.find(page, dc);
 	}
+	
 	
 	@Transactional(readOnly = false)
 	public void save(Product product) {
@@ -66,6 +69,8 @@ public class ProductService extends BaseService {
 			stockDao.save(stock);
 		}
 	}
+	
+	
 	
 	@Transactional(readOnly = false)
 	public void delete(String id) {
