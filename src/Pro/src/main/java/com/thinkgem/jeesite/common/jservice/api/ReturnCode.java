@@ -26,6 +26,8 @@ public interface ReturnCode {
 	 */
 	int DB_ERROR = 201;
 	
+	
+	
 	/**
 	 * 外部系统调用网络错误
 	 */
@@ -42,6 +44,11 @@ public interface ReturnCode {
 	int PARAMETER_ERROR = 204;
 	
 	/**
+	 * 数据库操作
+	 */
+	int DB_NOT_FIND_DATA = 205;
+	
+	/**
 	 * 登录失败
 	 */
 	int LOGIN_ERROR = 300;
@@ -50,4 +57,9 @@ public interface ReturnCode {
 	 * 鉴权失败
 	 */
 	int AUTH_ERROR = 301;
+	
+	/**
+	 * 流程错误
+	 */
+	int FLOW_ERROR = 302;
 }

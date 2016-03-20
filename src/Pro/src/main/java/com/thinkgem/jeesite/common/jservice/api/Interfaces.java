@@ -89,6 +89,27 @@ public class Interfaces {
 			this(name, uri, request, response, impl, true);
 		}
 		
+		public <T extends Request, S extends Response>InterfaceDef(String name,String uri, Class<? extends BasicService<T, S>> impl){
+			this(name, uri, impl, true);
+		}
+		
+		public <T extends Request, S extends Response>InterfaceDef(String name,String uri, Class<? extends BasicService<T, S>> impl, boolean needAuth){
+			this(name, uri, (Class<T>)defClass(impl, "Request"), (Class<S>)defClass(impl, "Response"), impl, needAuth);
+		}
+		
+
+		private static Class<?> defClass(Class<?> impl, String name){
+			String className = impl.getName();
+			className =  className.substring(0, className.lastIndexOf("$"));
+			Class<?> cls;
+			try {
+				cls = impl.getClassLoader().loadClass(className + "$" + name);
+				return cls;
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
 		public <T extends Request, S extends Response>InterfaceDef(String name,String uri, Class<T> request,
 				Class<S> response, Class<? extends BasicService<T, S>> impl, boolean needAuth) {
 			super();

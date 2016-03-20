@@ -97,9 +97,6 @@ public class ProductTree extends IdEntity<ProductTree> {
 	public void setChildList(List<ProductTree> childList) {
 		this.childList = childList;
 	}
-	
-	
-	
 }
 
 

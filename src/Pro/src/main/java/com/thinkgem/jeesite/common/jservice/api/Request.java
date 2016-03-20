@@ -1,5 +1,7 @@
 package com.thinkgem.jeesite.common.jservice.api;
 
+import java.lang.ref.WeakReference;
+
 import com.thinkgem.jeesite.common.jservice.api.entities.Auth;
 
 /**
@@ -32,6 +34,10 @@ public class Request {
 	private String callType;
 	
 	
+	@ParameterDef(ignore = true)
+	private transient WeakReference<Context> context;
+	
+	
 	public Auth getAuth() {
 		return auth;
 	}
@@ -54,5 +60,13 @@ public class Request {
 
 	public void setCallType(String callType) {
 		this.callType = callType;
+	}
+
+	public Context getContext() {
+		return context == null ? null : context.get();
+	}
+
+	public void setContext(Context context) {
+		this.context = new WeakReference<Context>(context);
 	}
 }

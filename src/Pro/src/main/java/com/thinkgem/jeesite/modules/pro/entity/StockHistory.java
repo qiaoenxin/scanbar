@@ -25,6 +25,21 @@ import com.thinkgem.jeesite.common.persistence.IdEntity;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class StockHistory extends IdEntity<StockHistory> {
 	
+	/**
+	 * 生产消耗
+	 */
+	public static String TYPE_SCAN_DESC = "6";
+	
+	/**
+	 * 生产增加
+	 */
+	public static String TYPE_SCAN_ADD = "2";
+	
+	/**
+	 * 生产损失
+	 */
+	public static String TYPE_PRODUCING_DESC = "7";
+	
 	
 	private static final long serialVersionUID = 1L;
 	private Product product;

@@ -93,4 +93,15 @@ public class ProductTreeService extends BaseService {
 		productTreeDao.deleteById(id);
 	}
 	
+	
+	/**
+	 * 根据父查询所有的子
+	 * @param product
+	 * @return
+	 */
+	public List<ProductTree> findSubTree(Product product){
+		DetachedCriteria criteria = productTreeDao.createDetachedCriteria(Restrictions.eq("parent.id", product.getId()));
+		List<ProductTree> list = productTreeDao.find(criteria);
+		return list;
+	}
 }

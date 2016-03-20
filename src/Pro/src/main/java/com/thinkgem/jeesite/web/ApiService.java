@@ -32,8 +32,11 @@ import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.jservice.api.entities.Auth;
 import com.thinkgem.jeesite.common.jservice.api.entities.Auth.Token;
 import com.thinkgem.jeesite.common.jservice.check.Comparator;
+import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 public class ApiService extends HttpServlet{
+	
 	private static final String UTF8_CHARSET = "UTF-8";
 	private static final String JSONP_PARAM = "jsoncallback";
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApiService.class);
@@ -46,8 +49,17 @@ public class ApiService extends HttpServlet{
 	private ServiceBuilder builder;
 	private Comparator comparator;
 
-	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response)
+	
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		User user = (User) request.getSession().getAttribute(UserUtils.USER_SESSION);
+		try {
+			UserUtils.setThreadUser(user);
+			service0(request, response);
+		} finally {
+			UserUtils.setThreadUser(null);
+		}
+	}
+	protected void service0(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ContextImpl context = new ContextImpl(request,response);
 		//业务方法
@@ -100,24 +112,26 @@ public class ApiService extends HttpServlet{
 			Service service = builder.getService(context.getHttpRequest().getPathInfo());
 			context.setService(service);
 			if(service == null){
-				Response resp = new Response(0,ReturnCode.UNKOWN_SERVICE+"", "no such service.");
+				Response resp = new Response(ReturnCode.UNKOWN_SERVICE, "no such service.");
 				context.setResponse(resp);
 				return;
 			}
-			
-			context.setRequest(service.newResquest());
+			Request req = service.newResquest();
+			req.setContext(context);
+			context.setRequest(req);
 			Response resp = service.newResponse();
+			resp.setContext(context);
 			context.setResponse(resp);
 			
 			//解析参数
 			parseRequest(context);
 			
 			//登录鉴权
-			/*if(!checkLogin(context)){
+			if(!checkLogin(context)){
 				Response errorResp = new Response(ReturnCode.AUTH_ERROR, "check auth error");
 				context.setResponse(errorResp);
 				return;
-			}*/
+			}
 			
 			//校验参数
 			if(!checkParameter(context)){
@@ -125,14 +139,13 @@ public class ApiService extends HttpServlet{
 			}
 			
 			BasicService<Request, Response> impl = (BasicService<Request, Response>) service.getImpl();
-			impl.setContext(context);
 			long begin = System.currentTimeMillis();
 			impl.doService(context.getRequest(), resp);
-			LOGGER.info("interface [{}] spent: {} ms", impl.getContext(), System.currentTimeMillis() - begin);
+			LOGGER.info("interface [{}] spent: {} ms", context, System.currentTimeMillis() - begin);
 			return;
 		} catch (Exception e) {
 			LOGGER.warn("", e);
-			Response resp = new Response(0,ReturnCode.UNKOWN_ERROR+"", e.toString());
+			Response resp = new Response(ReturnCode.UNKOWN_ERROR, e.toString());
 			context.setResponse(resp);
 		}
 	}
@@ -143,24 +156,14 @@ public class ApiService extends HttpServlet{
 	 * @return
 	 */
 	private boolean checkLogin(ContextImpl context) {
-		Request request = context.getRequest();
 		Service service = context.getService();
+		//不需要校验
 		if(!service.getInterfaceDef().isNeedAuth()){
 			return true;
 		}
-		FieldResovler resovler = service.getFieldResovler("userId");
-		String authToken = context.getHttpRequest().getParameter("auth.token");
-		if(StringUtils.isEmpty(authToken)){
-			return false;
-		}
-		Token token = Auth.TOKENS.get(authToken);
-		if(token == null){
-			return false;
-		}
-		if(resovler != null){
-			resovler.setValue(request, token.getUserId());
-		}
-		return true;
+		//登陆用户校验
+		User user = UserUtils.getUser();
+		return user.getLoginName() != null;
 	}
 	
 	/**
@@ -183,7 +186,7 @@ public class ApiService extends HttpServlet{
 				}
 
 				if(def != null && !comparator.matchRule(def, value)){
-					Response resp = new Response(0,ReturnCode.PARAMETER_ERROR+"", "parameter error: " + resolver.getPath());
+					Response resp = new Response(ReturnCode.PARAMETER_ERROR,"parameter error: " + resolver.getPath());
 					context.setResponse(resp);
 					return false;
 				}

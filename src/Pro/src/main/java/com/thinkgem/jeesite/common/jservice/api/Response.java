@@ -1,5 +1,7 @@
 package com.thinkgem.jeesite.common.jservice.api;
 
+import java.lang.ref.WeakReference;
+
 /**
  * 接口响应
  * 
@@ -7,17 +9,25 @@ package com.thinkgem.jeesite.common.jservice.api;
  * 
  */
 public class Response {
-	private int result = 1;
+	private int result;
 
 	private String reason = "";
 
-	private String data = "";
+	private Object data;
+	
+	private transient WeakReference<Context> context;
 
 	public Response() {
 		super();
 	}
 
-	public Response(int result, String reason, String data) {
+	public Response(int result, String reason) {
+		super();
+		this.result = result;
+		this.reason = reason;
+	}
+	
+	public Response(int result, String reason, Object data) {
 		super();
 		this.result = result;
 		this.reason = reason;
@@ -31,6 +41,11 @@ public class Response {
 	public void setResult(int result) {
 		this.result = result;
 	}
+	
+	public void setResultAndReason(int result, String reason){
+		this.reason = reason;
+		this.result = result;
+	}
 
 	public String getReason() {
 		return reason;
@@ -40,12 +55,19 @@ public class Response {
 		this.reason = reason;
 	}
 
-	public String getData() {
+	public Object getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(Object data) {
 		this.data = data;
 	}
 
+	public Context getContext() {
+		return context == null ? null : context.get();
+	}
+
+	public void setContext(Context context) {
+		this.context = new WeakReference<Context>(context);
+	}
 }

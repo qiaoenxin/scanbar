@@ -128,6 +128,9 @@ public class ServiceBuilder {
 			for(Field field : fields){
 				
 				ParameterDef def = field.getAnnotation(ParameterDef.class);
+				if(def != null && def.ignore()){
+					continue;
+				}
 				String name = field.getName();
 				MethodHandler setter = findBeanMethod(methodBean, "set" + name.substring(0,1).toUpperCase() + name.substring(1));
 				MethodHandler getter = findBeanMethod(methodBean, "get" + name.substring(0,1).toUpperCase() + name.substring(1));

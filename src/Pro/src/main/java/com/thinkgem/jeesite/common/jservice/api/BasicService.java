@@ -1,5 +1,8 @@
 package com.thinkgem.jeesite.common.jservice.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 接口服务
@@ -10,8 +13,10 @@ package com.thinkgem.jeesite.common.jservice.api;
  */
 public abstract class BasicService<Req extends Request,Resp extends Response > {
 	
-	protected Context context;
-	
+	/**
+	 * 日志对象
+	 */
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public void doService(Req request, Resp response){
 		before(request, response);
@@ -26,13 +31,5 @@ public abstract class BasicService<Req extends Request,Resp extends Response > {
 	
 	protected void after(Req request, Resp response){
 		
-	}
-
-	public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
 	}
 }

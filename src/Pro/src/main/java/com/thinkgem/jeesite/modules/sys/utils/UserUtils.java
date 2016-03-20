@@ -52,9 +52,16 @@ public class UserUtils extends BaseService {
 	public static final String CACHE_MENU_LIST = "menuList";
 	public static final String CACHE_AREA_LIST = "areaList";
 	public static final String CACHE_OFFICE_LIST = "officeList";
+	public static final String USER_SESSION = "____" + UserUtils.class.getName();
+	
+	
+	private static ThreadLocal<User> threadUser = new ThreadLocal<User>();
 	
 	public static User getUser(){
 		User user = (User)getCache(CACHE_USER);
+		if(threadUser.get() != null){
+			user = threadUser.get();
+		}
 		if (user == null){
 			try{
 				Subject subject = SecurityUtils.getSubject();
@@ -81,6 +88,10 @@ public class UserUtils extends BaseService {
 			}
 		}
 		return user;
+	}
+	
+	public static void setThreadUser(User user){
+		threadUser.set(user);
 	}
 	
 	public static User getUser(boolean isRefresh){

@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.pro.service;
 
+import java.util.Date;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -13,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionHistory;
 import com.thinkgem.jeesite.modules.pro.dao.ProductionHistoryDao;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 
 /**
  * 产品流历史Service
@@ -27,6 +31,9 @@ public class ProductionHistoryService extends BaseService {
 
 	@Autowired
 	private ProductionHistoryDao productionHistoryDao;
+	
+	@Autowired
+	private ProductionDetailService detailService;
 	
 	public ProductionHistory get(String id) {
 		return productionHistoryDao.get(id);
@@ -59,4 +66,13 @@ public class ProductionHistoryService extends BaseService {
 		productionHistoryDao.deleteById(id);
 	}
 	
+	@Transactional
+	public void saveHistory(ProductionDetail productionDetail){
+		ProductionHistory history = new ProductionHistory();
+		history.setStatus(productionDetail.getStatus());
+		history.setProductionDetail(productionDetail);
+		detailService.save(productionDetail);
+		productionHistoryDao.save(history);
+		
+	}
 }

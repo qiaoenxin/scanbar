@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.modules.pro.service;
 
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -76,9 +77,19 @@ public class ProductionDetailService extends BaseService {
 		}
 	}
 	
+	
 	@Transactional(readOnly = false)
 	public void delete(String id) {
 		productionDetailDao.deleteById(id);
+	}
+	
+	public ProductionDetail findByDetailNo(String detailNO){
+		DetachedCriteria detachedCriteria = productionDetailDao.createDetachedCriteria(Restrictions.eq("serialNum", detailNO));
+		List<ProductionDetail> list = productionDetailDao.find(detachedCriteria);
+		if(list.isEmpty()){
+			return null;
+		}
+		return list.get(0);
 	}
 	
 }
