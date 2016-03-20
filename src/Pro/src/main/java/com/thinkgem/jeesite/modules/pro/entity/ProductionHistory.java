@@ -27,8 +27,7 @@ import com.thinkgem.jeesite.common.persistence.IdEntity;
 public class ProductionHistory extends IdEntity<ProductionHistory> {
 	
 	private static final long serialVersionUID = 1L;
-	private Production production;//生产
-	private Product product;	//产品
+	private ProductionDetail productionDetail;//生产
 	private String status;		//状态
 
 	public ProductionHistory() {
@@ -41,27 +40,15 @@ public class ProductionHistory extends IdEntity<ProductionHistory> {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="production_id")
+	@JoinColumn(name="detail_id")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@NotNull
-	public Production getProduction() {
-		return production;
+	public ProductionDetail getProductionDetail() {
+		return productionDetail;
 	}
 
-	public void setProduction(Production production) {
-		this.production = production;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="product_id")
-	@NotFound(action = NotFoundAction.IGNORE)
-	@NotNull
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductionDetail(ProductionDetail productionDetail) {
+		this.productionDetail = productionDetail;
 	}
 
 	public String getStatus() {
