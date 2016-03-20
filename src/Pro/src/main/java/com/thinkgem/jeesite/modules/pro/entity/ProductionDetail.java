@@ -30,7 +30,7 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	private static final long serialVersionUID = 1L;
 	private Production production;//生产
 	private	String serialNum;	//编号	24位数
-	private Product product;	//产品
+	private ProductTree productTree;	//产品
 	private String status;		//状态
 	private int number;			//数量
 	private String data;		//数据
@@ -66,15 +66,15 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="product_id")
+	@JoinColumn(name="product_tree_id")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@NotNull
-	public Product getProduct() {
-		return product;
+	public ProductTree getProductTree() {
+		return productTree;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductTree(ProductTree productTree) {
+		this.productTree = productTree;
 	}
 
 	public String getStatus() {
