@@ -202,6 +202,14 @@
     <example>${fns:split(v,s)}</example>  
   </function>
   
+  <function>
+    <description>替换掉HTML标签</description>
+    <name>parseArray</name>
+    <function-class>com.thinkgem.jeesite.common.utils.StringUtils</function-class>
+    <function-signature>com.alibaba.fastjson.JSONArray parseArray(java.lang.String)</function-signature>
+    <example>${fns:parseArray(v)}</example>  
+  </function>
+  
   <!-- DateUtils -->
   <function>
     <description>获取当前日期</description>
