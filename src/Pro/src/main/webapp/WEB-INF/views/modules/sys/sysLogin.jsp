@@ -96,6 +96,11 @@ body {
 						h = (wh - h) / 2;
 						$('.login-wraper').css('margin-top', h);
 					});
+					
+					// 如果在框架中，则跳转刷新上级页面
+			if(self.frameElement && self.frameElement.tagName=="IFRAME"){
+				parent.location.reload();
+			}
 </script>
 </head>
 <body id="login-body">

@@ -6,30 +6,49 @@
 <meta name="decorator" content="default" />
 <script type="text/javascript">
 	$(document).ready(
-			function() {
-				$("#name").focus();
-				$("#inputForm")
-						.validate(
-								{
-									submitHandler : function(form) {
-										loading('正在提交，请稍等...');
-										form.submit();
-									},
-									errorContainer : "#messageBox",
-									errorPlacement : function(error, element) {
-										$("#messageBox").text("输入有误，请先更正。");
-										if (element.is(":checkbox")
-												|| element.is(":radio")
-												|| element.parent().is(
-														".input-append")) {
-											error.appendTo(element.parent()
-													.parent());
-										} else {
-											error.insertAfter(element);
-										}
-									}
-								});
-			});
+		function() {
+			$("#name").focus();
+			$("#inputForm").validate({
+				submitHandler : function(form) {
+					loading('正在提交，请稍等...');
+					form.submit();
+				},
+				errorContainer : "#messageBox",
+				errorPlacement : function(error, element) {
+					$("#messageBox").text("输入有误，请先更正。");
+					if (element.is(":checkbox")|| element.is(":radio")|| element.parent().is(".input-append")) {
+						error.appendTo(element.parent().parent());
+					} else {
+						error.insertAfter(element);
+					}
+				}
+		});
+		
+		initProductSelect($('#parent').val());
+	});
+	
+	function initProductSelect(value){
+		var url = "${ctx}/pro/productTree/getProductList";
+		var params = {};
+		params.id = value;
+        $.ajax({
+			url:   url,
+			data: params,
+			async :false,
+			success: function(data){
+				var control = $("#products");
+				control.empty();//清空下拉框
+				$.each(data,function(i,item){
+					control.append("<option value='"+item.id+"'>"+item.serialNum+"</option>");
+				});
+				control.select2('val', control.find('option:eq(0)').val());
+			},
+			error:function(){
+				top.$.jBox.tip("加载产品数据失败！","error",{persistent:true,opacity:0});
+			}
+		}); 
+			
+	}
 </script>
 </head>
 <body>
@@ -52,16 +71,18 @@
 		<div class="control-group">
 			<label class="control-label">父节点:</label>
 			<div class="controls">
-				 <tags:treeselect id="productTree" name="parent.id" value="${productTree.parent.id}" labelName="parent.product.serialNum" labelValue="${productTree.parent.product.serialNum}"
-					title="产品树" url="/pro/productTree/treeData" extId="${productTree.id}" cssClass="required"/>
+				<form:select path="parent.id" items="${productList }" id="parent"
+					itemLabel="serialNum" itemValue="id" onchange="initProductSelect(this.value)">
+				</form:select>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label">产品:</label>
 			<div class="controls">
-				<form:select path="product.id" items="${productList }"
-					itemLabel="serialNum" itemValue="id"></form:select>
+				<select id="products" name="product.id">
+				
+				</select>
 			</div>
 		</div>
 

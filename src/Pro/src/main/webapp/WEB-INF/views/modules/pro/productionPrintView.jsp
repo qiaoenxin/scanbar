@@ -22,7 +22,7 @@
         	var productTreeIds = new Array();
         	var numbers = new Array();
         	$("table tbody tr").each(function(){
-        		var id = $(this).attr("id");
+        		var id = $(this).attr("tree-id");
         		productTreeIds.push(id);
         		var num = $(this).find('input').val();
         		numbers.push(num);
@@ -55,10 +55,10 @@
 	<table id="treeTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr><th>名称</th><th>数量</th></tr></thead>
 		<tbody>
-		<c:forEach items="${productTreeList}" var="productTree">
-			<tr id="${productTree.id}"
-					pId="${productTree.parent.id ne '1' ? productTree.parent.id : '0'}">
-				<td>${productTree.product.serialNum}</td>
+		<c:forEach items="${list}" var="productTree">
+			<tr id="${productTree.id}" tree-id="${productTree.treeId }"
+					pId="${productTree.parent ne '1' ? productTree.parent : '0'}">
+				<td>${productTree.name}</td>
 				<td>
 					<c:choose>
 						<c:when test="${isProduction }">

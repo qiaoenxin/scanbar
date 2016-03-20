@@ -23,24 +23,30 @@
 		function init(){
 			var flows = [
 				<c:forEach items="${flowList}" var="flow">
-				{label:"${flow.label}",value:"${flow.value}"},
+				{id:"${flow.id}",label:"${flow.label}",value:"${flow.value}"},
 				</c:forEach>
 			];
 			
 			$.each(flows,function(i,flow){
-				var val = flow.value;
-				add(val);
+				add(flow);
 			});
 		}
 		
 		var flows = [
 			<c:forEach items="${fns:getDictList('flow_type')}" var="flow">
-			{label:"${flow.label}",value:"${flow.value}"},
+			{id:"${flow.value}",label:"${flow.label}"},
 			</c:forEach>
 		];
 		
 		
-		function add(id){
+		function add(flow){
+			var id = '',value='';
+			
+			if(flow){
+				id = flow.id;
+				value = flow.value;
+			}
+			
 			var len = $('.flows .flow').length;
 			
 			var html = "<div class='flow'>";
@@ -48,13 +54,13 @@
 			html += "<select>";
 			$.each(flows,function(i,flow){
 				var selected = "";
-				if(id == flow.value){
+				if(id == flow.id){
 					selected = " selected='true' ";
 				}
-				html += "<option value='"+flow.value+"' "+selected+">"+flow.label+"</option>";
+				html += "<option value='"+flow.id+"' "+selected+">"+flow.label+"</option>";
 			})
 			html += "</select>";
-			html += "<input type='button' class='btn' value='删除' onclick='_delete(this);'/>";
+			html += "：<input type='text' value='"+value+"' style='width:100px'/><input type='button' class='btn' value='删除' onclick='_delete(this);'/>";
 			html += "</div>";
 			
 			if(len==0){
@@ -75,16 +81,17 @@
 			
 			var result = {};
 			result.ok = false;
-			var ids = new Array();
+			var flows = new Array();
 			var _temp = {};
 			$('.flows .flow').each(function(){
-				var val = $(this).find("select").val();
-				if(_temp[val]){
+				var id = $(this).find("select").val();
+				var value = $(this).find("input").val();
+				if(_temp[id]){
 					result.error = "不能选择相同的工序！";
 					return;
 				}
-				_temp[val] = val;
-				ids.push(val);
+				_temp[id] = id;
+				flows.push({id:id,value:value});
 			});
 			
 			if(result.error){
@@ -94,7 +101,7 @@
 			var url = "${ctx}/pro/product/saveFlow";
 			var params = {};
 			params.id = "${product.id}";
-			params.flows = ids.join(",");
+			params.flows = JSON.stringify(flows);
 			
         	$.ajax({
 				url:   url,

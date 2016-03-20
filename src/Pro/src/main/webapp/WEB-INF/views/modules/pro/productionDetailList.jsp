@@ -25,7 +25,7 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<label>明细编号 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>生产编号 ：</label><form:input path="production.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>产品编号 ：</label><form:input path="product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>产品编号 ：</label><form:input path="production.plan.product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>状态 ：</label><form:select path="status" items="${fns:getDictList('flow_type') }" itemLabel="label" itemValue="value"></form:select>
 		
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
@@ -37,7 +37,7 @@
 		<c:forEach items="${page.list}" var="productionDetail">
 			<tr>
 				<td>${productionDetail.serialNum}</td>
-				<td>${productionDetail.product.serialNum}</td>
+				<td>${productionDetail.production.plan.product.serialNum}</td>
 				<td>${productionDetail.number}</td>
 				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
 			</tr>

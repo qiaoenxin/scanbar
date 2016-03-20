@@ -30,13 +30,13 @@
 	<table id="treeTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr><th>名称</th><th>数量</th><shiro:hasPermission name="pro:productTree:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
-		<c:forEach items="${page.list}" var="productTree">
+		<c:forEach items="${list}" var="productTree">
 			<tr  id="${productTree.id}"
-					pId="${productTree.parent.id ne '1' ? productTree.parent.id : '0'}">
-				<td>${productTree.product.serialNum}</td>
+					pId="${productTree.parent ne '1' ? productTree.parent : '0'}">
+				<td>${productTree.name}</td>
 				<td>${productTree.number}</td>
 				<shiro:hasPermission name="pro:productTree:edit"><td>
-					<a href="${ctx}/pro/productTree/delete?id=${productTree.id}" onclick="return confirmx('确认要删除该节点吗？', this.href)">删除</a>
+					<a href="${ctx}/pro/productTree/delete?id=${productTree.treeId}" onclick="return confirmx('确认要删除该节点吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

@@ -23,8 +23,8 @@
 	<form:form id="searchForm" modelAttribute="productionHistory" action="${ctx}/pro/productionHistory" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<label>生产编号 ：</label><form:input path="production.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>产品编号 ：</label><form:input path="product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>生产编号 ：</label><form:input path="productionDetail.production.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>产品编号 ：</label><form:input path="productionDetail.production.plan.product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>状态 ：</label><form:select path="status" items="${fns:getDictList('flow_type') }" itemLabel="label" itemValue="value"></form:select>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
@@ -34,8 +34,8 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="productionHistory">
 			<tr>
-				<td>${productionHistory.production.serialNum}</td>
-				<td>${productionHistory.product.serialNum}</td>
+				<td>${productionHistory.productionDetail.production.serialNum}</td>
+				<td>${productionHistory.productionDetail.production.plan.product.serialNum}</td>
 				<td>${fns:getDictLabel(productionHistory.status,'flow_type','')}</td>
 				<td>${fns:formatDate(productionHistory.createDate,'yyyy-MM-dd HH:mm')}</td>
 			</tr>

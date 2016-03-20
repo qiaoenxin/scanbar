@@ -64,10 +64,8 @@
 				<td>${product.serialNum}</td>
 				<td>${product.snpNum}</td>
 				<td>
-				<c:forEach items="${fns:split(product.flow,',') }" var="flow" varStatus="i">
-					<c:if test="${not empty flow }">
-					${i.index+1 } :${fns:getDictLabel(flow,'flow_type','') }
-					</c:if>
+				<c:forEach items="${fns:parseArray(product.flow) }" var="flow" varStatus="i">
+					${i.index+1 } :${fns:getDictLabel(flow.id,'flow_type','') }
 				</c:forEach>
 				</td>
 				<td>

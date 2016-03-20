@@ -33,30 +33,18 @@
 	<form:form id="inputForm" modelAttribute="production" action="${ctx}/pro/production/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<tags:message content="${message}"/>
+		
 		<div class="control-group">
-			<label class="control-label">产品:</label>
+			<label class="control-label">计划:</label>
 			<div class="controls">
-				<form:select path="product.id" items="${productList }" itemLabel="serialNum" itemValue="id"></form:select>
+				<form:select path="plan.id" items="${productionPlanList }" itemLabel="name" itemValue="id"></form:select>
 			</div>
 		</div>
+		
 		<div class="control-group">
 			<label class="control-label">生产目标数量:</label>
 			<div class="controls">
 				<form:input path="number" htmlEscape="false" maxlength="200" class="required"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">计划开始时间:</label>
-			<div class="controls">
-				<input id="beginDate" name="beginDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate required"
-				value="${fns:formatDate(production.beginDate,'yyyy-MM-dd')}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">计划完成时间:</label>
-			<div class="controls">
-				<input id="endDate" name="endDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate required"
-				value="${fns:formatDate(production.endDate,'yyyy-MM-dd')}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</div>
 		</div>
 		<div class="control-group">
