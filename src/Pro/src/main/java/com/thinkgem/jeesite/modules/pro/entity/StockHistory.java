@@ -29,7 +29,7 @@ public class StockHistory extends IdEntity<StockHistory> {
 	private static final long serialVersionUID = 1L;
 	private Product product;
 	private String type;		//-1：出库；1：入库
-	private int number;		//数量
+	private double number;		//数量
 	private String reason;	//原因
 	private	ProductionDetail productionDetail;
 	
@@ -62,11 +62,11 @@ public class StockHistory extends IdEntity<StockHistory> {
 		this.type = type;
 	}
 
-	public int getNumber() {
+	public double getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(double number) {
 		this.number = number;
 	}
 

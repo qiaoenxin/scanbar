@@ -31,11 +31,8 @@ import com.thinkgem.jeesite.common.persistence.IdEntity;
 public class Production extends IdEntity<Production> {
 	
 	private static final long serialVersionUID = 1L;
-	
-	private Product product;//产品
+	private ProductionPlan plan;
 	private int number;		//生产目标数量
-	private Date beginDate;	//计划开始时间
-	private Date endDate;	//计划完成时间
 	private int priority;	//优先级	1:高;2:中;3:低
 	private	String serialNum;	//编号	20位数
 	
@@ -48,16 +45,17 @@ public class Production extends IdEntity<Production> {
 		this.id = id;
 	}
 
+	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="product_id")
+	@JoinColumn(name = "plan_id")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@NotNull
-	public Product getProduct() {
-		return product;
+	public ProductionPlan getPlan() {
+		return plan;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setPlan(ProductionPlan plan) {
+		this.plan = plan;
 	}
 
 	public int getNumber() {
@@ -66,22 +64,6 @@ public class Production extends IdEntity<Production> {
 
 	public void setNumber(int number) {
 		this.number = number;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
 	}
 
 	public int getPriority() {
