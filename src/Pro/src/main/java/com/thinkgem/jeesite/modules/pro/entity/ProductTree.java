@@ -38,8 +38,7 @@ public class ProductTree extends IdEntity<ProductTree> {
 	public static String SYS_ID = "1";
 	
 	private Product product;	//产品
-	private ProductTree parent;		//父
-	private String parentIds;
+	private Product parent;		//父
 	private int number;			//数量
 	
 	private List<ProductTree> childList = Lists.newArrayList();// 拥有子菜单列表
@@ -69,22 +68,14 @@ public class ProductTree extends IdEntity<ProductTree> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="parent_id")
 	@NotFound(action = NotFoundAction.IGNORE)
-	@NotNull
-	public ProductTree getParent() {
+	public Product getParent() {
 		return parent;
 	}
 
-	public void setParent(ProductTree parent) {
+	public void setParent(Product parent) {
 		this.parent = parent;
 	}
 
-	public String getParentIds() {
-		return parentIds;
-	}
-
-	public void setParentIds(String parentIds) {
-		this.parentIds = parentIds;
-	}
 
 	public int getNumber() {
 		return number;
