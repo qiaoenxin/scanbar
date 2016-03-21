@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.ibatis.ognl.ListPropertyAccessor;
 
 
+
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
@@ -36,6 +38,7 @@ public class QuerySub {
 			}
 			List<ProductTree> subs = treeService.findSubTree(detail.getProductTree().getProduct());
 			response.setData(subs);
+			response.setJsonFilter(new SimplePropertyPreFilter(ProductTree.class, "product", "number"));
 		}
 	}
 	

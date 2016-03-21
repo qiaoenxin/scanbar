@@ -237,7 +237,13 @@ public class ApiService extends HttpServlet{
 			return "<xml>not support yet.</xml>";
 		}
 		context.getHttpResponse().setContentType("application/json;charset=" + UTF8_CHARSET);
-		String text = JSON.toJSONString(response,SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteMapNullValue);
+		String text;
+		if(response.getJsonFilter() != null){
+			text = JSON.toJSONString(response, response.getJsonFilter(), SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteMapNullValue);
+		}else{
+			text = JSON.toJSONString(response,SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteMapNullValue);
+		}
+		
 //		String text = JSON.toJSONString(context.getResponse(), SerializerFeature.WriteMapNullValue);
 		if(Request.JSONP_CALL_TYPE.equals(type)){
 			StringBuilder builder = new StringBuilder();

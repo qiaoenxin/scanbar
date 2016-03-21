@@ -2,6 +2,8 @@ package com.thinkgem.jeesite.common.jservice.api;
 
 import java.lang.ref.WeakReference;
 
+import com.alibaba.fastjson.serializer.PropertyPreFilter;
+
 /**
  * 接口响应
  * 
@@ -16,6 +18,8 @@ public class Response {
 	private Object data;
 	
 	private transient WeakReference<Context> context;
+	
+	private transient PropertyPreFilter[] jsonFilter;
 
 	public Response() {
 		super();
@@ -69,5 +73,13 @@ public class Response {
 
 	public void setContext(Context context) {
 		this.context = new WeakReference<Context>(context);
+	}
+
+	public PropertyPreFilter[] getJsonFilter() {
+		return jsonFilter;
+	}
+
+	public void setJsonFilter(PropertyPreFilter... jsonFilter) {
+		this.jsonFilter = jsonFilter;
 	}
 }
