@@ -16,9 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.jservice.ContextImpl;
 import com.thinkgem.jeesite.common.jservice.ServiceBuilder;
 import com.thinkgem.jeesite.common.jservice.ServiceBuilder.FieldResovler;
@@ -29,8 +27,6 @@ import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.Request;
 import com.thinkgem.jeesite.common.jservice.api.Response;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
-import com.thinkgem.jeesite.common.jservice.api.entities.Auth;
-import com.thinkgem.jeesite.common.jservice.api.entities.Auth.Token;
 import com.thinkgem.jeesite.common.jservice.check.Comparator;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
@@ -66,12 +62,8 @@ public class ApiService extends HttpServlet{
 		doService(context);
 		//构造响应
 		String text = buildResponse(context);
-		Response response2 = JSONObject.parseObject(text, Response.class);
 		//写响应
-		if(response2.getResult() != -1){
-			writeResponse(text, response);
-		}
-		
+		writeResponse(text, response);
 	}
 	/**
 	 * 写响应
@@ -80,12 +72,14 @@ public class ApiService extends HttpServlet{
 	 * @throws IOException
 	 */
 	private void writeResponse(String text, HttpServletResponse response) throws IOException {
+		if(text == null){
+			return;
+		}
 		byte[] bytes = new byte[0];
 		try {
 			bytes = text.getBytes(UTF8_CHARSET);
 		} catch (UnsupportedEncodingException e) {
 		}
-		response.setContentType("application/json;charset=UTF-8");
 		response.setCharacterEncoding(UTF8_CHARSET);
 		response.setContentLength(bytes.length);
 		ServletOutputStream out = null;
@@ -226,14 +220,24 @@ public class ApiService extends HttpServlet{
 	 * @return
 	 */
 	private String buildResponse(ContextImpl context) {
+		
+		Response response = context.getResponse();
+		
+		//流响应
+		if(response.getResult() == ReturnCode.Stream){
+			return null;
+		}
+		
 		String type = null;
 		if(context.getRequest()!=null){
 			type = context.getRequest().getCallType();
 		}
 		if(Request.XML_CALL_TYPE.equals(type)){
+			context.getHttpResponse().setContentType("application/xml;charset=" + UTF8_CHARSET);
 			return "<xml>not support yet.</xml>";
 		}
-		String text = JSON.toJSONString(context.getResponse(),SerializerFeature.DisableCircularReferenceDetect);
+		context.getHttpResponse().setContentType("application/json;charset=" + UTF8_CHARSET);
+		String text = JSON.toJSONString(response,SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteMapNullValue);
 //		String text = JSON.toJSONString(context.getResponse(), SerializerFeature.WriteMapNullValue);
 		if(Request.JSONP_CALL_TYPE.equals(type)){
 			StringBuilder builder = new StringBuilder();

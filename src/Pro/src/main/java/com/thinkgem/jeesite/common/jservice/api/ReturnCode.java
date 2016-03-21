@@ -10,10 +10,17 @@ package com.thinkgem.jeesite.common.jservice.api;
  */
 public interface ReturnCode {
 	
+	
+	/**
+	 * 流响应
+	 */
+	int Stream = 80;
+	
 	/**
 	 * 成功
 	 */
 	int SUCCESS = 100;
+	
 	
 	/**
 	 * 未知错误
