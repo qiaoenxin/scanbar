@@ -3,6 +3,9 @@
  */
 package com.thinkgem.jeesite.modules.pro.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,7 +22,9 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.sys.entity.Dict;
 import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
@@ -52,6 +57,10 @@ public class ProductionDetailController extends BaseController {
 		if (!user.isAdmin()){
 			productionDetail.setCreateBy(user);
 		}
+		List<Dict> dicts = DictUtils.getDictList("flow_type");
+		List<Dict> status = new ArrayList<Dict>(dicts); 
+		status.add(0, new Dict("---", ""));
+		model.addAttribute("status", status);
         Page<ProductionDetail> page = productionDetailService.find(new Page<ProductionDetail>(request, response), productionDetail); 
         model.addAttribute("page", page);
 		return "modules/pro/productionDetailList";

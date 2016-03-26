@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.pro.web;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +25,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -103,30 +110,16 @@ public class ProductionController extends BaseController {
         List<ProductTreePage> list = Lists.newArrayList();
         
         Product product = production.getPlan().getProduct();
-        List<ProductTree> productTreeList =  productTreeService.findChildrensByProductId(product.getId());;
        
-        if(productTreeList.size() == 0){
-        	String id = IdGen.uuid();
-            list.add(new ProductTreePage(product.getId(),id,"",product.getSerialNum(),number));
-        }else{
-            for(ProductTree productTree : productTreeList){
-            	
-            	ProductTreePage productTreePage = new ProductTreePage();
-            	String id = IdGen.uuid();
-    			productTreePage.setTreeId(productTree.getId());
-    			productTreePage.setId(id);
-    			productTreePage.setParent("");
-    			productTreePage.setName(productTree.getProduct().getSerialNum());
-    			
-    			productTreePage.setNumber(productTree.getNumber()*number);
-    			
-    			list.add(productTreePage);
-    			List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
-    			for(ProductTree c : childrens){
-    				recursiveChildren(id,c,productTree.getNumber(),list);
-    			}
-    		}
-        }
+        ProductTree root = productTreeService.findParentsByProductId(product.getId()).get(0);
+        String id = IdGen.uuid();
+        ProductTreePage treePage = new ProductTreePage(root.getId(),id,"",product.getSerialNum(),number);
+        treePage.setProduct(product);
+        list.add(treePage);
+        List<ProductTree> childrens = productTreeService.findChildrensByProductId(product.getId());
+		for(ProductTree c : childrens){
+			recursiveChildren(id,c,number,list);
+		}
         
         model.addAttribute("list", list);
         model.addAttribute("isProduction", isProduction);
@@ -141,12 +134,13 @@ public class ProductionController extends BaseController {
 		productTreePage.setId(id);
 		productTreePage.setParent(parentId);
 		productTreePage.setName(productTree.getProduct().getSerialNum());
-		productTreePage.setNumber(productTree.getNumber()*number);
+		productTreePage.setNumber(productTree.getNumber() * number);
+		productTreePage.setProduct(productTree.getProduct());
 		list.add(productTreePage);
 		
 		List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
 		for(ProductTree c : childrens){
-			recursiveChildren(id,c,productTree.getNumber(),list);
+			recursiveChildren(id,c,productTree.getNumber() * number,list);
 		}
 	}
 	
@@ -155,7 +149,7 @@ public class ProductionController extends BaseController {
 	@RequiresUser
 	@ResponseBody
 	@RequestMapping(value = "print")
-	public Map<String, Object> print(String productionId, String productTreeIds ,String numbers,Model model, RedirectAttributes redirectAttributes) {
+	public String print(String productionId, String productTreeIds ,String numbers, String snps, String mods, Model model, RedirectAttributes redirectAttributes) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("ok", true);
 		try {
@@ -163,41 +157,67 @@ public class ProductionController extends BaseController {
 			List <ProductionDetail> list = productionDetailService.findByProductionId(productionId);
 			//检查是否投产
 			if(list.size()>0){
-				return map;
+				return "";
 			}
 			
 			List<ProductionDetail> productionDetailList = Lists.newArrayList();
-			List<Integer> useNumbers = Lists.newArrayList();
 			
 			Production production = productionService.get(productionId);
 			String[] productTreeAry = productTreeIds.split(",");
 			String[] numberAry = numbers.split(",");
+			String[] snpAry = snps.split(",");
+			String[] modAry = mods.split(",");
 			int index = 0;
+			int seq = 0;
 			for(String productTreeId : productTreeAry){
 				ProductTree productTree = productTreeService.get(productTreeId);
 				int number = StringUtils.toInteger(numberAry[index]);
-				
+				int snp = StringUtils.toInteger(snpAry[index]);
+				int mod = StringUtils.toInteger(modAry[index]);
 				index += 1;
 				
-				ProductionDetail detail = new ProductionDetail();
-				detail.setProduction(production);
-				detail.setSerialNum(production.getSerialNum()+RandomUtils.nextInt(10000));
-				detail.setProductTree(productTree);
-				detail.setNumber(number);
-				productionDetailList.add(detail);
-				
-				useNumbers.add(number);
+				int count = number / snp;
+				for(int i =0; i< count; i++){
+					seq++;
+					ProductionDetail detail = new ProductionDetail();
+					detail.setProduction(production);
+					detail.setSerialNum(production.getSerialNum()+toSeq(seq, 4));
+					detail.setProductTree(productTree);
+					detail.setNumber(snp);
+					productionDetailList.add(detail);
+				}
+				if(mod != 0){
+					seq++;
+					ProductionDetail detail = new ProductionDetail();
+					detail.setProduction(production);
+					detail.setSerialNum(production.getSerialNum()+toSeq(seq, 4));
+					detail.setProductTree(productTree);
+					detail.setNumber(mod);
+					productionDetailList.add(detail);
+				}
 			}
 			productionDetailService.save(productionDetailList);
+			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum", "productTree", "number");
+			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
+			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "flow", "serialNum", "field1", "field2", "field3", "field4", "field5", "field6");
 			
-			
+			String json =  JSONObject.toJSONString(productionDetailList,new SerializeFilter[]{filter1, filter2, filter3}, SerializerFeature.DisableCircularReferenceDetect);
+			return json;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			logger.error(e.getMessage(),e);
-			map.put("ok", false);
-			map.put("error", "添加失败！");
 		}
-		return map;
+		return "";
+	}
+	
+	private String toSeq(int num, int count){
+		double power = Math.pow(10, count);
+		if(num >= power){
+			throw new RuntimeException();
+		}
+		double a = num / power;
+		String seq = new BigDecimal(a).toString();
+		int index = seq.indexOf(".");
+		return seq.substring(index + 1, index + 1 + count);
 	}
 
 	@RequiresPermissions("pro:production:view")
@@ -236,9 +256,17 @@ public class ProductionController extends BaseController {
 			addMessage(redirectAttributes, "超出计划范围!");
 			return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
 		}
-		
+		if(StringUtils.isBlank(production.getSerialNum())){
+			String serialNum = DateUtils.formatDate(new Date(), "yyyyMMddHHmmss")+ toSeq(1, 2);
+			production.setSerialNum(serialNum);
+		}
 		productionService.save(production);
 		addMessage(redirectAttributes, "保存生产管理成功");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
 	}
 	

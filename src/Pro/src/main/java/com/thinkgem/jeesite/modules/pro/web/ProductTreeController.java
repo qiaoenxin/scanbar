@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.pro.web;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.thinkgem.jeesite.common.config.Global;
@@ -92,6 +91,9 @@ public class ProductTreeController extends BaseController {
 	@RequiresPermissions("pro:productTree:view")
 	@RequestMapping(value = "form")
 	public String form(ProductTree productTree, Model model) {
+		if(productTree.getNumber() == 0){
+			productTree.setNumber(1);
+		}
 		model.addAttribute("productTree", productTree);
 		
 		List<Product> productList = productService.findAll();
@@ -105,6 +107,18 @@ public class ProductTreeController extends BaseController {
 	public String save(ProductTree productTree, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, productTree)){
 			return form(productTree, model);
+		}
+		if(productTree.getParent() == null){
+			productTree.setNumber(1);
+		}else{
+			Product parent = productTree.getParent();
+			List<ProductTree> list = productTreeService.findParentsByProductId(parent.getId());
+			if(list.isEmpty()){
+				ProductTree pTree  = new ProductTree();
+				productTree.setProduct(parent);
+				productTree.setNumber(1);
+				productTreeService.save(pTree);
+			}
 		}
 		productTreeService.save(productTree);
 		addMessage(redirectAttributes, "保存产品流管理成功");
@@ -130,6 +144,22 @@ public class ProductTreeController extends BaseController {
 		List<Product> productList = productService.findAll();
 		
 		List<Product> list = Lists.newArrayList();
+		if(StringUtils.isEmpty(id)){
+			List<String> ids = productTreeService.hasChildren();
+			for(Iterator<Product> iter = productList.iterator();iter.hasNext();){
+				Product pro = iter.next();
+				if(ids.contains(pro.getId())){
+					iter.remove();
+				}
+			}
+			for(Product p : productList){
+				Map<String, Object> map = Maps.newHashMap();
+				map.put("id", p.getId());
+				map.put("serialNum", p.getSerialNum());
+				mapList.add(map);
+			}
+			return mapList;
+		}
 		//获取当前产品下的所有子节点
 		List<ProductTree> childList = productTreeService.findChildrensByProductId(id);
 		for(ProductTree productTree : childList){

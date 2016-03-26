@@ -41,7 +41,6 @@ public class ProductTree extends IdEntity<ProductTree> {
 	private Product parent;		//父
 	private int number;			//数量
 	
-	private List<ProductTree> childList = Lists.newArrayList();// 拥有子菜单列表
 	
 	public ProductTree() {
 		super();
@@ -83,19 +82,6 @@ public class ProductTree extends IdEntity<ProductTree> {
 
 	public void setNumber(int number) {
 		this.number = number;
-	}
-
-	@OneToMany(mappedBy = "parent", fetch=FetchType.LAZY)
-	@Where(clause="del_flag='"+DEL_FLAG_NORMAL+"'")
-	@OrderBy(value="sort") @Fetch(FetchMode.SUBSELECT)
-	@NotFound(action = NotFoundAction.IGNORE)
-	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	public List<ProductTree> getChildList() {
-		return childList;
-	}
-
-	public void setChildList(List<ProductTree> childList) {
-		this.childList = childList;
 	}
 }
 

@@ -1,5 +1,10 @@
 package com.thinkgem.jeesite.modules.pro.entity.page;
 
+import java.util.List;
+
+import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
+
 public class ProductTreePage {
 
 	private String treeId;
@@ -7,11 +12,31 @@ public class ProductTreePage {
 	private String parent;
 	private String name;
 	private int number;
+	private Product product;
+	
+	
 
 	public ProductTreePage() {
-		super();
-		// TODO Auto-generated constructor stub
+		this(null, null, null, null, 0);
 	}
+	
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public int getSnpNum(){
+		 return number / product.getSnpNum();
+	}
+
+	public int getModNum(){
+		return number % product.getSnpNum();
+	}
+	
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
 
 	public ProductTreePage(String treeId, String id, String parent,
 			String name, int number) {

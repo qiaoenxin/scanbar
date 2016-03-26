@@ -66,10 +66,6 @@ public class ProductionService extends BaseService {
 	
 	@Transactional(readOnly = false)
 	public void save(Production production) {
-		if(StringUtils.isBlank(production.getSerialNum())){
-			String serialNum = DateUtils.formatDate(new Date(), "yyyyMMddHHmmss")+RandomUtils.nextInt(10000);
-			production.setSerialNum(serialNum);
-		}
 		productionDao.clear();
 		productionDao.save(production);
 	}

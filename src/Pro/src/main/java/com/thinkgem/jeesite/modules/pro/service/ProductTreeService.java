@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.pro.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -68,6 +69,14 @@ public class ProductTreeService extends BaseService {
 		return productTreeDao.find(dc);
 	}
 	
+	public List<String> hasChildren(){
+		List<String> ids = productTreeDao.findBySql("SELECT DISTINCT t.`parent_id` FROM pro_product_tree t where t.`del_flag` = 0");
+		List<String> list = new ArrayList<String>(ids);
+		ids = productTreeDao.findBySql("SELECT DISTINCT t.`product_id` FROM pro_product_tree t WHERE t.`parent_id` IS NULL and t.`del_flag` = 0");
+		list.addAll(ids);
+		return list;
+	}
+	
 	
 	public Page<ProductTree> find(Page<ProductTree> page, ProductTree productTree) {
 		DetachedCriteria dc = productTreeDao.createDetachedCriteria();
@@ -85,6 +94,7 @@ public class ProductTreeService extends BaseService {
 		if(productTree.getParent()==null || StringUtils.isBlank(productTree.getParent().getId())){
 			productTree.setParent(null);
 		}
+		
 		productTreeDao.save(productTree);
 	}
 	
