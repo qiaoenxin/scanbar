@@ -3,7 +3,6 @@ package com.thinkgem.jeesite.web;
 
 import java.util.List;
 
-import org.apache.ibatis.ognl.ListPropertyAccessor;
 
 
 
@@ -12,12 +11,10 @@ import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
-import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
-import com.thinkgem.jeesite.modules.pro.service.ScanStockService;
 
 
 public class QuerySub {

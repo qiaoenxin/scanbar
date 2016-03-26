@@ -20,7 +20,6 @@ public class Loss {
 
 	private static ProductionDetailService detailService = SpringContextHolder.getBean(ProductionDetailService.class);
 	
-	private static ProductTreeService treeService = SpringContextHolder.getBean(ProductTreeService.class);
 	
 	private static ScanStockService scanStockService;
 	
@@ -34,7 +33,12 @@ public class Loss {
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
 				return;
 			}
-			
+			try {
+				scanStockService.saveStock(detail, request.products);
+			} catch (Exception e) {
+				logger.error(e.toString(), e);
+				response.setResultAndReason(ReturnCode.DB_ERROR, "数据库操作错误");
+			}
 		}
 	}
 	
@@ -53,7 +57,14 @@ public class Loss {
 		public void setDetailNo(String detailNo) {
 			this.detailNo = detailNo;
 		}
-		
+
+		public String[] getProducts() {
+			return products;
+		}
+
+		public void setProducts(String[] products) {
+			this.products = products;
+		}
 	}
 	
 	public static class Response extends com.thinkgem.jeesite.common.jservice.api.Response{
