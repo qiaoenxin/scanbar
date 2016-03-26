@@ -47,6 +47,12 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">扩展字段1:</label>
+			<div class="controls">
+				<form:input path="field1" htmlEscape="false" maxlength="200" class="required"/>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">备注:</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="200" class="input-xxlarge"/>

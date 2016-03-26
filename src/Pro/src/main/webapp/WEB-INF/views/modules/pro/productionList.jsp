@@ -32,13 +32,14 @@
 							//打印
 							var myTemplate = Handlebars.compile($('#print-templ').html());
 							var html = myTemplate({});
-							
 							try{ 
 						    	var LODOP=getLodop(); 
-								LODOP.PRINT_INIT("");		            
-								LODOP.ADD_PRINT_HTM(10,10,"100%","100%",html);	       
-								LODOP.PRINT();
+								LODOP.PRINT_INITA(0,0,522,333,"打印控件功能演示_Lodop功能_自定义纸张4");
+								LODOP.SET_PRINT_PAGESIZE(1,2000,1000,"CreateCustomPage");
+								LODOP.ADD_PRINT_HTM(28,20,"100%","100%",html);	       
+								LODOP.PREVIEW();
 							 }catch(err){ 
+							 alert(err);
 					 		 } 
  		 
 						}else{
@@ -91,19 +92,101 @@
 	<div class="pagination">${page}</div>
 	
 	<script id="print-templ" type="text/x-handlebars-template">
-		{{#each items}}
-			<li class="am-g am-list-item-dated"><a href="javascript:itemClick({{id}});"
-			class="am-list-item-hd ">
-				<div class="am-g">
-					<div class="am-u-sm-11">
-						<div class="title">{{name}}</div>
-						<div class="time">部门：{{department}}&nbsp;&nbsp;&nbsp;&nbsp;时间：{{createDate}}</div>
-					</div>
-					<div class="am-u-sm-1">
-						<span class="am-list-date icon iconfont icon-right"></span>
-					</div>
-				</div> </a></li>
-		{{/each}}
+		<table style="font-size:14px;" id="c"> 
+
+<style>
+table{
+	font-family: 微软雅黑;
+	font-size:10px;
+}
+div{
+	font-family: 微软雅黑;
+	font-size:16px;
+}
+table.gridtable {
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable td {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+</style>
+
+<tr>
+	<td>
+<table style="height:310px;width:520px;" class="gridtable">
+<tr>
+	<td colspan="6">制程管理卡</td>
+</tr>
+<tr>
+	<td colspan="4">品   番  4637G-TOT-HOOO</td>
+	<td colspan="2">SNP 10</td>
+</tr>
+<tr>
+	<td>HPC / </td>
+	<td colspan="2">端末 L:23</td>
+	<td>烘护套</td>
+	<td>印字</td>
+	<td>标示（）</td>
+</tr>
+<tr>
+	<td style="width:13%;">*</td>
+	<td style="width:18%;">*</td>
+	<td style="width:18%;">*</td>
+	<td style="width:22%;">*</td>
+	<td style="width:15%;">*</td>
+	<td>*</td>
+</tr>
+<tr>
+	<td>PCO</td>
+	<td colspan="3">弯曲TK10/4(补弯无 标识无)</td>
+	<td colspan="2" rowspan="2">仓库</td>
+</tr>
+<tr>
+	<td>*</td>
+	<td colspan="3">*</td>
+</tr>
+<tr>
+	<td colspan="2">检查</td>
+	<td colspan="2">管材 LOT . NO</td>
+	<td colspan="2">出货日期年月日</td>
+</tr>
+<tr>
+	<td colspan="2">*</td>
+	<td colspan="2">*</td>
+	<td colspan="2">*</td>
+</tr>
+<tr>
+	<td colspan="3">日期/名字</td>
+	<td colspan="3">三楼（武汉）汽车部件有限公司</td>
+</tr>
+</table>
+
+</td>
+	<td style="padding-left:10px;">
+		<div>
+			<div>优先级：1</div>
+		</div>
+		<div style="padding:20px 0px;">
+			<div>计划日期</div>
+			<div>06/13/16</div>
+		</div>
+		<div style="padding-bottom:20px;">
+			<div>批次流水号</div>
+			<div>20140401123123</div>
+		</div>
+		<div>
+			<div><img src=""/></div>
+		</div>
+	</td>
+</tr>
+
+</table>
 	</script>
 </body>
 </html>

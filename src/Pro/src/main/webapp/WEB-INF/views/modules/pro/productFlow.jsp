@@ -23,7 +23,7 @@
 		function init(){
 			var flows = [
 				<c:forEach items="${flowList}" var="flow">
-				{id:"${flow.id}",label:"${flow.label}",value:"${flow.value}"},
+				{id:"${flow.id}",label:"${flow.label}",value:"${flow.value}",number:"${flow.number}"},
 				</c:forEach>
 			];
 			
@@ -40,11 +40,12 @@
 		
 		
 		function add(flow){
-			var id = '',value='';
+			var id = '',value='',number='';
 			
 			if(flow){
 				id = flow.id;
 				value = flow.value;
+				number = flow.number;
 			}
 			
 			var len = $('.flows .flow').length;
@@ -60,7 +61,9 @@
 				html += "<option value='"+flow.id+"' "+selected+">"+flow.label+"</option>";
 			})
 			html += "</select>";
-			html += "：<input type='text' value='"+value+"' style='width:100px'/><input type='button' class='btn' value='删除' onclick='_delete(this);'/>";
+			html += "：<input type='text' class='value' value='"+value+"' style='width:100px'/>";
+			html += "编号：<input type='text' class='number' value='"+number+"' style='width:100px'/>";
+			html += "<input type='button' class='btn' value='删除' onclick='_delete(this);'/>";
 			html += "</div>";
 			
 			if(len==0){
@@ -85,13 +88,15 @@
 			var _temp = {};
 			$('.flows .flow').each(function(){
 				var id = $(this).find("select").val();
-				var value = $(this).find("input").val();
+				var value = $(this).find("input[class='value']").val();
+				var number = $(this).find("input[class='number']").val();
+				
 				if(_temp[id]){
 					result.error = "不能选择相同的工序！";
 					return;
 				}
 				_temp[id] = id;
-				flows.push({id:id,value:value});
+				flows.push({id:id,value:value,number:number});
 			});
 			
 			if(result.error){
