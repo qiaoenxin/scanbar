@@ -11,6 +11,7 @@ import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
+import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
@@ -35,7 +36,7 @@ public class QuerySub {
 			}
 			List<ProductTree> subs = treeService.findSubTree(detail.getProductTree().getProduct());
 			response.setData(subs);
-			response.setJsonFilter(new SimplePropertyPreFilter(ProductTree.class, "product", "number"));
+			response.setJsonFilter(new SimplePropertyPreFilter(ProductTree.class, "product", "number"), new SimplePropertyPreFilter(Product.class,"id", "serialNum"));
 		}
 	}
 	
