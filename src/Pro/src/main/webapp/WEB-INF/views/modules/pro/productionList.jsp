@@ -25,13 +25,13 @@
 				buttons:buttons, submit:function(v, h, f){
 					var win = h.find("iframe")[0].contentWindow;
 					if(v=="print"){
-						var ok = win.print();
-						if(ok == true){
-							//top.$.jBox.tip("保存成功！","",{persistent:true,opacity:0});
-							top.$.jBox.close();
+						var data = JSON.parse(win.print());
+						//top.$.jBox.tip("保存成功！","",{persistent:true,opacity:0});
+						//top.$.jBox.close();
+						for(int i = 0; i< data.length; i++){
 							//打印
 							var myTemplate = Handlebars.compile($('#print-templ').html());
-							var html = myTemplate({});
+							var html = myTemplate(data[i]);
 							try{ 
 						    	var LODOP=getLodop(); 
 								LODOP.PRINT_INITA(0,0,522,333,"打印控件功能演示_Lodop功能_自定义纸张4");
@@ -41,10 +41,8 @@
 							 }catch(err){ 
 							 alert(err);
 					 		 } 
- 		 
-						}else{
-							top.$.jBox.tip("保存失败","error",{persistent:true,opacity:0});
 						}
+						
 					}else{
 						return true;
 					}
@@ -72,12 +70,13 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>计划名称</th><th>生产编号</th><th>生产目标</th><th>优先级</th><shiro:hasPermission name="pro:production:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>计划名称</th><th>生产编号</th><th>产品</th><th>生产目标</th><th>优先级</th><shiro:hasPermission name="pro:production:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="production">
 			<tr>
 				<td>${production.plan.name}</td>
 				<td>${production.serialNum}</td>
+				<td>${production.plan.product.serialNum}</td>
 				<td>${production.number}</td>
 				<td>${fns:getDictLabel(production.priority,'production_priority','') }</td>
 				<shiro:hasPermission name="pro:production:edit"><td>
@@ -124,8 +123,8 @@ table.gridtable td {
 	<td colspan="6">制程管理卡</td>
 </tr>
 <tr>
-	<td colspan="4">品   番  4637G-TOT-HOOO</td>
-	<td colspan="2">SNP 10</td>
+	<td colspan="4">品   番  {{productTree.product.serialNum}}</td>
+	<td colspan="2">SNP {{number}}</td>
 </tr>
 <tr>
 	<td>HPC / </td>
@@ -178,7 +177,7 @@ table.gridtable td {
 		</div>
 		<div style="padding-bottom:20px;">
 			<div>批次流水号</div>
-			<div>20140401123123</div>
+			<div>{{serialNum}}</div>
 		</div>
 		<div>
 			<div><img src=""/></div>

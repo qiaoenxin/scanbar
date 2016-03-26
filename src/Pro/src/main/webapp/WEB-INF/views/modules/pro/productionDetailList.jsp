@@ -26,20 +26,21 @@
 		<label>明细编号 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>生产编号 ：</label><form:input path="production.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>产品编号 ：</label><form:input path="production.plan.product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>状态 ：</label><form:select path="status" items="${fns:getDictList('flow_type') }" itemLabel="label" itemValue="value"></form:select>
+		<label>状态 ：</label><form:select path="status" items="${status }" itemLabel="label" itemValue="value"></form:select>
 		
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>明细编号</th><th>产品</th><th>数量</th><th>状态</th></tr></thead>
+		<thead><tr><th>明细编号</th><th>产品</th><th>数量</th><th>状态</th><th>打印</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productionDetail">
 			<tr>
 				<td>${productionDetail.serialNum}</td>
-				<td>${productionDetail.production.plan.product.serialNum}</td>
+				<td>${productionDetail.productTree.product.serialNum}</td>
 				<td>${productionDetail.number}</td>
 				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
+				<td><a href="javascript:void(0);" >打印</a> </td>
 			</tr>
 		</c:forEach>
 		</tbody>

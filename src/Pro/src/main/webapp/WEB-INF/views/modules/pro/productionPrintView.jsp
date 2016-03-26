@@ -21,16 +21,21 @@
         	
         	var productTreeIds = new Array();
         	var numbers = new Array();
+        	var mods = new Array();
+        	var snps = new Array();
         	$("table tbody tr").each(function(){
         		var id = $(this).attr("tree-id");
         		productTreeIds.push(id);
-        		var num = $(this).find('input').val();
-        		numbers.push(num);
+        		var num = $(this).find('input');
+        		snps.push($(num.get(0)).val());
+        		numbers.push($(num.get(1)).val());
+        		mods.push($(num.get(2)).val());
         	});
         	
         	params.productTreeIds = productTreeIds.join(',');
         	params.numbers = numbers.join(',');
-        	
+        	params.mods = mods.join(',');
+        	params.snps = snps.join(",");
         	var ok = false; 
         	var url = "${ctx}/pro/production/print";
         	$.ajax({
@@ -66,7 +71,13 @@
 							${productTree.number}
 						</c:when>
 						<c:otherwise>
-							<input type="text" value="${productTree.number}" class="input-small"/>
+							<input type="hidden" value="${productTree.product.snpNum}"/>${productTree.snpNum}x${productTree.product.snpNum}<input readonly="readonly" type="text" value="${productTree.snpNum*productTree.product.snpNum}" class="input-small"/>
+							<c:if test="${productTree.modNum != 0}">
+							    余${productTree.modNum}<input type="text" value="${productTree.product.snpNum}" class="input-small"/>
+							</c:if>
+							<c:if test="${productTree.modNum == 0}">
+							   <input type="hidden" value="0" class="input-small"/>
+							</c:if>
 						</c:otherwise>
 					</c:choose>
 				

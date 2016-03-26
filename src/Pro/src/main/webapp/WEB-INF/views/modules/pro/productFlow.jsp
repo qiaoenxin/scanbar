@@ -61,7 +61,7 @@
 				html += "<option value='"+flow.id+"' "+selected+">"+flow.label+"</option>";
 			})
 			html += "</select>";
-			html += "：<input type='text' class='value' value='"+value+"' style='width:100px'/>";
+			html += "描述：<input type='text' class='value' value='"+value+"' style='width:100px'/>";
 			html += "编号：<input type='text' class='number' value='"+number+"' style='width:100px'/>";
 			html += "<input type='button' class='btn' value='删除' onclick='_delete(this);'/>";
 			html += "</div>";

@@ -34,7 +34,7 @@
 			<tr  id="${productTree.id}"
 					pId="${productTree.parent ne '1' ? productTree.parent : '0'}">
 				<td>${productTree.name}</td>
-				<td>${productTree.number}</td>
+				<td>${productTree.number != 1 ? '1 x ' : ''} ${productTree.number}</td>
 				<shiro:hasPermission name="pro:productTree:edit"><td>
 					<a href="${ctx}/pro/productTree/delete?id=${productTree.treeId}" onclick="return confirmx('确认要删除该节点吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
