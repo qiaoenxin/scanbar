@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.pro.service;
 
+import java.util.List;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -85,6 +87,12 @@ public class StockHistoryService extends BaseService {
 	@Transactional(readOnly = false)
 	public void delete(String id) {
 		stockHistoryDao.deleteById(id);
+	}
+	
+	public List<StockHistory> findByDetailId(String id){
+		DetachedCriteria criteria = stockHistoryDao.createDetachedCriteria();
+		criteria.add(Restrictions.eq("productionDetail.id", id));
+		return stockHistoryDao.find(criteria);
 	}
 	
 }

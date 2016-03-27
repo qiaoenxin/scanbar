@@ -3,6 +3,7 @@ package com.thinkgem.jeesite.modules.pro.entity;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
 
 public class Device extends IdEntity<Device>{
+	
 	private static final long serialVersionUID = -4460260433320333570L;
 
 	private String deviceKey;
