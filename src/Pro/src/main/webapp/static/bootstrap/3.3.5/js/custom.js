@@ -30,3 +30,47 @@ function mAlert(msg){
 		$('body').find('.m-alert').remove();
 	},2000);
 }
+
+function auth(code){
+	if(code==301){
+		location.href='login';
+	}
+}
+
+function getSetting(){
+	var setting = localStorage.getItem("setting");
+	setting = JSON.parse(setting);
+	return setting;
+}
+function setSetting(setting){
+	setting = JSON.stringify(setting);
+	localStorage.setItem("setting",setting);
+}
+
+function ajax(url,data,method,success,error){
+	var setting = getSetting();
+	var address = setting.address;
+	url = address + url;
+	$.ajax({
+		url:url,
+		type:method,
+		dataType:"json",
+		data:data,
+		success: function(data){
+			success(data);
+		},
+		error:function(){
+			error();
+		}
+	});
+}
+
+function alarm(){
+	var audio = new Audio();
+	audio.src = 'http://www.w3school.com.cn/i/horse.ogg';
+	//audio.loop = true;
+	audio.id = 'alarm';
+	audio.autoplay = true;
+	audio.play();
+}
+
