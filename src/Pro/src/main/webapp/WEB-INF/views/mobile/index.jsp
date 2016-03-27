@@ -22,17 +22,41 @@
 		padding:20px;
 	}
 </style>
+<script>
+	$(document).ready(function(){
+	
+		$('button').click(function(){
+			
+			var href = $(this).attr('data-href');
+			
+			var url = "/interface/checkLogin";
+			ajax(url,{},"POST",function(data){
+				var code = data.result;
+				auth(code);
+				if (code == 0) {
+					location.href = href;
+				} else {
+					mAlert(data.reason);
+				}
+			},function(){
+				mAlert("登录失败");
+			});
+			
+		});
+		
+	});
+</script>
 </head>
 <body>
 	<div class="btn-group-vertical" role="group">
 		<br>
-		<a class="btn btn-default" href="scanSave">扫描入库</a>
+		<button class="btn btn-default" data-href="scanSave">扫描入库</button>
 		<br>
-		<a class="btn btn-default" href="scanFlow">流程扫描</a>
+		<button class="btn btn-default" data-href="scanFlow">流程扫描</button>
 		<br>
-		<a class="btn btn-default" href="scanLoss">报损扫描</a>
+		<button class="btn btn-default" data-href="scanLoss">报损扫描</button>
 		<br>
-		<a class="btn btn-default" href="setting">设置</a>
+		<button class="btn btn-default" data-href="setting">设置</button>
 	</div>
 </body>
 </html>
