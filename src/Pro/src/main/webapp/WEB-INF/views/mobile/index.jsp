@@ -28,7 +28,7 @@
 		<br>
 		<a class="btn btn-default" href="scanSave">扫描入库</a>
 		<br>
-		<a class="btn btn-default" href="scanFlow">流程入库</a>
+		<a class="btn btn-default" href="scanFlow">流程扫描</a>
 		<br>
 		<a class="btn btn-default" href="scanLoss">报损扫描</a>
 		<br>

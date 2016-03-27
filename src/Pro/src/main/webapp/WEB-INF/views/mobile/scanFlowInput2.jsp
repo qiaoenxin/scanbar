@@ -57,7 +57,7 @@
 			<div class="col-xs-2">
 				<i class="glyphicon glyphicon-menu-left back" data-back="scanFlow"></i>
 			</div>
-			<div class="col-xs-8 title">流程入库</div>
+			<div class="col-xs-8 title">流程扫描</div>
 		</div>
 	</div>
 	

@@ -2,6 +2,7 @@ package com.thinkgem.jeesite.web;
 
 import com.thinkgem.jeesite.common.jservice.api.Interfaces;
 import com.thinkgem.jeesite.common.jservice.api.Interfaces.InterfaceDef;
+import com.thinkgem.jeesite.web.CheckLogin.CheckLoginService;
 import com.thinkgem.jeesite.web.Flow.FlowService;
 import com.thinkgem.jeesite.web.Login.LoginService;
 import com.thinkgem.jeesite.web.Logout.LogoutService;
@@ -29,6 +30,9 @@ public class InterfaceConfig {
 		interfaces.registerInterface(new InterfaceDef("logout", "/logout", LogoutService.class, false));
 		//工序流
 		interfaces.registerInterface(new InterfaceDef("flow", "/flow", FlowService.class, false));
+		
+		//判断登录
+		interfaces.registerInterface(new InterfaceDef("checkLogin", "/checkLogin", CheckLoginService.class, false));
 	}
 	
 }
