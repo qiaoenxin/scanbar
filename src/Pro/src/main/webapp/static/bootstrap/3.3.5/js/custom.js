@@ -4,16 +4,6 @@ $(document).ready(function(){
 		var backUrl = $(this).attr('data-back');
 		back(backUrl);
 	});
-	
-	//验证用户是否登录
-	var href = location.href; 
-	if(href.indexOf('/login')==-1 && href.indexOf('/index')==-1){
-		var user = localStorage.getItem("user");
-		if(!user){
-			location.href='login';
-		}
-	}
-	
 });
 
 function back(backUrl){
@@ -38,14 +28,28 @@ function auth(code){
 	}
 }
 
-function getSetting(){
-	var setting = localStorage.getItem("setting");
+function getSetting(key){
+	if(!_jscallapi.call){
+		mAlert("未找到call方法");
+		return;
+	}
+	var setting = {};
+	setting.key = key;
+	setting = JSON.stringify(setting);
+	var setting = _jscallapi.call('getPrefer',setting);
 	setting = JSON.parse(setting);
 	return setting;
 }
-function setSetting(setting){
+function setSetting(key,value){
+	if(!_jscallapi.call){
+		mAlert("未找到call方法");
+		return;
+	}
+	var setting = {};
+	setting.key = key;
+	setting.value = value;
 	setting = JSON.stringify(setting);
-	localStorage.setItem("setting",setting);
+	 _jscallapi.call('savePrefer',setting);
 }
 
 function ajax(url,data,method,success,error){
