@@ -62,7 +62,7 @@
 	<div class="toolbar affix-top">
 		<div class="row">
 			<div class="col-xs-2">
-				<i class="glyphicon glyphicon-menu-left back"></i>
+				<i class="glyphicon glyphicon-menu-left back" data-back="index"></i>
 			</div>
 			<div class="col-xs-8 title">设置</div>
 			<div class="col-xs-2">

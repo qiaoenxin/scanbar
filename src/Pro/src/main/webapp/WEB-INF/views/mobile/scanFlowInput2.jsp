@@ -55,7 +55,7 @@
 	<div class="toolbar affix-top">
 		<div class="row">
 			<div class="col-xs-2">
-				<i class="glyphicon glyphicon-menu-left back"></i>
+				<i class="glyphicon glyphicon-menu-left back" data-back="scanFlow"></i>
 			</div>
 			<div class="col-xs-8 title">流程入库</div>
 		</div>

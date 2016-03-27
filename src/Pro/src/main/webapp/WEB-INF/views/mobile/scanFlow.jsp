@@ -53,7 +53,6 @@
 		var flowId = '';
 		$('.btn-group-vertical').find('.btn').click(function(){
 			flowId = $(this).attr('data-flow');
-			alert(flowId);
 			location.href = 'scanFlowInput?flowId='+flowId;
 		});
 	}
@@ -71,7 +70,7 @@
 	<div class="toolbar affix-top">
 		<div class="row">
 			<div class="col-xs-2">
-				<i class="glyphicon glyphicon-menu-left back"></i>
+				<i class="glyphicon glyphicon-menu-left back" data-back="index"></i>
 			</div>
 			<div class="col-xs-8 title">流程入库</div>
 		</div>
