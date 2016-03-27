@@ -51,9 +51,6 @@
 			dataType : "json",
 			success : function(data) {
 				if (data.result == 0) {
-					var user = {};
-					user.loginName = loginName;
-					localStorage.setItem("user",JSON.stringify(user));
 					location.href='index';
 				} else {
 					mAlert(data.reason);

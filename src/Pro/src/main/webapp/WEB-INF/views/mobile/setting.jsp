@@ -29,7 +29,6 @@
 		ajax(url,{},"POST",function(data){
 			var code = data.result;
 			if(code==0){
-				localStorage.removeItem("user");
 				location.href='login';
 			}else{
 				mAlert(data.reason);
@@ -40,19 +39,16 @@
 	}
 	
 	function init(){
-		var setting = getSetting();
-		var address = setting.address;
-		var device = setting.device;
-		$('#address').val(address);
-		$('#device').val(device);
+		var addressUrl = getSetting("addressUrl");
+		var deviceKey = getSetting("deviceKey");
+		$('#address').val(addressUrl);
+		$('#device').val(deviceKey);
 	}
 	function submit(){
 		var address = $('#address').val();
 		var device = $('#device').val();
-		var setting = {};
-		setting.address = address;
-		setting.device = device;
-		setSetting(setting);
+		setSetting("addressUrl",address);
+		setSetting("deviceKey",device);
 		mAlert("提交成功");
 	}
 </script>
@@ -91,7 +87,7 @@
 		</div>
 	</div>
 	
-	<div class="center-block affix-bottom">
+	<div class="center-block">
 		<button class="btn btn-default" style="width:80%;" onclick="submit()">提交</button>
 	</div>
 </body>
