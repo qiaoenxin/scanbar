@@ -84,7 +84,7 @@ public class ProductController extends BaseController {
 		JSONArray flows = new JSONArray();
 		try {
 			if(StringUtils.isNotBlank(product.getFlow())){
-				flows = JSONObject.parseArray(StringEscapeUtils.unescapeHtml4(product.getFlow()));
+				flows = JSONObject.parseArray(product.getFlow());
 				for(int i = 0;i<flows.size();i++){
 					JSONObject flow = flows.getJSONObject(i);
 					String id = flow.getString("id");

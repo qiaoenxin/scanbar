@@ -71,7 +71,7 @@ public class Product extends IdEntity<Product> {
 	}
 
 	public String getFlow() {
-		return flow;
+		return StringEscapeUtils.unescapeHtml4(flow);
 	}
 
 	public void setFlow(String flow) {
@@ -129,7 +129,7 @@ public class Product extends IdEntity<Product> {
 
 	@Transient
 	public List<Flow> getFlows() {
-		if(StringUtils.isBlank(flow)){
+		if(StringUtils.isBlank(this.getFlow())){
 			return Collections.emptyList();
 		}
 		
@@ -137,7 +137,7 @@ public class Product extends IdEntity<Product> {
 			return flows;
 		}
 		//StringEscapeUtils.unescapeHtml4
-		JSONArray arrays = JSONArray.parseArray(flow);
+		JSONArray arrays = JSONArray.parseArray(this.getFlow());
 		List<Flow> list = new ArrayList<Product.Flow>();
 		Flow prev = null;
 		for(int i =0, len = arrays.size(); i < len;i++){
