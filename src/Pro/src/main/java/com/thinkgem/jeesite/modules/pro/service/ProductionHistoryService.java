@@ -87,6 +87,5 @@ public class ProductionHistoryService extends BaseService {
 		history.setProductionDetail(productionDetail);
 		detailService.save(productionDetail);
 		productionHistoryDao.save(history);
-		
 	}
 }

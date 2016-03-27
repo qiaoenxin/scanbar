@@ -287,7 +287,7 @@ dt,dd {
 	<div id="main">
 		<div id="header" class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<div class="brand"><a href=""><img src="${ctxStatic}/common/images/logo.png" /></a></div>
+				<div class="brand"><a href="" style="font-size: 24; color: white;padding-top: 200px;"><!--<img src="${ctxStatic}/common/images/logo.png" />--></a></div>
 				<div class="nav-collapse">
 					<ul id="menu" class="nav">
 						<c:set var="firstMenu" value="true" />
