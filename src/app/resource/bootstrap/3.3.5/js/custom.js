@@ -23,9 +23,7 @@ function getSetting(key){
 	var setting = {};
 	setting.key = key;
 	setting = JSON.stringify(setting);
-	setting = _jscallapi.call('getPrefer',setting);
-	setting = JSON.parse(setting);
-	return setting;
+	return _jscallapi.call('getPrefer',setting);
 }
 function setSetting(key,value){
 	if(!_jscallapi){
