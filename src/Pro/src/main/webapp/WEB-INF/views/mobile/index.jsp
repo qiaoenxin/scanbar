@@ -20,7 +20,7 @@
 		width:80%;
 		margin-left:10%;
 	}
-	.btn-group-vertical a{
+	.btn-group-vertical button{
 		padding:20px;
 	}
 </style>
