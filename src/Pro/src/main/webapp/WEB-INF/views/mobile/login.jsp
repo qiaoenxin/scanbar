@@ -38,27 +38,20 @@
 			return;
 		}
 		
-		var url = "${contextPath}/interface/login";
+		var url = "/interface/login";
 		var data = {};
 		data.loginName = loginName;
 		data.password = password;
 		data.device = '123123123';
-
-		$.ajax({
-			url : url,
-			type : "POST",
-			data : data,
-			dataType : "json",
-			success : function(data) {
-				if (data.result == 0) {
-					location.href='index';
-				} else {
-					mAlert(data.reason);
-				}
-			},
-			error : function() {
-				mAlert("登录失败");
+		
+		ajax(url,data,"POST",function(data){
+			if (data.result == 0) {
+				location.href='index';
+			} else {
+				mAlert(data.reason);
 			}
+		},function(){
+			mAlert("登录失败");
 		});
 	}
 </script>
