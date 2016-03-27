@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="${ctxStatic }/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <script type="text/javascript"src="${ctxStatic }/bootstrap/3.3.5/js/jquery-1.9.1.min.js"></script>
 <script src="${ctxStatic }/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
 
 <style>
 	.btn-group-vertical{

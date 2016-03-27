@@ -18,6 +18,12 @@
 	src="${ctxStatic }/bootstrap/3.3.5/js/jquery-1.9.1.min.js"></script>
 <script src="${ctxStatic }/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
+<script>
+	function loginOut(){
+		localStorage.removeItem("user");
+		location.href='login';
+	}
+</script>
 
 </head>
 <body>
@@ -27,6 +33,9 @@
 				<i class="glyphicon glyphicon-menu-left back"></i>
 			</div>
 			<div class="col-xs-8 title">设置</div>
+			<div class="col-xs-2">
+				<a href="javascript:loginOut();" style="color:#FFFFFF;">注销</a>
+			</div>
 		</div>
 	</div>
 

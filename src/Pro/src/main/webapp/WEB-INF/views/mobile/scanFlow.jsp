@@ -74,9 +74,9 @@
 	
 	<div class="m-content" >
 		<div class="btn-group-vertical" role="group">
-			<button class="btn btn-default" data-flow="1">端末</button><br>
-			<button class="btn btn-default" data-flow="2">扭曲</button><br>
-			<button class="btn btn-default" data-flow="3">检查</button><br>
+			<button class="btn btn-default" data-flow="3">端末</button><br>
+			<button class="btn btn-default" data-flow="6">弯曲</button><br>
+			<button class="btn btn-default" data-flow="7">检查</button><br>
 		</div>
 		
 		<br>

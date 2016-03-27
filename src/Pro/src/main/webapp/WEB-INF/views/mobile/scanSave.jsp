@@ -16,6 +16,7 @@
 <script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
 
 <script>
+					
 	$(document).ready(function(){
 		$('#scan').focus();
 		$('#scan').keyup(function(){
