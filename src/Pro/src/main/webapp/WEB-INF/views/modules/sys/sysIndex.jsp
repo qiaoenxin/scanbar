@@ -159,8 +159,7 @@ dt,dd {
 
 		initSiteTree();
 		
-		$('#mainFrame').attr('src','${ctx}/monitoring');
-		$('#openClose').click();
+		
 		
 	});
 
@@ -321,7 +320,7 @@ dt,dd {
 			<div id="content" class="row-fluid">
 				<div id="left">
 					<iframe id="menuFrame" name="menuFrame"
-						src=""
+						src="${ctx}/sys/menu/tree?parentId=${firstMenuId}"
 						style="overflow:visible;" scrolling="yes" frameborder="no"
 						width="100%" height="650"></iframe>
 				</div>

@@ -15,43 +15,47 @@
 <script src="${ctxStatic }/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
 
+<style>
+	.btn-group-vertical button{
+		padding:20px;
+	}
+</style>
 <script>
 	$(document).ready(function() {
 		$('#scan').hide();
-		
+		init();
+	});
+	
+	
+	function init(){
+		var url = "/interface/flow";
+		ajax(url,{},"GET",function(data){
+			var code = data.result;
+			auth(code);
+			if(code==0){
+				var jDom = $('#flows');
+				var flows = data.data;
+				$.each(flows,function(i,flow){
+					var html = '<button class="btn btn-default" data-flow="'+flow.value+'">'+flow.label+'</button><br>';
+					jDom.append(html);
+				});
+					
+				bindEvent();
+			}else{
+				mAlert(data.reason);
+			}
+		},function(){
+			mAlert("查询失败");
+		});
+	}
+	
+	function bindEvent(){
 		var flowId = '';
 		$('.btn-group-vertical').find('.btn').click(function(){
 			flowId = $(this).attr('data-flow');
-			$('#scan').show();
-			$('#scan').focus();
+			location.href = 'scanFlowInput?flowId='+flowId;
 		});
-		
-		$('#scan').keyup(function(){
-			var value = $(this).val();
-			if(value.indexOf('/n')!=-1 || value.indexOf('<br>')!=-1 || value.indexOf('<br/>')!=-1){
-				var url = "${contextPath}/interface/scanFlow";
-				var data = {};
-				data.detailNo = value;
-				data.flow = flowId;
-				$.ajax({
-					url:url,
-					type:"POST",
-				 	data: data,
-				 	dataType:"json",
-				 	success: function(data){
-				 		if(data.result==0){
-				 			mAlert("入库成功");
-				 		}else{
-				 			mAlert(data.reason);
-				 		}
-				 	},
-				 	error:function(){
-				 		mAlert("入库失败");
-				 	}
-				});
-			}
-		});
-	});
+	}
 </script>
 <style>
 .btn-group-vertical {
@@ -73,15 +77,7 @@
 	</div>
 	
 	<div class="m-content" >
-		<div class="btn-group-vertical" role="group">
-			<button class="btn btn-default" data-flow="3">端末</button><br>
-			<button class="btn btn-default" data-flow="6">弯曲</button><br>
-			<button class="btn btn-default" data-flow="7">检查</button><br>
-		</div>
-		
-		<br>
-		<div class="form-group">
-			<input type="text" class="form-control" id="scan" placeholder="">
+		<div class="btn-group-vertical" role="group" id="flows">
 		</div>
 	</div>
 </body>

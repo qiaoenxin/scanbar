@@ -42,7 +42,7 @@
 		var data = {};
 		data.loginName = loginName;
 		data.password = password;
-		data.device = device;
+		data.device = '123123123';
 
 		$.ajax({
 			url : url,
@@ -76,11 +76,11 @@
 	<div class="m-content" style="padding:20px;">
 		<div class="form-group">
 			<label for="exampleInputEmail1">用户名</label> <input type="text"
-				class="form-control" id="loginName" placeholder="请输入用户名">
+				class="form-control" id="loginName" placeholder="请输入用户名" value="thinkgem">
 		</div>
 		<div class="form-group">
 			<label for="exampleInputPassword1">密码</label> <input type="password"
-				class="form-control" id="password" placeholder="请输入密码">
+				class="form-control" id="password" placeholder="请输入密码" value="admin">
 		</div>
 		<div style="text-align:center;">
 			<button class="btn btn-default" onclick="submit()">提交</button>

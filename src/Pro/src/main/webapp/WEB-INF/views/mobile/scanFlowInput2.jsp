@@ -16,7 +16,8 @@
 <script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
 
 <script>
-					
+	
+	var flowId = '${param.flowId}';
 	$(document).ready(function(){
 		$('#scan').focus();
 		$('#scan').keyup(function(e){
@@ -24,17 +25,17 @@
 			if(e.keyCode==13){
 				var data = {};
 				data.detailNo = value;
-				var url = "/interface/scanSave";
+				data.flow = flowId;
+				var url = "/interface/scanFlow";
 				ajax(url,data,"POST",function(data){
 					var code = data.result;
-				 	auth(code);
-				 	if(code==0){
-				 		mAlert("入库成功");
-				 		$('#scan').val('');
-				 	}else{
-				 		mAlert(data.reason);
-				 		alarm();
-				 	}
+					auth(code);
+					if(code==0){
+						mAlert("入库成功");
+					}else{
+						mAlert(data.reason);
+						alarm();
+					}
 				},function(){
 					mAlert("入库失败");
 					alarm();
@@ -56,7 +57,7 @@
 			<div class="col-xs-2">
 				<i class="glyphicon glyphicon-menu-left back"></i>
 			</div>
-			<div class="col-xs-8 title">扫描入库</div>
+			<div class="col-xs-8 title">流程入库</div>
 		</div>
 	</div>
 	

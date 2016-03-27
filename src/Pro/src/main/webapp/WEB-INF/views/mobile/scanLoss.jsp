@@ -16,42 +16,54 @@
 <script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
 
 <script>
+
+	var detailNo = '';
 	$(document).ready(function(){
-		init();
+		
+		$('#scan').focus();
+		$('#scan').keyup(function(e){
+			var value = $(this).val();
+			if(e.keyCode==13){
+				detailNo = value;
+				init();
+			}
+		});
+		
+		
+		$('.clear').click(function(){
+			$('#scan').val('');
+			$('#scan').focus();
+		});
+		
 	});
 	
-	var detailNo = "201603202324131073206";
-	
 	function init(){
-		var url = "${contextPath}/interface/querySub";
 		var data = {};
 		data.detailNo = detailNo;
-		$.ajax({
-			url:url,
-			type:"GET",
-			data: data,
-			dataType:"json",
-			success: function(data){
-				if(data.result==0){
-					data = data.data;
-					$.each(data,function(i,item){
-						var html = getItemHtml(item.product.id,item.product.serialNum,item.number);
-						$('#list').append(html);
-					});
-				 }else{
-				 	mAlert(data.reason);
-				 }
-			},
-			error:function(){
-				mAlert("查询失败");
+		var url = "/interface/querySub";
+		ajax(url,data,"GET",function(data){
+			var code = data.result;
+			auth(code);
+			if(code==0){
+				data = data.data;
+				$.each(data,function(i,item){
+					var html = getItemHtml(item.product.id,item.product.serialNum,item.number);
+					$('#list').append(html);
+				});
+					
+				$('.submit').show();
+			}else{
+				mAlert(data.reason);
 			}
+		},function(){
+			mAlert("查询失败");
 		});
 	}
 	
 	function getItemHtml(id,serialNum,number){
 		var html = '<li class="list-group-item row" data-id="'+id+'">';
 		html += '<div class="col-xs-8">'+serialNum+'：</div>';
-		html += '<div class="col-xs-4"><input type="text" class="form-control" id="" placeholder="" value="'+number+'"></div>';
+		html += '<div class="col-xs-4"><input type="text" class="form-control" id="" placeholder="" value="0" max-value="'+number+'"></div>';
 		html += '</li>';
 		return html;
 	}
@@ -65,27 +77,31 @@
 			var item = id + ',' + number;
 			products.push(item);
 		});
+		products = products.join(';');
 		
-		var url = "${contextPath}/interface/loss";
+		var url = "/interface/loss";
 		var data = {};
 		data.detailNo = detailNo;
 		data.products = products;
 		
-		$.ajax({
-			url:url,
-			type:"POST",
-			data: data,
-			dataType:"json",
-			success: function(data){
-				if(data.result==0){
+		ajax(url,data,"POST",function(data){
+			var code = data.result;
+			auth(code);
+			if(code==0){
+				var code = data.result;
+				auth(code);
+				if(code==0){
 					mAlert("提交成功");
 				 }else{
 				 	mAlert(data.reason);
+				 	alarm();
 				 }
-			},
-			error:function(){
-				mAlert("提交失败");
+			}else{
+				mAlert(data.reason);
+				alarm();
 			}
+		},function(){
+			mAlert("提交失败");
 		});
 	}
 </script>
@@ -100,12 +116,27 @@
 		</div>
 	</div>
 	
-	<ul class="list-group m-content" id="list">
-		
-	</ul>
-	<br>
-	<div class="center-block affix-bottom">
-		<button class="btn btn-default" style="width:80%;" onclick="submit()">提交</button>
+	<div class="m-content">
+		<br>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-9">
+					<input type="text" class="form-control" id="scan" placeholder="">
+				</div>
+				<div class="col-xs-2">
+					<button class="btn btn-default clear">清空</button>
+				</div>
+			</div>
+		</div>
+		<ul class="list-group" id="list">
+			
+		</ul>
+		<div class="center-block submit" style="display:none">
+			<button class="btn btn-default" style="width:80%;" onclick="submit()">提交</button>
+		</div>
 	</div>
+	
+	<br>
+	
 </body>
 </html>

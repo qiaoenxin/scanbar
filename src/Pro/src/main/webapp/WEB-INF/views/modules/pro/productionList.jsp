@@ -49,7 +49,7 @@
 						    	LODOP.PRINT_INIT("");
 								LODOP.SET_PRINT_PAGESIZE(1,2000,1000,"CreateCustomPage");
 								LODOP.ADD_PRINT_HTM(28,20,"100%","100%",html);
-								LODOP.PREVIEW();
+								LODOP.PRINT();
 							 }catch(err){ 
 							 	alert(err);
 					 		 } 
