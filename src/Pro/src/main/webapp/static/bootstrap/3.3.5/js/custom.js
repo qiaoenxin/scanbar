@@ -17,6 +17,7 @@ $(document).ready(function(){
 });
 
 function back(backUrl){
+	alert(backUrl);
 	location.href = backUrl;
 }
 
