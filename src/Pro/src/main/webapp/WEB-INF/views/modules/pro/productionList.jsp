@@ -46,7 +46,7 @@
 						    	LODOP.PRINT_INIT("");
 								LODOP.SET_PRINT_PAGESIZE(1,2000,1000,"CreateCustomPage");
 								LODOP.ADD_PRINT_HTM(28,20,"100%","100%",html);
-								LODOP.PRINT();
+								LODOP.PRINTVIEW();
 							 }catch(err){ 
 							 	alert(err);
 					 		 } 
@@ -109,7 +109,7 @@ table{
 }
 div{
 	font-family: 微软雅黑;
-	font-size:16px;
+	font-size:14px;
 }
 table.gridtable {
 	color:#333333;
