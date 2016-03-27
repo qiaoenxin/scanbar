@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
+import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.entity.StockHistory;
 
@@ -21,6 +22,9 @@ public class ScanStockService {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private ProductionService productionService;
 	
 	
 	
@@ -37,6 +41,12 @@ public class ScanStockService {
 		stockHistory.setProduct(detail.getProductTree().getProduct());
 		stockHistory.setProductionDetail(detail);
 		int number  = detail.getNumber();
+		String productId = detail.getProduction().getPlan().getProduct().getId();
+		if(productId.equals(detail.getProductTree().getProduct().getId())){
+			Production production = detail.getProduction();
+			production.setCompleteNum(detail.getNumber());
+			productionService.save(production);
+		}
 		stockHistory.setNumber(detail.getNumber());
 		for(ProductTree tree: subTrees){
 			Product subProduct = tree.getProduct();
