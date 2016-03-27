@@ -66,8 +66,11 @@ function ajax(url,data,method,success,error){
 }
 
 function alarm(){
+	var setting = getSetting();
+	var address = setting.address;
+	var src = address + "/static/sound/ALARM.WAV"
 	var audio = new Audio();
-	audio.src = 'http://www.w3school.com.cn/i/horse.ogg';
+	audio.src = src;
 	//audio.loop = true;
 	audio.id = 'alarm';
 	audio.autoplay = true;
