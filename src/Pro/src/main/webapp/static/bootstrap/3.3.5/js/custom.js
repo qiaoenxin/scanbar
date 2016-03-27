@@ -51,9 +51,8 @@ function setSetting(key,value){
 }
 
 function ajax(url,data,method,success,error){
-	var setting = getSetting();
-	var address = setting.address;
-	url = address + url;
+	var addressUrl = getSetting("addressUrl");
+	url = addressUrl + url;
 	$.ajax({
 		url:url,
 		type:method,
