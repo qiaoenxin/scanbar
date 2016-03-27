@@ -5,7 +5,8 @@ $(document).ready(function(){
 	});
 	
 	//验证用户是否登录
-	if(location.href.indexOf('/login')==-1){
+	var href = location.href; 
+	if(href.indexOf('/login')==-1 && href.indexOf('/index')==-1){
 		var user = localStorage.getItem("user");
 		if(!user){
 			location.href='login';
