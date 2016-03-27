@@ -7,6 +7,9 @@
 	<script src="${ctxStatic}/lodop/LodopFuncs.js" type="text/javascript"></script>
 	<script src="${ctxStatic}/handlebars/handlebars.min.js" type="text/javascript"></script>
 	
+	<script src="${ctxStatic}/qrcode/jquery.qrcode.min.js" type="text/javascript"></script>
+	<script src="${ctxStatic}/qrcode/canvas2Image.js" type="text/javascript"></script>
+	
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
@@ -25,21 +28,27 @@
 				buttons:buttons, submit:function(v, h, f){
 					var win = h.find("iframe")[0].contentWindow;
 					if(v=="print"){
-						var data = JSON.parse(win.print());
+						var str = win.print();
+						if(!str){
+							alert('保存失败！');
+							return false;
+						}
+						var data = JSON.parse(str);
 						//top.$.jBox.tip("保存成功！","",{persistent:true,opacity:0});
 						//top.$.jBox.close();
-						for(int i = 0; i< data.length; i++){
+						for(var i = 0; i< data.length; i++){
 							//打印
 							var myTemplate = Handlebars.compile($('#print-templ').html());
 							var html = myTemplate(data[i]);
+							console.log(html);
 							try{ 
-						    	var LODOP=getLodop(); 
-								LODOP.PRINT_INITA(0,0,522,333,"打印控件功能演示_Lodop功能_自定义纸张4");
+						    	var LODOP=getLodop();
+						    	LODOP.PRINT_INIT("");
 								LODOP.SET_PRINT_PAGESIZE(1,2000,1000,"CreateCustomPage");
-								LODOP.ADD_PRINT_HTM(28,20,"100%","100%",html);	       
-								LODOP.PREVIEW();
+								LODOP.ADD_PRINT_HTM(28,20,"100%","100%",html);
+								LODOP.PRINT();
 							 }catch(err){ 
-							 alert(err);
+							 	alert(err);
 					 		 } 
 						}
 						

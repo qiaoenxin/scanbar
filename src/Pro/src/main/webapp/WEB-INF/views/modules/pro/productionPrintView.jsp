@@ -36,14 +36,14 @@
         	params.numbers = numbers.join(',');
         	params.mods = mods.join(',');
         	params.snps = snps.join(",");
-        	var ok = false; 
+        	var ok = ''; 
         	var url = "${ctx}/pro/production/print";
         	$.ajax({
 				url:   url,
 			 	data: params,
 			 	async :false,
 			 	success: function(data){
-			 		ok = true
+			 		ok = data
 			 	}
 			}); 
 			
