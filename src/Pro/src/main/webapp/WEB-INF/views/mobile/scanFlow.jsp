@@ -53,6 +53,7 @@
 		var flowId = '';
 		$('.btn-group-vertical').find('.btn').click(function(){
 			flowId = $(this).attr('data-flow');
+			alert(flowId);
 			location.href = 'scanFlowInput?flowId='+flowId;
 		});
 	}
