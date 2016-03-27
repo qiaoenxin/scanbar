@@ -54,7 +54,6 @@ public class ProductTree extends IdEntity<ProductTree> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="product_id")
 	@NotFound(action = NotFoundAction.IGNORE)
-	@NotNull
 	public Product getProduct() {
 		return product;
 	}

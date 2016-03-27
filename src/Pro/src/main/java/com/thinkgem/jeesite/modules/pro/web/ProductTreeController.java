@@ -108,7 +108,7 @@ public class ProductTreeController extends BaseController {
 		if (!beanValidator(model, productTree)){
 			return form(productTree, model);
 		}
-		if(productTree.getParent() == null){
+		if(productTree.getParent() == null || StringUtils.isBlank(productTree.getParent().getId())){
 			productTree.setNumber(1);
 		}else{
 			Product parent = productTree.getParent();

@@ -64,6 +64,11 @@ public class MobileController extends BaseController {
 	public String scanFlow(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "mobile/scanFlow";
 	}
+	@RequestMapping(value = "scanFlowInput")
+	public String scanFlowInput(String flowId,HttpServletRequest request, HttpServletResponse response, Model model) {
+		model.addAttribute("flowId", "flowId");
+		return "mobile/scanFlowInput2";
+	}
 	
 	@RequestMapping(value = "scanLoss")
 	public String scanLoss(HttpServletRequest request, HttpServletResponse response, Model model) {
