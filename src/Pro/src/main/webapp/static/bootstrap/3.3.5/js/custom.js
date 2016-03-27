@@ -29,25 +29,28 @@ function auth(code){
 }
 
 function getSetting(key){
-	if(!_jscallapi){
+	try{
+		var setting = {};
+		setting.key = key;
+		setting = JSON.stringify(setting);
+		return  _jscallapi.call('getPrefer',setting);
+	}catch(e){
 		mAlert("未找到_jscallapi方法");
-		return;
+		return localStorage.getItem(key);
 	}
-	var setting = {};
-	setting.key = key;
-	setting = JSON.stringify(setting);
-	return  _jscallapi.call('getPrefer',setting);
+	
 }
 function setSetting(key,value){
-	if(!_jscallapi){
+	try{
+		var setting = {};
+		setting.key = key;
+		setting.value = value;
+		setting = JSON.stringify(setting);
+		 _jscallapi.call('savePrefer',setting);
+	}catch(e){
 		mAlert("未找到_jscallapi方法");
-		return;
+		return localStorage.setItem(key,value);
 	}
-	var setting = {};
-	setting.key = key;
-	setting.value = value;
-	setting = JSON.stringify(setting);
-	 _jscallapi.call('savePrefer',setting);
 }
 
 function ajax(url,data,method,success,error){
@@ -67,14 +70,18 @@ function ajax(url,data,method,success,error){
 	});
 }
 
+var audio;
 function alarm(){
-	var addressUrl = getSetting("addressUrl");
-	var src = addressUrl + "/static/sound/ALARM.WAV"
-	var audio = new Audio();
-	audio.src = src;
+	if(!audio){
+		var addressUrl = getSetting("addressUrl");
+		var src = addressUrl + "/static/sound/ALARM.WAV";
+		audio = new Audio();
+		audio.src = src;
+		audio.id = 'alarm';
+		audio.autoplay = true;
+	}
+	audio.currentTime=0;
 	//audio.loop = true;
-	audio.id = 'alarm';
-	audio.autoplay = true;
 	audio.play();
 }
 
