@@ -1,7 +1,8 @@
 
 $(document).ready(function(){
 	$('.toolbar .back').click(function(){
-		back();
+		var backUrl = $(this).attr('data-back');
+		back(backUrl);
 	});
 	
 	//验证用户是否登录
@@ -15,8 +16,8 @@ $(document).ready(function(){
 	
 });
 
-function back(){
-	history.go(-1);
+function back(backUrl){
+	location.href = backUrl;
 }
 
 function mAlert(msg){
