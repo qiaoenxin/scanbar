@@ -37,11 +37,6 @@
 			$('#password').focus();
 			return;
 		}
-		if(!device){
-			mAlert("请输入设备号");
-			$('#device').focus();
-			return;
-		}
 		
 		var url = "${contextPath}/interface/login";
 		var data = {};
@@ -58,7 +53,6 @@
 				if (data.result == 0) {
 					var user = {};
 					user.loginName = loginName;
-					user.device = device;
 					localStorage.setItem("user",JSON.stringify(user));
 					location.href='index';
 				} else {
@@ -87,10 +81,6 @@
 		<div class="form-group">
 			<label for="exampleInputPassword1">密码</label> <input type="password"
 				class="form-control" id="password" placeholder="请输入密码">
-		</div>
-		<div class="form-group">
-			<label for="exampleInputEmail1">设备号</label> <input type="text"
-				class="form-control" id="device" placeholder="请输入设备号">
 		</div>
 		<div style="text-align:center;">
 			<button class="btn btn-default" onclick="submit()">提交</button>

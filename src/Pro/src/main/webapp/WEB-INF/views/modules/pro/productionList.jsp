@@ -39,14 +39,17 @@
 						for(var i = 0; i< data.length; i++){
 							//打印
 							var myTemplate = Handlebars.compile($('#print-templ').html());
-							var html = myTemplate(data[i]);
-							console.log(html);
+							var dataItem = data[i];
+							var QRImg = Canvas2Image.qrcode(dataItem.serialNum,130,130);
+							var QRHtml = QRImg.outerHTML;
+							dataItem.qrImg = QRHtml;
+							var html = myTemplate(dataItem);
 							try{ 
 						    	var LODOP=getLodop();
 						    	LODOP.PRINT_INIT("");
 								LODOP.SET_PRINT_PAGESIZE(1,2000,1000,"CreateCustomPage");
 								LODOP.ADD_PRINT_HTM(28,20,"100%","100%",html);
-								LODOP.PRINTVIEW();
+								LODOP.PREVIEW();
 							 }catch(err){ 
 							 	alert(err);
 					 		 } 
@@ -189,7 +192,7 @@ table.gridtable td {
 			<div>{{serialNum}}</div>
 		</div>
 		<div>
-			<div><img src=""/></div>
+			<div>{{{qrImg}}}</div>
 		</div>
 	</td>
 </tr>

@@ -18,14 +18,12 @@
 		width:80%;
 		margin-left:10%;
 	}
-	.btn-group-vertical button{
-		margin-top:30px;
+	.btn-group-vertical a{
+		padding:20px;
 	}
 </style>
 </head>
 <body>
-	
-	
 	<div class="btn-group-vertical" role="group">
 		<br>
 		<a class="btn btn-default" href="scanSave">扫描入库</a>
