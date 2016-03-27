@@ -209,15 +209,25 @@ public class ProductionController extends BaseController {
 		return "";
 	}
 	
+	/**
+	 * 整数补位
+	 * @param num
+	 * @param count
+	 * @return
+	 */
 	private String toSeq(int num, int count){
 		double power = Math.pow(10, count);
 		if(num >= power){
 			throw new RuntimeException();
 		}
-		double a = num / power;
-		String seq = new BigDecimal(a).toString();
-		int index = seq.indexOf(".");
-		return seq.substring(index + 1, index + 1 + count);
+		String str = String.valueOf(num);
+		int patch = count-str.length();
+		StringBuilder builder = new StringBuilder(10);
+		for(int i =0; i < patch; i++){
+			builder.append("0");
+		}
+		builder.append(str);
+		return builder.toString();
 	}
 
 	@RequiresPermissions("pro:production:view")
