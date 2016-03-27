@@ -4,6 +4,7 @@
 package com.thinkgem.jeesite.modules.pro.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -66,8 +67,21 @@ public class ProductionHistoryService extends BaseService {
 		productionHistoryDao.deleteById(id);
 	}
 	
+	public List<ProductionHistory> findByDetail(String detailId){
+		DetachedCriteria criteria = productionHistoryDao.createDetachedCriteria();
+		criteria.add(Restrictions.eq("productionDetail", detailId));
+		return productionHistoryDao.find(criteria);
+	}
+	
 	@Transactional
 	public void saveHistory(ProductionDetail productionDetail){
+		List<ProductionHistory> detailHistories = findByDetail(productionDetail.getId());
+		for(ProductionHistory history: detailHistories){
+			//重复扫描
+			if(productionDetail.getStatus().equals(history.getStatus())){
+				return;
+			}
+		}
 		ProductionHistory history = new ProductionHistory();
 		history.setStatus(productionDetail.getStatus());
 		history.setProductionDetail(productionDetail);

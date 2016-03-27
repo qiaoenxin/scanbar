@@ -52,7 +52,6 @@ public class QuerySub {
 		public void setDetailNo(String detailNo) {
 			this.detailNo = detailNo;
 		}
-		
 	}
 	
 	public static class Response extends com.thinkgem.jeesite.common.jservice.api.Response{
