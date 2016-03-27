@@ -9,6 +9,8 @@
 <title></title>
 <link rel="stylesheet" href="${ctxStatic }/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="${ctxStatic }/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet"
+	href="${ctxStatic }/bootstrap/3.3.5/css/custom.css">
 <script type="text/javascript"src="${ctxStatic }/bootstrap/3.3.5/js/jquery-1.9.1.min.js"></script>
 <script src="${ctxStatic }/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
@@ -39,7 +41,7 @@
 					mAlert(data.reason);
 				}
 			},function(){
-				mAlert("登录失败");
+				mAlert("检查身份失败");
 			});
 			
 		});
