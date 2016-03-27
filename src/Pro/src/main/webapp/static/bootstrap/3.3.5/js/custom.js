@@ -68,9 +68,8 @@ function ajax(url,data,method,success,error){
 }
 
 function alarm(){
-	var setting = getSetting();
-	var address = setting.address;
-	var src = address + "/static/sound/ALARM.WAV"
+	var addressUrl = getSetting("addressUrl");
+	var src = addressUrl + "/static/sound/ALARM.WAV"
 	var audio = new Audio();
 	audio.src = src;
 	//audio.loop = true;
