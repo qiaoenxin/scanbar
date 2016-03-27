@@ -21,7 +21,7 @@ public class Loss {
 	private static ProductionDetailService detailService = SpringContextHolder.getBean(ProductionDetailService.class);
 	
 	
-	private static ScanStockService scanStockService;
+	private static ScanStockService scanStockService = SpringContextHolder.getBean(ScanStockService.class);
 	
 	public static class LossService extends BasicService<Request, Response>{
 		
@@ -34,7 +34,8 @@ public class Loss {
 				return;
 			}
 			try {
-				scanStockService.saveStock(detail, request.products);
+				String[] products = request.products.split(";");
+				scanStockService.saveStock(detail, products);
 			} catch (Exception e) {
 				logger.error(e.toString(), e);
 				response.setResultAndReason(ReturnCode.DB_ERROR, "数据库操作错误");
@@ -48,7 +49,7 @@ public class Loss {
 		private String detailNo;
 		
 		@ParameterDef(required = true)
-		private String[] products;
+		private String products;
 		
 		public String getDetailNo(){
 			return detailNo;
@@ -58,11 +59,11 @@ public class Loss {
 			this.detailNo = detailNo;
 		}
 
-		public String[] getProducts() {
+		public String getProducts() {
 			return products;
 		}
 
-		public void setProducts(String[] products) {
+		public void setProducts(String products) {
 			this.products = products;
 		}
 	}

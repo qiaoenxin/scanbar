@@ -2,6 +2,7 @@ package com.thinkgem.jeesite.web;
 
 import com.thinkgem.jeesite.common.jservice.api.Interfaces;
 import com.thinkgem.jeesite.common.jservice.api.Interfaces.InterfaceDef;
+import com.thinkgem.jeesite.web.Flow.FlowService;
 import com.thinkgem.jeesite.web.Login.LoginService;
 import com.thinkgem.jeesite.web.Loss.LossService;
 import com.thinkgem.jeesite.web.QuerySub.QuerySubService;
@@ -23,6 +24,8 @@ public class InterfaceConfig {
 		interfaces.registerInterface(new InterfaceDef("querySub", "/querySub", QuerySubService.class, false));
 		//损失
 		interfaces.registerInterface(new InterfaceDef("loss", "/loss", LossService.class, false));
+		//工序流
+		interfaces.registerInterface(new InterfaceDef("flow", "/flow", FlowService.class, false));
 	}
 	
 }

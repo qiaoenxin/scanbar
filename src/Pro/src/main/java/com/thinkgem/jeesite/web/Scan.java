@@ -22,7 +22,7 @@ public class Scan {
 	
 	private static ProductTreeService treeService = SpringContextHolder.getBean(ProductTreeService.class);
 	
-	private static ScanStockService scanStockService;
+	private static ScanStockService scanStockService = SpringContextHolder.getBean(ScanStockService.class);;
 	
 	public static class ScanService extends BasicService<Request, Response>{
 		
