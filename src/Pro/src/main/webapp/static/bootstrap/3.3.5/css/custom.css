@@ -1,0 +1,52 @@
+@CHARSET "UTF-8";
+
+.toolbar {
+	line-height: 50px;
+	background: #015b9a;
+	color: #ffffff;
+}
+
+.toolbar .title {
+	text-align: center;
+}
+
+.toolbar .back {
+	padding-left: 10px;
+}
+
+.center-block {
+	text-align: center;
+}
+
+.affix-top {
+	position: fixed;
+	top: 0px;
+	z-index: 9999;
+	width: 100%;
+}
+
+.affix-bottom {
+	position: fixed;
+	bottom: 30px;
+	z-index: 9999;
+	width: 100%;
+}
+
+.m-content {
+	margin-top: 50px;
+}
+
+.m-alert {
+	text-align: center;
+	position: fixed;
+	width: 100%;
+	bottom: 30px;
+	z-index:99999999;
+}
+
+.m-alert-content {
+	background: rgba(0, 0, 0, 0.59);
+	color: #FFFFFF;
+	padding: 10px;
+	border-radius: 20px;
+}
