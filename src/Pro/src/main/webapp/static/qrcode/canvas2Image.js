@@ -1,18 +1,7 @@
 var Canvas2Image = function () {
 
 	
-	function qrcode(content,width,height){
-		var jDom = $("<div></div>").qrcode({
-			render: "canvas",
-			width: 200,
-			height:200,
-			text: content
-		});
-		
-		var canvas = div.find('canvas')[0];
-		var img = Canvas2Image.convertToImage(canvas,width,height,'png');
-		return img;
-	}
+	
     // check if support sth.
     var $support = function () {
         var canvas = document.createElement('canvas'),
@@ -86,6 +75,9 @@ var Canvas2Image = function () {
     function makeURI (strData, type) {
         return 'data:' + type + ';base64,' + strData;
     }
+    
+    
+    
 
 
     /**
@@ -235,6 +227,19 @@ var Canvas2Image = function () {
             }
         }
     }
+    
+    
+    var qrcode = function(content,width,height){
+		var jDom = $("<div></div>").qrcode({
+			render: "canvas",
+			width: 200,
+			height:200,
+			text: content
+		});
+		var canvas = jDom.find('canvas')[0];
+		var img = Canvas2Image.convertToImage(canvas,width,height,'png');
+		return img;
+	}
 
 
 
@@ -254,6 +259,7 @@ var Canvas2Image = function () {
         },
         
         convertToImage: convertToImage,
+        qrcode:qrcode,
         convertToPNG: function (canvas, width, height) {
             return convertToImage(canvas, width, height, 'png');
         },
