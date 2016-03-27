@@ -16,8 +16,8 @@ function mAlert(msg){
 
 
 function getSetting(key){
-	if(!_jscallapi.call){
-		mAlert("未找到call方法");
+	if(!_jscallapi){
+		mAlert("鏈壘鍒癬jscallapi鏂规硶");
 		return;
 	}
 	var setting = {};
@@ -28,8 +28,8 @@ function getSetting(key){
 	return setting;
 }
 function setSetting(key,value){
-	if(!_jscallapi.call){
-		mAlert("未找到call方法");
+	if(!_jscallapi){
+		mAlert("鏈壘鍒癬jscallapi鏂规硶");
 		return;
 	}
 	var setting = {};
