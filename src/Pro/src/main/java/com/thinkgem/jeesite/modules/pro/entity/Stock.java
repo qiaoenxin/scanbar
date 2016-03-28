@@ -15,6 +15,8 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.thinkgem.jeesite.common.persistence.IdEntity;
+import com.thinkgem.jeesite.common.utils.excel.annotation.ExcelField;
+import com.thinkgem.jeesite.common.utils.excel.fieldtype.ProductType;
 
 /**
  * 库存管理Entity
@@ -45,6 +47,7 @@ public class Stock extends IdEntity<Stock> {
 	@JoinColumn(name="product_id")
 	@NotFound(action = NotFoundAction.IGNORE)
 	@NotNull
+	@ExcelField(title="产品", align=2, sort=20,fieldType=ProductType.class)
 	public Product getProduct() {
 		return product;
 	}
@@ -53,6 +56,7 @@ public class Stock extends IdEntity<Stock> {
 		this.product = product;
 	}
 
+	@ExcelField(title="数量", align=2, sort=25)
 	public int getNumber() {
 		return number;
 	}
@@ -61,6 +65,7 @@ public class Stock extends IdEntity<Stock> {
 		this.number = number;
 	}
 
+	@ExcelField(title="占用数量", align=2, sort=30)
 	public int getUseNumber() {
 		return useNumber;
 	}
