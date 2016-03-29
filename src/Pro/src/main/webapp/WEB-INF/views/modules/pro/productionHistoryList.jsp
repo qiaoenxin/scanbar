@@ -25,7 +25,7 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<label>生产编号 ：</label><form:input path="productionDetail.production.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>产品编号 ：</label><form:input path="productionDetail.production.plan.product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>状态 ：</label><form:select path="status" items="${fns:getDictList('flow_type') }" itemLabel="label" itemValue="value"></form:select>
+		<label>状态 ：</label><form:select path="status" items="${status }" itemLabel="label" itemValue="value"></form:select>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	<tags:message content="${message}"/>

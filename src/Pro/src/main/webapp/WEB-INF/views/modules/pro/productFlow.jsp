@@ -13,6 +13,9 @@
 		    margin-top: -10px;
     		margin-left: 10px;
 		}
+		.flows .label{
+    		margin-left: 30px;
+		}
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -121,10 +124,32 @@
 	</script>
 </head>
 <body>
-	
+	<form action="">
 	<div class="flows">
-		<div class="empty-message">请点击创库下方的添加按钮进行添加工序流</div>
+	<!-- 
+		<div class="flow">
+		
+			端末工程<br/>
+			<a class="label">编号：</a><input type='text' class='number' value='20031211' style='width:100px'/><br/>
+			<a class="label">HPC：</a><input type='text' class='number' value='12' style='width:100px'/><br/>
+			<a class="label">端末：</a><input type='text' class='number' value='L:723' style='width:100px'/><br/>
+			<a class="label">ISO/ISO：</a><input type='text' class='number' value='' style='width:100px'/><br/>
+			<a class="label">烘护套：</a><input type='text' class='number' value='' style='width:100px'/><br/>
+			<a class="label">PCO：</a><input type='text' class='number' value='' style='width:100px'/><br/>
+			<a class="label">印字：</a><input type='text' class='number' value='' style='width:100px'/><br/>
+			<a class="label">标识：</a><input type='text' class='number' value='' style='width:100px'/><br/>
+		</div>
+		<div class="flow">
+			弯曲工程<br/>
+			<input type='hidden' class='number' value='' value/>
+			<a class="label">编号：</a><input type='text' class='number' value='20031211' style='width:100px'/><br/>
+			<a class="label">规格：</a><input type='text' class='number' value='TK#&LR#&FD#' style='width:100px'/><br/>
+		</div>
+		 -->
 	</div>
+	
+	</form>
+	
 	
 </body>
 </html>

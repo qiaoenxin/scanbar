@@ -132,7 +132,7 @@ table.gridtable td {
 	<td>
 <table style="height:310px;width:520px;" class="gridtable">
 <tr>
-	<td colspan="6">制程管理卡</td>
+	<td colspan="6">制程管理卡 {{productTree.product.field1}}  </td>
 </tr>
 <tr>
 	<td colspan="4">品   番  {{productTree.product.serialNum}}</td>
