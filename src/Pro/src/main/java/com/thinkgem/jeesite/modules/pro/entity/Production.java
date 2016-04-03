@@ -32,6 +32,7 @@ public class Production extends IdEntity<Production> {
 	
 	private static final long serialVersionUID = 1L;
 	private ProductionPlan plan;
+	private Product product;
 	private int number;		//生产目标数量
 	private int priority;	//优先级	1:高;2:中;3:低
 	private	String serialNum;	//编号	20位数
@@ -97,6 +98,17 @@ public class Production extends IdEntity<Production> {
 		this.completeNum += completeNum;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id")
+	@NotFound(action = NotFoundAction.IGNORE)
+	@NotNull
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 }
 
 

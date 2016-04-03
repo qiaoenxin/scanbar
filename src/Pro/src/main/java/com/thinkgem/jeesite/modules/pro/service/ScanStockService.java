@@ -36,6 +36,9 @@ public class ScanStockService {
 	 */
 	@Transactional
 	public void saveStock(ProductionDetail detail, List<ProductTree> subTrees) throws Exception{
+		//判断流程是否完成
+		
+		
 		//判断是否重复扫描
 		List<StockHistory> detailScaned = historyService.findByDetailId(detail.getId());
 		if(detailScaned.size() > 0){

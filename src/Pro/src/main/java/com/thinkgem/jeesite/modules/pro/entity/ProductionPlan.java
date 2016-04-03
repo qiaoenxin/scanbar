@@ -41,7 +41,6 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-	private Product product;// 产品
 	private int number; // 计划数量
 	private Date beginDate; // 计划开始时间
 	private Date endDate; // 计划完成时间
@@ -66,17 +65,7 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 	public void setName(String name) {
 		this.name = name;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id")
-	@NotFound(action = NotFoundAction.IGNORE)
-	@NotNull
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+	
 
 	public int getNumber() {
 		return number;
