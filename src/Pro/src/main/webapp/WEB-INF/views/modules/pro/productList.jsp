@@ -18,7 +18,7 @@
         function flow(id){
         	var url = "iframe:${ctx}/pro/product/flow?id="+id;
 	    	var buttons = {"添加":"add","保存":"save","关闭":false};
-	    	top.$.jBox.open(url, "功序流程设置", 800, 500,{
+	    	top.$.jBox.open(url, "功序流程设置", 1000, 500,{
 				buttons:buttons, submit:function(v, h, f){
 					var win = h.find("iframe")[0].contentWindow;
 					if(v=="add"){
@@ -52,15 +52,16 @@
 	<form:form id="searchForm" modelAttribute="product" action="${ctx}/pro/product/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<label>编号 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-small"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>编号</th><th>snp数量</th><th>工序</th><th>操作</th></tr></thead>
+		<thead><tr><th>名称</th><th>编号</th><th>snp数量</th><th>工序</th><th>操作</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="product">
 			<tr>
+				<td>${product.name}</td>
 				<td>${product.serialNum}</td>
 				<td>${product.snpNum}</td>
 				<td>

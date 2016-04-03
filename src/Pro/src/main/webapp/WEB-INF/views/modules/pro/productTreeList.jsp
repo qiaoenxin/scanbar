@@ -22,10 +22,6 @@
 		<li class="active"><a href="${ctx}/pro/productTree/">产品树列表</a></li>
 		<shiro:hasPermission name="pro:productTree:edit"><li><a href="${ctx}/pro/productTree/form">产品树添加</a></li></shiro:hasPermission>
 	</ul>
-	<form:form id="searchForm" modelAttribute="productTree" action="${ctx}/pro/productTree/" method="post" class="breadcrumb form-search">
-		<label>编号 ：</label><form:input path="product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
-		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
-	</form:form>
 	<tags:message content="${message}"/>
 	<table id="treeTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr><th>名称</th><th>数量</th><shiro:hasPermission name="pro:productTree:edit"><th>操作</th></shiro:hasPermission></tr></thead>

@@ -35,6 +35,12 @@
 		<form:hidden path="flow"/>
 		<tags:message content="${message}"/>
 		<div class="control-group">
+			<label class="control-label">名称:</label>
+			<div class="controls">
+				<form:input path="name" htmlEscape="false" maxlength="200" class="required"/>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">编号:</label>
 			<div class="controls">
 				<form:input path="serialNum" htmlEscape="false" maxlength="200" class="required"/>

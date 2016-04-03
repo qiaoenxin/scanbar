@@ -18,24 +18,24 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/pro/productionPlan/">生产计划列表</a></li>
-		<shiro:hasPermission name="pro:productionPlan:edit"><li><a href="${ctx}/pro/productionPlan/form">生产计划添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/pro/productionPlan/">生产指令列表</a></li>
+		<shiro:hasPermission name="pro:productionPlan:edit"><li><a href="${ctx}/pro/productionPlan/form">生产指令添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="productionPlan" action="${ctx}/pro/productionPlan/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<label>计划名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>产品编号 ：</label><form:input path="product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>指令名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>机台：</label><form:input path="field1" htmlEscape="false" maxlength="50" class="input-small"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>产品编号</th><th>计划生产数量</th><th>计划开始时间</th><th>计划完成时间</th><th>进度</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>名称</th><th>机台</th><th>计划生产数量</th><th>计划开始时间</th><th>计划完成时间</th><th>进度</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productionPlan">
 			<tr>
 				<td>${productionPlan.name}</td>
-				<td>${productionPlan.product.serialNum}</td>
+				<td>${productionPlan.field1}</td>
 				<td>${productionPlan.number}</td>
 				<td>${fns:formatDate(productionPlan.beginDate,'yyyy-MM-dd')}</td>
 				<td>${fns:formatDate(productionPlan.endDate,'yyyy-MM-dd')}</td>

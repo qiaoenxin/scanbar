@@ -42,6 +42,13 @@
 		</div>
 		
 		<div class="control-group">
+			<label class="control-label">产品:</label>
+			<div class="controls">
+				<form:select path="product.id" items="${productList }" itemLabel="name" itemValue="id"></form:select>
+			</div>
+		</div>
+		
+		<div class="control-group">
 			<label class="control-label">生产目标数量:</label>
 			<div class="controls">
 				<form:input path="number" htmlEscape="false" maxlength="200" class="required"/>

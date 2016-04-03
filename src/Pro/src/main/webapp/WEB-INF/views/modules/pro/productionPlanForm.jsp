@@ -27,8 +27,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/pro/productionPlan/">生产计划列表</a></li>
-		<li class="active"><a href="${ctx}/pro/productionPlan/form?id=${productionPlan.id}">生产计划<shiro:hasPermission name="pro:productionPlan:edit">${not empty productionPlan.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="pro:productionPlan:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/pro/productionPlan/">生产指令列表</a></li>
+		<li class="active"><a href="${ctx}/pro/productionPlan/form?id=${productionPlan.id}">生产指令<shiro:hasPermission name="pro:productionPlan:edit">${not empty productionPlan.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="pro:productionPlan:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="productionPlan" action="${ctx}/pro/productionPlan/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
@@ -40,12 +40,21 @@
 				<form:input path="name" htmlEscape="false" maxlength="200" class="required"/>
 			</div>
 		</div>
+		
 		<div class="control-group">
-			<label class="control-label">产品:</label>
+			<label class="control-label">机台:</label>
 			<div class="controls">
-				<form:select path="product.id" items="${productList }" itemLabel="serialNum" itemValue="id"></form:select>
+				<form:input path="field1" htmlEscape="false" maxlength="200" class="required"/>
 			</div>
 		</div>
+		
+		<div class="control-group">
+			<label class="control-label">编号:</label>
+			<div class="controls">
+				<form:input path="serialNum" htmlEscape="false" maxlength="200" class="required"/>
+			</div>
+		</div>
+		
 		<div class="control-group">
 			<label class="control-label">计划生产数量:</label>
 			<div class="controls">

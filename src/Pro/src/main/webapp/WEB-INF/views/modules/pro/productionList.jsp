@@ -77,6 +77,7 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<label>计划编号 ：</label><form:input path="plan.id" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>生产编号 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>产品：</label><form:input path="product.name" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>优先级 ：</label><form:radiobuttons path="priority" items="${fns:getDictList('production_priority') }" itemLabel="label" itemValue="value"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
@@ -88,7 +89,7 @@
 			<tr>
 				<td>${production.plan.name}</td>
 				<td>${production.serialNum}</td>
-				<td>${production.plan.product.serialNum}</td>
+				<td>${production.product.name}</td>
 				<td>${production.number}</td>
 				<td>${fns:getDictLabel(production.priority,'production_priority','') }</td>
 				<shiro:hasPermission name="pro:production:edit"><td>

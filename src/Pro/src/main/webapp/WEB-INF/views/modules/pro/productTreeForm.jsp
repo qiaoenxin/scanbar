@@ -39,7 +39,7 @@
 				var control = $("#products");
 				control.empty();//清空下拉框
 				$.each(data,function(i,item){
-					control.append("<option value='"+item.id+"'>"+item.serialNum+"</option>");
+					control.append("<option value='"+item.id+"'>"+item.name+"</option>");
 				});
 				control.select2('val', control.find('option:eq(0)').val());
 			},
@@ -72,7 +72,7 @@
 			<label class="control-label">父节点:</label>
 			<div class="controls">
 				<form:select path="parent.id" items="${productList }" id="parent"
-					itemLabel="serialNum" itemValue="id" onchange="initProductSelect(this.value)">
+					itemLabel="name" itemValue="id" onchange="initProductSelect(this.value)">
 				</form:select>
 			</div>
 		</div>

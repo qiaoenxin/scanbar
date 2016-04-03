@@ -24,8 +24,8 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<label>生产编号 ：</label><form:input path="productionDetail.production.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>产品编号 ：</label><form:input path="productionDetail.production.plan.product.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>状态 ：</label><form:select path="status" items="${status }" itemLabel="label" itemValue="value"></form:select>
+		<label>产品 ：</label><form:input path="productionDetail.production.product.name" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>状态 ：</label><form:select path="status" items="${status }" itemLabel="label" itemValue="value" class="input-small"></form:select>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	<tags:message content="${message}"/>
@@ -35,7 +35,7 @@
 		<c:forEach items="${page.list}" var="productionHistory">
 			<tr>
 				<td>${productionHistory.productionDetail.production.serialNum}</td>
-				<td>${productionHistory.productionDetail.production.plan.product.serialNum}</td>
+				<td>${productionHistory.productionDetail.production.product.name}</td>
 				<td>${fns:getDictLabel(productionHistory.status,'flow_type','')}</td>
 				<td>${productionHistory.createBy.loginName }</td>
 				<td>${fns:formatDate(productionHistory.createDate,'yyyy-MM-dd HH:mm')}</td>
