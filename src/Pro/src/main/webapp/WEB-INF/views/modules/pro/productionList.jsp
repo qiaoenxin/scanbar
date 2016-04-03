@@ -40,6 +40,12 @@
 							//打印
 							var myTemplate = Handlebars.compile($('#print-templ').html());
 							var dataItem = data[i];
+							
+							var flows = dataItem.productTree.product.flow;
+							flows = JSON.parse(flows);
+							dataItem.flow1 = flows[0];
+							dataItem.flow2 = flows[1];
+							
 							var QRImg = Canvas2Image.qrcode(dataItem.serialNum,130,130);
 							var QRHtml = QRImg.outerHTML;
 							dataItem.qrImg = QRHtml;
@@ -140,11 +146,11 @@ table.gridtable td {
 	<td colspan="2">SNP {{number}}</td>
 </tr>
 <tr>
-	<td>HPC / </td>
-	<td colspan="2">端末 L:23</td>
-	<td>烘护套</td>
-	<td>印字</td>
-	<td>标示（）</td>
+	<td>HPC&nbsp;{{flow1.field2}} </td>
+	<td colspan="2">端末&nbsp;{{flow1.field3}}</td>
+	<td>烘护套&nbsp;{{flow1.field5}}</td>
+	<td>印字&nbsp;{{flow1.field7}}</td>
+	<td>标示（{{flow1.field8}}）</td>
 </tr>
 <tr>
 	<td style="width:13%;">*</td>
@@ -155,8 +161,8 @@ table.gridtable td {
 	<td>*</td>
 </tr>
 <tr>
-	<td>PCO</td>
-	<td colspan="3">弯曲TK10/4(补弯无 标识无)</td>
+	<td>PCO&nbsp;{{flow1.field6}}</td>
+	<td colspan="3">弯曲&nbsp;{{flow2.field2}}</td>
 	<td colspan="2" rowspan="2">仓库</td>
 </tr>
 <tr>
@@ -182,11 +188,11 @@ table.gridtable td {
 </td>
 	<td style="padding-left:10px;">
 		<div>
-			<div>优先级：1</div>
+			<div>优先级：{{production.priority}}</div>
 		</div>
 		<div style="padding:20px 0px;">
 			<div>计划日期</div>
-			<div>06/13/16</div>
+			<div>{{production.plan.beginDate}}</div>
 		</div>
 		<div style="padding-bottom:20px;">
 			<div>批次流水号</div>
