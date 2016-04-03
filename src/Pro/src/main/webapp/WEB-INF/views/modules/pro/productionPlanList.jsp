@@ -30,16 +30,14 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>机台</th><th>计划生产数量</th><th>计划开始时间</th><th>计划完成时间</th><th>进度</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>名称</th><th>机台</th><th>计划开始时间</th><th>计划完成时间</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productionPlan">
 			<tr>
 				<td>${productionPlan.name}</td>
 				<td>${productionPlan.field1}</td>
-				<td>${productionPlan.number}</td>
 				<td>${fns:formatDate(productionPlan.beginDate,'yyyy-MM-dd')}</td>
 				<td>${fns:formatDate(productionPlan.endDate,'yyyy-MM-dd')}</td>
-				<td>${productionPlan.progress }</td>
 				<shiro:hasPermission name="pro:productionPlan:edit"><td>
     				<a href="${ctx}/pro/productionPlan/form?id=${productionPlan.id}">修改</a>
 					<a href="${ctx}/pro/productionPlan/delete?id=${productionPlan.id}" onclick="return confirmx('确认要删除该生产计划吗？', this.href)">删除</a>

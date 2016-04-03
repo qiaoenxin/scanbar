@@ -56,12 +56,6 @@
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label">计划生产数量:</label>
-			<div class="controls">
-				<form:input path="number" htmlEscape="false" maxlength="200" class="required"/>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">计划开始时间:</label>
 			<div class="controls">
 				<input id="beginDate" name="beginDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate required"
