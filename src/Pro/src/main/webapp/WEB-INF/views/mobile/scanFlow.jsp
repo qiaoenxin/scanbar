@@ -23,7 +23,7 @@
 </style>
 <script>
 	$(document).ready(function() {
-		$('#scan').hide();
+		//$('#scan').hide();
 		init();
 	});
 	

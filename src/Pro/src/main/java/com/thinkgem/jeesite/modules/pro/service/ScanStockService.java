@@ -81,6 +81,9 @@ public class ScanStockService {
 			String[] splits = pruduct.split(",");
 			Product pro = productService.get(splits[0]);
 			int value = StringUtils.toInteger(splits[1]);
+			if(value == 0){
+				continue;
+			}
 			StockHistory subHistory = new StockHistory();
 			subHistory.setNumber(value);
 			subHistory.setProduct(pro);

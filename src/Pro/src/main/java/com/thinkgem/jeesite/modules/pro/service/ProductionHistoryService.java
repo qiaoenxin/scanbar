@@ -69,7 +69,7 @@ public class ProductionHistoryService extends BaseService {
 	
 	public List<ProductionHistory> findByDetail(String detailId){
 		DetachedCriteria criteria = productionHistoryDao.createDetachedCriteria();
-		criteria.add(Restrictions.eq("productionDetail", detailId));
+		criteria.add(Restrictions.eq("productionDetail.id", detailId));
 		return productionHistoryDao.find(criteria);
 	}
 	

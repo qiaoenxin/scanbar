@@ -63,7 +63,8 @@
 	</div>
 	
 	<div class="m-content" >
-		<br>
+	${fns:getDictLabel(param.flowId,'flow_type','')}
+		<br/>
 		<div class="form-group">
 			<div class="row">
 				<div class="col-xs-9">
