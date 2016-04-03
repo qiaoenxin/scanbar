@@ -70,20 +70,6 @@ public class ProductionPlanController extends BaseController {
 			productionPlan.setCreateBy(user);
 		}
         Page<ProductionPlan> page = productionPlanService.find(new Page<ProductionPlan>(request, response), productionPlan); 
-        for(ProductionPlan plan : page.getList()){
-        	int completeTotalNumber = 0;
-        	//获取当前计划下的生产进度
-        	List<Production> productionList = productionService.findByPlanId(plan.getId());
-        	for(Production p : productionList){
-        		completeTotalNumber += p.getCompleteNum();
-        	}
-        	if(completeTotalNumber>0){
-        		plan.setProgress(((plan.getNumber()/completeTotalNumber)*100)+"%");
-        	}else{
-        		plan.setProgress("0%");
-        	}
-        }
-        
         model.addAttribute("page", page);
 		return "modules/pro/productionPlanList";
 	}

@@ -41,15 +41,12 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-	private int number; // 计划数量
 	private Date beginDate; // 计划开始时间
 	private Date endDate; // 计划完成时间
 	private String status;
 	private String field1;//机台
 	private String serialNum;//指令编号
 	
-	
-	private String progress;
 
 	public ProductionPlan() {
 		super();
@@ -69,15 +66,6 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 		this.name = name;
 	}
 	
-
-	public int getNumber() {
-		return number;
-	}
-
-	public void setNumber(int number) {
-		this.number = number;
-	}
-
 	public Date getBeginDate() {
 		return beginDate;
 	}
@@ -119,13 +107,5 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 		this.serialNum = serialNum;
 	}
 
-	@Transient
-	public String getProgress() {
-		return progress;
-	}
-
-	public void setProgress(String progress) {
-		this.progress = progress;
-	}
 
 }

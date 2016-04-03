@@ -264,18 +264,6 @@ public class ProductionController extends BaseController {
 			return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
 		}
 		
-		//判断增加的生产总数是否超出计划范围
-		int number = production.getNumber();
-		ProductionPlan plan = productionPlanService.get(production.getPlan().getId());
-		int planNumber = plan.getNumber();
-		List<Production> productions = productionService.findByPlanId(plan.getId());
-		for(Production production2 : productions){
-			number+=production2.getNumber();
-		}
-		if(number>planNumber){
-			addMessage(redirectAttributes, "超出计划范围!");
-			return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
-		}
 		if(StringUtils.isBlank(production.getSerialNum())){
 			String serialNum = DateUtils.formatDate(new Date(), "yyyyMMddHHmmss")+ toSeq(1, 2);
 			production.setSerialNum(serialNum);
