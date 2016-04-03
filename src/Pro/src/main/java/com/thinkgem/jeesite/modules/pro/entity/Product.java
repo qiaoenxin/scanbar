@@ -19,6 +19,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
+import com.thinkgem.jeesite.common.utils.Reflections;
 
 /**
  * 产品管理Entity
@@ -32,6 +33,7 @@ public class Product extends IdEntity<Product> {
 	
 	private static final long serialVersionUID = 1L;
 
+	private String name;
 	private String serialNum;//编号
 	private int snpNum;		 //snp数量
 	private String flow;	//功序流
@@ -52,6 +54,14 @@ public class Product extends IdEntity<Product> {
 	public Product(String id){
 		this();
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getSerialNum() {
@@ -143,12 +153,23 @@ public class Product extends IdEntity<Product> {
 		for(int i =0, len = arrays.size(); i < len;i++){
 			JSONObject json = arrays.getJSONObject(i);
 			String id = json.getString("id");
-			String value = json.getString("value");
-			String number = json.getString("number");
 			Flow flow = new Flow();
 			flow.setId(id);
-			flow.setValue(value);
-			flow.setNumber(number);
+			
+			if(json.containsKey("fields")){
+				JSONArray fields = json.getJSONArray("fields");
+				if(fields.size()>0){
+					String number = fields.getJSONObject(0).getString("value");
+					flow.setNumber(number);
+				}
+				for(int j=0;j<fields.size();j++){
+					JSONObject fieldJSON = fields.getJSONObject(j);
+					String fieldName = fieldJSON.getString("field");
+					String fieldValue = fieldJSON.getString("value");
+					Reflections.setFieldValue(flow, fieldName, fieldValue);
+				}
+			}
+			
 			
 			flow.prev = prev;
 			if(prev != null){
@@ -165,9 +186,16 @@ public class Product extends IdEntity<Product> {
 		
 		private String id;
 		
-		private String value;
-		
 		private String number;
+		
+		private String field1;
+		private String field2;
+		private String field3;
+		private String field4;
+		private String field5;
+		private String field6;
+		private String field7;
+		private String field8;
 		
 		private Flow prev;
 		
@@ -179,18 +207,61 @@ public class Product extends IdEntity<Product> {
 		public void setId(String id) {
 			this.id = id;
 		}
-		public String getValue() {
-			return value;
-		}
-		public void setValue(String value) {
-			this.value = value;
-		}
-		
 		public String getNumber() {
 			return number;
 		}
 		public void setNumber(String number) {
 			this.number = number;
+		}
+		
+		
+		public String getField1() {
+			return field1;
+		}
+		public void setField1(String field1) {
+			this.field1 = field1;
+		}
+		public String getField2() {
+			return field2;
+		}
+		public void setField2(String field2) {
+			this.field2 = field2;
+		}
+		public String getField3() {
+			return field3;
+		}
+		public void setField3(String field3) {
+			this.field3 = field3;
+		}
+		public String getField4() {
+			return field4;
+		}
+		public void setField4(String field4) {
+			this.field4 = field4;
+		}
+		public String getField5() {
+			return field5;
+		}
+		public void setField5(String field5) {
+			this.field5 = field5;
+		}
+		public String getField6() {
+			return field6;
+		}
+		public void setField6(String field6) {
+			this.field6 = field6;
+		}
+		public String getField7() {
+			return field7;
+		}
+		public void setField7(String field7) {
+			this.field7 = field7;
+		}
+		public String getField8() {
+			return field8;
+		}
+		public void setField8(String field8) {
+			this.field8 = field8;
 		}
 		public Flow getNext(){
 			return next;

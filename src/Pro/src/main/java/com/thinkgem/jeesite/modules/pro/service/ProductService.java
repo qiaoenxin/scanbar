@@ -47,8 +47,8 @@ public class ProductService extends BaseService {
 	
 	public Page<Product> find(Page<Product> page, Product product) {
 		DetachedCriteria dc = productDao.createDetachedCriteria();
-		if(StringUtils.isNotBlank(product.getSerialNum())){
-			dc.add(Restrictions.eq("serialNum", product.getSerialNum()));
+		if(StringUtils.isNotBlank(product.getName())){
+			dc.add(Restrictions.like("name", "%"+product.getName()+"%"));
 		}
 		dc.add(Restrictions.eq(Product.FIELD_DEL_FLAG, Product.DEL_FLAG_NORMAL));
 		dc.addOrder(Order.desc("id"));

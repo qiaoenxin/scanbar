@@ -66,7 +66,7 @@ public class ProductTreeController extends BaseController {
 		List<ProductTree> roots = productTreeService.findRoots();
 		for(ProductTree root : roots){
 			String id = IdGen.uuid();
-			list.add(new ProductTreePage(root.getId(),id,"",root.getProduct().getSerialNum(),root.getNumber()));
+			list.add(new ProductTreePage(root.getId(),id,"",root.getProduct().getName(),root.getNumber()));
 			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
 			for(ProductTree c : childrens){
 				recursiveChildren(id,c,list);
@@ -79,7 +79,7 @@ public class ProductTreeController extends BaseController {
 	
 	public void recursiveChildren(String parentId,ProductTree productTree,List<ProductTreePage> list){
 		String id = IdGen.uuid();
-		list.add(new ProductTreePage(productTree.getId(),id,parentId,productTree.getProduct().getSerialNum(),productTree.getNumber()));
+		list.add(new ProductTreePage(productTree.getId(),id,parentId,productTree.getProduct().getName(),productTree.getNumber()));
 		
 		List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
 		for(ProductTree c : childrens){
@@ -156,6 +156,7 @@ public class ProductTreeController extends BaseController {
 				Map<String, Object> map = Maps.newHashMap();
 				map.put("id", p.getId());
 				map.put("serialNum", p.getSerialNum());
+				map.put("name", p.getName());
 				mapList.add(map);
 			}
 			return mapList;
@@ -193,6 +194,7 @@ public class ProductTreeController extends BaseController {
 			Map<String, Object> map = Maps.newHashMap();
 			map.put("id", p.getId());
 			map.put("serialNum", p.getSerialNum());
+			map.put("name", p.getName());
 			mapList.add(map);
 		}
 		return mapList;

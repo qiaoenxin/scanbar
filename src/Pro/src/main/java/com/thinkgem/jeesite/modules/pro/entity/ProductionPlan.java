@@ -45,6 +45,9 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 	private Date beginDate; // 计划开始时间
 	private Date endDate; // 计划完成时间
 	private String status;
+	private String field1;//机台
+	private String serialNum;//指令编号
+	
 	
 	private String progress;
 
@@ -99,6 +102,22 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 		this.status = status;
 	}
 	
+
+	public String getField1() {
+		return field1;
+	}
+
+	public void setField1(String field1) {
+		this.field1 = field1;
+	}
+
+	public String getSerialNum() {
+		return serialNum;
+	}
+
+	public void setSerialNum(String serialNum) {
+		this.serialNum = serialNum;
+	}
 
 	@Transient
 	public String getProgress() {

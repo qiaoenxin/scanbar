@@ -73,6 +73,9 @@ public class ProductionController extends BaseController {
 	@Autowired
 	private ProductTreeService productTreeService;
 	
+	@Autowired
+	private ProductService productService;
+	
 	
 	@ModelAttribute
 	public Production get(@RequestParam(required=false) String id) {
@@ -109,7 +112,7 @@ public class ProductionController extends BaseController {
         //获取需要投产的产品
         List<ProductTreePage> list = Lists.newArrayList();
         
-        Product product = production.getPlan().getProduct();
+        Product product = production.getProduct();
        
         ProductTree root = productTreeService.findParentsByProductId(product.getId()).get(0);
         String id = IdGen.uuid();
@@ -163,6 +166,10 @@ public class ProductionController extends BaseController {
 			List<ProductionDetail> productionDetailList = Lists.newArrayList();
 			
 			Production production = productionService.get(productionId);
+			ProductionPlan plan = production.getPlan();//获取生产指令
+			Product product  = production.getProduct();//获取要生产的产品
+			String serialNum = plan.getSerialNum()+product.getSerialNum();//生产详情编号规则  指令号+产品编号+流水号
+			
 			String[] productTreeAry = productTreeIds.split(",");
 			String[] numberAry = numbers.split(",");
 			String[] snpAry = snps.split(",");
@@ -181,7 +188,7 @@ public class ProductionController extends BaseController {
 					seq++;
 					ProductionDetail detail = new ProductionDetail();
 					detail.setProduction(production);
-					detail.setSerialNum(production.getSerialNum()+toSeq(seq, 4));
+					detail.setSerialNum(serialNum+toSeq(seq, 4));
 					detail.setProductTree(productTree);
 					detail.setNumber(snp);
 					productionDetailList.add(detail);
@@ -190,7 +197,7 @@ public class ProductionController extends BaseController {
 					seq++;
 					ProductionDetail detail = new ProductionDetail();
 					detail.setProduction(production);
-					detail.setSerialNum(production.getSerialNum()+toSeq(seq, 4));
+					detail.setSerialNum(serialNum+toSeq(seq, 4));
 					detail.setProductTree(productTree);
 					detail.setNumber(mod);
 					productionDetailList.add(detail);
@@ -237,6 +244,9 @@ public class ProductionController extends BaseController {
 		
 		List<ProductionPlan> productionPlanList = productionPlanService.findAll();
         model.addAttribute("productionPlanList", productionPlanList);
+        
+        List<Product> productList = productService.findAll();
+        model.addAttribute("productList", productList);
         
 		return "modules/pro/productionForm";
 	}

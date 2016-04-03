@@ -41,12 +41,11 @@ public class StockService extends BaseService {
 	
 	public Page<Stock> find(Page<Stock> page, Stock stock) {
 		DetachedCriteria dc = stockDao.createDetachedCriteria();
-		if(stock.getProduct()!=null && StringUtils.isNotBlank(stock.getProduct().getSerialNum())){
-			dc.add(Restrictions.like("product.serialNum", "%,"+stock.getProduct().getSerialNum()+",%"));
+		if(stock.getProduct()!=null && StringUtils.isNotBlank(stock.getProduct().getName())){
+			dc.add(Restrictions.like("product.name", "%,"+stock.getProduct().getName()+",%"));
 		}
-		
 		dc.add(Restrictions.eq(Stock.FIELD_DEL_FLAG, Stock.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("id"));
+		dc.addOrder(Order.desc("createDate"));
 		return stockDao.find(page, dc);
 	}
 	

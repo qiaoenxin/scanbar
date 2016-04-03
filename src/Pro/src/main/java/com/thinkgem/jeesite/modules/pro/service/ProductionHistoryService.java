@@ -42,10 +42,10 @@ public class ProductionHistoryService extends BaseService {
 	
 	public Page<ProductionHistory> find(Page<ProductionHistory> page, ProductionHistory productionHistory) {
 		DetachedCriteria dc = productionHistoryDao.createDetachedCriteria();
-		if(productionHistory.getProductionDetail()!=null && productionHistory.getProductionDetail().getProduction()!=null && productionHistory.getProductionDetail().getProduction().getPlan()!=null && productionHistory.getProductionDetail().getProduction().getPlan().getProduct()!=null){
-			String serialNum =  productionHistory.getProductionDetail().getProduction().getPlan().getProduct().getSerialNum();
-			if(StringUtils.isNotBlank(serialNum)){
-				dc.add(Restrictions.eq("productionDetail.production.plan.product.serialNum", serialNum));
+		if(productionHistory.getProductionDetail()!=null && productionHistory.getProductionDetail().getProduction()!=null && productionHistory.getProductionDetail().getProduction().getProduct()!=null){
+			String name =  productionHistory.getProductionDetail().getProduction().getProduct().getName();
+			if(StringUtils.isNotBlank(name)){
+				dc.add(Restrictions.like("productionDetail.production.product.name", "%"+name+"%"));
 			}
 		}
 		if(StringUtils.isNotBlank(productionHistory.getStatus())){

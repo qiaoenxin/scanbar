@@ -55,6 +55,9 @@ public class ProductionService extends BaseService {
 		if(production.getPlan()!=null && StringUtils.isNotBlank(production.getPlan().getId())){
 			dc.add(Restrictions.eq("plan.id", production.getPlan().getId()));
 		}
+		if(production.getProduct()!=null && StringUtils.isNotBlank(production.getProduct().getName())){
+			dc.add(Restrictions.like("product.name", "%"+production.getProduct().getName()+"%"));
+		}
 		if(production.getPriority()!=0){
 			dc.add(Restrictions.eq("priority", production.getPriority()));
 		}

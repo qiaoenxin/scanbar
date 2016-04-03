@@ -85,12 +85,6 @@ public class ProductController extends BaseController {
 		try {
 			if(StringUtils.isNotBlank(product.getFlow())){
 				flows = JSONObject.parseArray(product.getFlow());
-				for(int i = 0;i<flows.size();i++){
-					JSONObject flow = flows.getJSONObject(i);
-					String id = flow.getString("id");
-					String label = DictUtils.getDictLabel(id, "flow_type", "");
-					flow.put("label", label);
-				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

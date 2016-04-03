@@ -53,7 +53,7 @@ public class ScanStockService {
 		stockHistory.setProduct(detail.getProductTree().getProduct());
 		stockHistory.setProductionDetail(detail);
 		int number  = detail.getNumber();
-		String productId = detail.getProduction().getPlan().getProduct().getId();
+		String productId = detail.getProduction().getProduct().getId();
 		if(productId.equals(detail.getProductTree().getProduct().getId())){
 			Production production = detail.getProduction();
 			production.setCompleteNum(detail.getNumber());
