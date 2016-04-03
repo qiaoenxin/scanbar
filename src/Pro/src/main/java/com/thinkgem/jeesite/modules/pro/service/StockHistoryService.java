@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.schedule.StockBillsSchedule;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
@@ -61,6 +62,12 @@ public class StockHistoryService extends BaseService {
 	
 	@Transactional(readOnly = false)
 	public void save(StockHistory stockHistory) throws Exception {
+		
+		//判断是否是正在扎帐
+		if(StockBillsSchedule.isRunning){
+			throw new Exception("扎帐中...，不允许入库操作");
+		}
+		
 		//修改库存
 		Product product = stockHistory.getProduct();
 		Stock stock = stockDao.getByProductId(product.getId());

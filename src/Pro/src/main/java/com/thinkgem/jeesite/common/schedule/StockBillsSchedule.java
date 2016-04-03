@@ -16,7 +16,7 @@ import com.thinkgem.jeesite.modules.pro.service.StockService;
 
 public class StockBillsSchedule {
 
-	public static boolean running = false;
+	public static boolean isRunning = false;
 			
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -31,7 +31,7 @@ public class StockBillsSchedule {
 	public void start() {
 		Date createDate = new Date();
 		logger.info("---开始扎帐("+createDate+")---");
-		running = true;
+		isRunning = true;
 		try {
 			List<Stock> stoctList = stockService.find(new Page(), new Stock())
 					.getList();
@@ -49,7 +49,7 @@ public class StockBillsSchedule {
 			// TODO Auto-generated catch block
 			logger.error("扎帐异常",e);
 		}
-		running = false;
+		isRunning = false;
 		logger.info("---扎帐结束("+createDate+")---");
 	}
 
