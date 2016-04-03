@@ -116,7 +116,7 @@ public class ProductionController extends BaseController {
        
         ProductTree root = productTreeService.findParentsByProductId(product.getId()).get(0);
         String id = IdGen.uuid();
-        ProductTreePage treePage = new ProductTreePage(root.getId(),id,"",product.getSerialNum(),number);
+        ProductTreePage treePage = new ProductTreePage(root.getId(),id,"",product.getName(),number);
         treePage.setProduct(product);
         list.add(treePage);
         List<ProductTree> childrens = productTreeService.findChildrensByProductId(product.getId());
@@ -136,7 +136,7 @@ public class ProductionController extends BaseController {
 		productTreePage.setTreeId(productTree.getId());
 		productTreePage.setId(id);
 		productTreePage.setParent(parentId);
-		productTreePage.setName(productTree.getProduct().getSerialNum());
+		productTreePage.setName(productTree.getProduct().getName());
 		productTreePage.setNumber(productTree.getNumber() * number);
 		productTreePage.setProduct(productTree.getProduct());
 		list.add(productTreePage);
@@ -204,11 +204,13 @@ public class ProductionController extends BaseController {
 				}
 			}
 			productionDetailService.save(productionDetailList);
-			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum", "productTree", "number");
+			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
 			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "flow", "serialNum", "field1", "field2", "field3", "field4", "field5", "field6");
+			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan");
+			SimplePropertyPreFilter filter5 = new SimplePropertyPreFilter(ProductionPlan.class, "beginDate");
 			
-			String json =  JSONObject.toJSONString(productionDetailList,new SerializeFilter[]{filter1, filter2, filter3}, SerializerFeature.DisableCircularReferenceDetect);
+			String json =  JSONObject.toJSONString(productionDetailList,new SerializeFilter[]{filter1, filter2, filter3,filter4,filter5}, SerializerFeature.DisableCircularReferenceDetect);
 			return json;
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
