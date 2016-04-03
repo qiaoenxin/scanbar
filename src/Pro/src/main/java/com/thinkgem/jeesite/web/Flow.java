@@ -24,8 +24,6 @@ import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
 public class Flow {
 
 	
-	
-	
 	public static class FlowService extends BasicService<Request, Response>{
 		
 		

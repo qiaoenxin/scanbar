@@ -101,5 +101,4 @@ public class StockHistoryService extends BaseService {
 		criteria.add(Restrictions.eq("productionDetail.id", id));
 		return stockHistoryDao.find(criteria);
 	}
-	
 }

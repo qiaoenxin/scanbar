@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Flow;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
@@ -36,7 +37,6 @@ public class ScanStockService {
 	 */
 	@Transactional
 	public void saveStock(ProductionDetail detail, List<ProductTree> subTrees) throws Exception{
-		//判断流程是否完成
 		
 		
 		//判断是否重复扫描
@@ -45,7 +45,6 @@ public class ScanStockService {
 			return;
 		}
 		
-		//判断子节点是否完成
 		
 		
 		StockHistory stockHistory = new StockHistory();

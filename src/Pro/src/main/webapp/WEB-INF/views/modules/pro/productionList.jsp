@@ -89,13 +89,14 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>计划名称</th><th>生产编号</th><th>产品</th><th>生产目标</th><th>优先级</th><shiro:hasPermission name="pro:production:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>计划名称</th><th>生产编号</th><th>产品</th><th>产品编号</th><th>生产目标</th><th>优先级</th><shiro:hasPermission name="pro:production:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="production">
 			<tr>
 				<td>${production.plan.name}</td>
 				<td>${production.serialNum}</td>
 				<td>${production.product.name}</td>
+				<td>${production.product.serialNum}</td>
 				<td>${production.number}</td>
 				<td>${fns:getDictLabel(production.priority,'production_priority','') }</td>
 				<shiro:hasPermission name="pro:production:edit"><td>

@@ -1,18 +1,21 @@
 package com.thinkgem.jeesite.web;
 
+
 import javax.servlet.http.HttpSession;
 
 import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
+import com.thinkgem.jeesite.modules.pro.entity.Device;
+import com.thinkgem.jeesite.modules.pro.service.DeviceService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.SystemService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 public class Login {
 	private static SystemService systemService = SpringContextHolder.getBean(SystemService.class);
-
+	private static DeviceService deviceService = SpringContextHolder.getBean(DeviceService.class);
 	public static class LoginService extends BasicService<Request, Response> {
 
 		@Override
@@ -27,9 +30,22 @@ public class Login {
 				response.setResultAndReason(ReturnCode.AUTH_ERROR, "登陆失败，用户名或密码错误");
 				return;
 			}
+			Device device = deviceService.findByDeviceKey(request.getDevice());
+			if(device == null){
+				response.setResultAndReason(ReturnCode.AUTH_ERROR, "登陆失败，无效的设备号");
+				return;
+			}
+			
+			if(!deviceService.valid(device)){
+				response.setResultAndReason(ReturnCode.AUTH_ERROR, "登陆失败，无效的设备号");
+				return;
+			}
+			
 			HttpSession session = request.getContext().getHttpRequest().getSession();
 			session.setAttribute(UserUtils.USER_SESSION, user);
 		}
+
+		
 	}
 
 	public static class Request extends

@@ -32,12 +32,13 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>明细编号</th><th>产品</th><th>数量</th><th>状态</th><th>打印</th></tr></thead>
+		<thead><tr><th>明细编号</th><th>产品</th><th>产品编号</th><th>数量</th><th>状态</th><th>打印</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productionDetail">
 			<tr>
 				<td>${productionDetail.serialNum}</td>
-				<td>${productionDetail.production.product.name}</td>
+				<td>${productionDetail.productTree.product.name}</td>
+				<td>${productionDetail.productTree.product.serialNum}</td>
 				<td>${productionDetail.number}</td>
 				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
 				<td><a href="javascript:void(0);" >打印</a> </td>

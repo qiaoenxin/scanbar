@@ -11,6 +11,7 @@ import com.thinkgem.jeesite.common.utils.SpringContextHolder;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Flow;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
 import com.thinkgem.jeesite.modules.pro.service.ScanStockService;
@@ -33,8 +34,16 @@ public class Scan {
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
 				return;
 			}
-			 Product product = detail.getProductTree().getProduct();
-			 List<ProductTree> subTrees = treeService.findSubTree(product);
+			//判断流程是否完成
+			Product product = detail.getProductTree().getProduct();
+			List<Flow> flows = product.getFlows();
+			if(!flows.isEmpty()){
+				if(!detail.getStatus().equals(flows.get(flows.size() -1))){
+					response.setResultAndReason(ReturnCode.SAVE_STORE_ERROR, "入库失败，加工流程未结束"); 
+					return;
+				}
+			}
+			List<ProductTree> subTrees = treeService.findSubTree(product);
 			 try {
 				scanStockService.saveStock(detail, subTrees);
 			} catch (Exception e) {

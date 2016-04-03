@@ -69,4 +69,9 @@ public interface ReturnCode {
 	 * 流程错误
 	 */
 	int FLOW_ERROR = 302;
+	
+	/**
+	 * 入库失败
+	 */
+	int SAVE_STORE_ERROR = 303;
 }

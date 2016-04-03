@@ -30,12 +30,13 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>生产编号</th><th>产品</th><th>状态</th><th>操作人</th><th>流水时间</th></tr></thead>
+		<thead><tr><th>生产编号</th><th>产品</th><th>产品编号</th><th>状态</th><th>操作人</th><th>流水时间</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productionHistory">
 			<tr>
 				<td>${productionHistory.productionDetail.production.serialNum}</td>
-				<td>${productionHistory.productionDetail.production.product.name}</td>
+				<td>${productionHistory.productionDetail.productTree.product.name}</td>
+				<td>${productionHistory.productionDetail.productTree.product.serialNum}</td>
 				<td>${fns:getDictLabel(productionHistory.status,'flow_type','')}</td>
 				<td>${productionHistory.createBy.loginName }</td>
 				<td>${fns:formatDate(productionHistory.createDate,'yyyy-MM-dd HH:mm')}</td>
