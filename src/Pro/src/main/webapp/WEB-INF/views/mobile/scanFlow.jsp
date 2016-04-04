@@ -23,6 +23,10 @@
 	 .btn-sel{
 		color: red;
 	}
+	 .btn.btn-sel{
+		background: rgba(33, 30, 30, 0.72);
+    	color: #FFFFFF;
+	}
 </style>
 <script>
 	$(document).ready(function() {
@@ -43,8 +47,10 @@
 					var html = '<button class="btn btn-default" data-flow="'+flow.value+'">'+flow.label+'</button><br>';
 					jDom.append(html);
 				});
-					
+				
+				activeFlow();
 				bindEvent();
+				
 			}else{
 				mAlert(data.reason);
 			}
@@ -53,6 +59,10 @@
 		});
 	}
 	
+	function activeFlow(){
+		var flowId = getSetting("flowId");
+		$('#flows .btn[data-flow="'+flowId+'"]').addClass('btn-sel');
+	}
 	function bindEvent(){
 		var flowId = '';
 		$('.btn-group-vertical').find('.btn').click(function(){

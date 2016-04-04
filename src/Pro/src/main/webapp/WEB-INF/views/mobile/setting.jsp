@@ -89,10 +89,7 @@
 		
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">工位</h3>
-			</div>
-			<div class="panel-body" style="text-align: right;">
-				<a href="scanFlow">》</a>
+				<div style="display: inline-block;;width:50%;"><h3 class="panel-title">工位</h3></div><div style="display: inline-block;width:50%;text-align:right;"><a href="scanFlow">》</a></div>
 			</div>
 		</div>
 	</div>
