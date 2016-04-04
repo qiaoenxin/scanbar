@@ -45,12 +45,13 @@ public class StockBillsSchedule {
 				stockBillsList.add(stockBills);
 			}
 			stockBillsService.save(stockBillsList);
+			logger.info("---扎帐结束("+createDate+")---");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.error("扎帐异常",e);
+		}finally{
+			isRunning = false;
 		}
-		isRunning = false;
-		logger.info("---扎帐结束("+createDate+")---");
 	}
 
 }

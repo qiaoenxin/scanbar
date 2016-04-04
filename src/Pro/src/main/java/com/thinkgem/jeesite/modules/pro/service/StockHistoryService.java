@@ -61,7 +61,7 @@ public class StockHistoryService extends BaseService {
 	}
 	
 	@Transactional(readOnly = false)
-	public void save(StockHistory stockHistory) throws Exception {
+	public synchronized void save(StockHistory stockHistory) throws Exception {
 		
 		//判断是否是正在扎帐
 		if(StockBillsSchedule.isRunning){
@@ -81,10 +81,11 @@ public class StockHistoryService extends BaseService {
 			throw new Exception();
 		}
 		if(StringUtils.toInteger(dict.getDescription())>0){//入库
-			number += stockHistory.getNumber();
+//			stockHistory.getNumber();
 		}else{//出库
-			number -= stockHistory.getNumber();
+			stockHistory.setNumber(-stockHistory.getNumber());
 		}
+		number += stockHistory.getNumber();
 		stock.setNumber(number);
 		stockDao.save(stock);
 		

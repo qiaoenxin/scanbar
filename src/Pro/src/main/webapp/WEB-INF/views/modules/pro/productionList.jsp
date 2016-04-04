@@ -81,7 +81,7 @@
 	<form:form id="searchForm" modelAttribute="production" action="${ctx}/pro/production/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<label>计划编号 ：</label><form:input path="plan.id" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>计划编号 ：</label><form:input path="plan.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>生产编号 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>产品：</label><form:input path="product.name" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>优先级 ：</label><form:radiobuttons path="priority" items="${fns:getDictList('production_priority') }" itemLabel="label" itemValue="value"/>

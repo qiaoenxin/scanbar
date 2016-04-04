@@ -50,7 +50,7 @@ public class ProductionPlanService extends BaseService {
 			dc.add(Restrictions.like("field1", "%"+productionPlan.getField1()+"%"));
 		}
 		dc.add(Restrictions.eq(ProductionPlan.FIELD_DEL_FLAG, ProductionPlan.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("id"));
+		dc.addOrder(Order.desc("serialNum"));
 		return productionPlanDao.find(page, dc);
 	}
 	

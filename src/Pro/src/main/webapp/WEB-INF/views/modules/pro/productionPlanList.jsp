@@ -30,11 +30,12 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>机台</th><th>计划开始时间</th><th>计划完成时间</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>名称</th><th>编号</th><th>机台</th><th>计划开始时间</th><th>计划完成时间</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productionPlan">
 			<tr>
 				<td>${productionPlan.name}</td>
+				<td>${productionPlan.serialNum}</td>
 				<td>${productionPlan.field1}</td>
 				<td>${fns:formatDate(productionPlan.beginDate,'yyyy-MM-dd')}</td>
 				<td>${fns:formatDate(productionPlan.endDate,'yyyy-MM-dd')}</td>
