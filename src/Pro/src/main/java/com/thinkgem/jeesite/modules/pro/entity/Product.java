@@ -94,6 +94,7 @@ public class Product extends IdEntity<Product> {
 		flows = null;
 	}
 	
+	@ExcelField(title="车种", align=2, sort=70)
 	public String getField1() {
 		return field1;
 	}
