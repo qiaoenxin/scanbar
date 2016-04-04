@@ -20,6 +20,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
 import com.thinkgem.jeesite.common.utils.Reflections;
+import com.thinkgem.jeesite.common.utils.excel.annotation.ExcelField;
+import com.thinkgem.jeesite.common.utils.excel.fieldtype.ProductType;
 
 /**
  * 产品管理Entity
@@ -35,7 +37,7 @@ public class Product extends IdEntity<Product> {
 
 	private String name;
 	private String serialNum;//编号
-	private int snpNum;		 //snp数量
+	private Integer snpNum;		 //snp数量
 	private String flow;	//功序流
 	private String field1;
 	private String field2;
@@ -56,6 +58,7 @@ public class Product extends IdEntity<Product> {
 		this.id = id;
 	}
 
+	@ExcelField(title="名称", align=2, sort=50)
 	public String getName() {
 		return name;
 	}
@@ -64,6 +67,7 @@ public class Product extends IdEntity<Product> {
 		this.name = name;
 	}
 
+	@ExcelField(title="编号", align=2, sort=60)
 	public String getSerialNum() {
 		return serialNum;
 	}
@@ -72,11 +76,12 @@ public class Product extends IdEntity<Product> {
 		this.serialNum = serialNum;
 	}
 
-	public int getSnpNum() {
+	@ExcelField(title="SNP数量", align=2, sort=70)
+	public Integer getSnpNum() {
 		return snpNum;
 	}
 
-	public void setSnpNum(int snpNum) {
+	public void setSnpNum(Integer snpNum) {
 		this.snpNum = snpNum;
 	}
 
