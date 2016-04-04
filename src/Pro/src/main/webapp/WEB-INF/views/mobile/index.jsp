@@ -37,6 +37,9 @@
 				var code = data.result;
 				auth(code);
 				if (code == 0) {
+					if(href == "scanFlowInput"){
+						href = "scanFlowInput?flowId="  + getSetting("flowId");
+					}
 					location.href = href;
 				} else {
 					mAlert(data.reason);
@@ -55,7 +58,7 @@
 		<br>
 		<button class="btn btn-default" data-href="scanSave">扫描入库</button>
 		<br>
-		<button class="btn btn-default" data-href="scanFlow">流程扫描</button>
+		<button class="btn btn-default" data-href="scanFlowInput" >流程扫描</button>
 		<br>
 		<button class="btn btn-default" data-href="scanLoss">报损扫描</button>
 		<br>

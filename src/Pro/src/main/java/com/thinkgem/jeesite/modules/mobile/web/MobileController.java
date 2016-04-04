@@ -33,6 +33,7 @@ import com.thinkgem.jeesite.modules.sys.entity.Dict;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
+import com.thinkgem.jeesite.modules.pro.entity.Device;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 
@@ -44,6 +45,12 @@ import com.thinkgem.jeesite.modules.pro.service.ProductService;
 @Controller
 @RequestMapping(value = "${mobilePath}/mobile")
 public class MobileController extends BaseController {
+	
+	@ModelAttribute
+	public String get(@RequestParam(required=false) String id, HttpServletResponse response) {
+		response.setHeader("Cache-Control", "no-cache");
+		return "";
+	}
 	
 	@RequestMapping(value = "index")
 	public String index(HttpServletRequest request, HttpServletResponse response, Model model) {

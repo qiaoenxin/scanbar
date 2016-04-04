@@ -43,7 +43,7 @@
 		var data = {};
 		data.loginName = loginName;
 		data.password = password;
-		data.device = '123123123';
+		data.device = getSetting("deviceKey");;
 		
 		ajax(url,data,"POST",function(data){
 			if (data.result == 0) {

@@ -86,6 +86,15 @@
 				<input type="text" class="form-control" id="device" placeholder="请输入设备号">
 			</div>
 		</div>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">工位</h3>
+			</div>
+			<div class="panel-body" style="text-align: right;">
+				<a href="scanFlow">》</a>
+			</div>
+		</div>
 	</div>
 	
 	<div class="center-block">

@@ -20,6 +20,9 @@
 	.btn-group-vertical button{
 		padding:20px;
 	}
+	 .btn-sel{
+		color: red;
+	}
 </style>
 <script>
 	$(document).ready(function() {
@@ -54,7 +57,10 @@
 		var flowId = '';
 		$('.btn-group-vertical').find('.btn').click(function(){
 			flowId = $(this).attr('data-flow');
-			location.href = 'scanFlowInput?flowId='+flowId;
+			//location.href = 'scanFlowInput?flowId='+flowId;
+			$('.btn-group-vertical').find('.btn').removeClass("btn-sel");
+			$(this).addClass("btn-sel");
+			setSetting("flowId",flowId);
 		});
 	}
 </script>
@@ -71,7 +77,7 @@
 	<div class="toolbar affix-top">
 		<div class="row">
 			<div class="col-xs-2">
-				<i class="glyphicon glyphicon-menu-left back" data-back="index"></i>
+				<i class="glyphicon glyphicon-menu-left back" data-back="setting"></i>
 			</div>
 			<div class="col-xs-8 title">流程扫描</div>
 		</div>

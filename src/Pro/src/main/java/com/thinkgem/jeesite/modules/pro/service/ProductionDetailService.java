@@ -61,7 +61,7 @@ public class ProductionDetailService extends BaseService {
 		}
 		
 		dc.add(Restrictions.eq(ProductionDetail.FIELD_DEL_FLAG, ProductionDetail.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("id"));
+		dc.addOrder(Order.desc("serialNum"));
 		return productionDetailDao.find(page, dc);
 	}
 	
