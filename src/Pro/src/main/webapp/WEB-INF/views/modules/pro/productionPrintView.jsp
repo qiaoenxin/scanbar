@@ -17,7 +17,8 @@
         
         function print(){
         	var params = {};
-        	params.productionId = '${production.id}';
+        	params.id = '${production.id}';
+        	params.type = 'production';
         	
         	var productTreeIds = new Array();
         	var numbers = new Array();
