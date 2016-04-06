@@ -152,58 +152,65 @@ public class ProductionController extends BaseController {
 	@RequiresUser
 	@ResponseBody
 	@RequestMapping(value = "print")
-	public String print(String productionId, String productTreeIds ,String numbers, String snps, String mods, Model model, RedirectAttributes redirectAttributes) {
+	public String print(String type,String id, String productTreeIds ,String numbers, String snps, String mods, Model model, RedirectAttributes redirectAttributes) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("ok", true);
 		try {
 			
-			List <ProductionDetail> list = productionDetailService.findByProductionId(productionId);
-			//检查是否投产
-			if(list.size()>0){
-				return "";
-			}
-			
 			List<ProductionDetail> productionDetailList = Lists.newArrayList();
 			
-			Production production = productionService.get(productionId);
-			ProductionPlan plan = production.getPlan();//获取生产指令
-			Product product  = production.getProduct();//获取要生产的产品
-			String serialNum = plan.getSerialNum()+product.getSerialNum();//生产详情编号规则  指令号+产品编号+流水号
-			
-			String[] productTreeAry = productTreeIds.split(",");
-			String[] numberAry = numbers.split(",");
-			String[] snpAry = snps.split(",");
-			String[] modAry = mods.split(",");
-			int index = 0;
-			int seq = 0;
-			for(String productTreeId : productTreeAry){
-				ProductTree productTree = productTreeService.get(productTreeId);
-				int number = StringUtils.toInteger(numberAry[index]);
-				int snp = StringUtils.toInteger(snpAry[index]);
-				int mod = StringUtils.toInteger(modAry[index]);
-				index += 1;
+			if("production".equals(type)){
+				List <ProductionDetail> list = productionDetailService.findByProductionId(id);
+				//检查是否投产
+				if(list.size()>0){
+					return "";
+				}
 				
-				int count = number / snp;
-				for(int i =0; i< count; i++){
-					seq++;
-					ProductionDetail detail = new ProductionDetail();
-					detail.setProduction(production);
-					detail.setSerialNum(serialNum+toSeq(seq, 4));
-					detail.setProductTree(productTree);
-					detail.setNumber(snp);
-					productionDetailList.add(detail);
+				Production production = productionService.get(id);
+				ProductionPlan plan = production.getPlan();//获取生产指令
+				Product product  = production.getProduct();//获取要生产的产品
+				String serialNum = plan.getSerialNum()+product.getSerialNum();//生产详情编号规则  指令号+产品编号+流水号
+				
+				String[] productTreeAry = productTreeIds.split(",");
+				String[] numberAry = numbers.split(",");
+				String[] snpAry = snps.split(",");
+				String[] modAry = mods.split(",");
+				int index = 0;
+				int seq = 0;
+				for(String productTreeId : productTreeAry){
+					ProductTree productTree = productTreeService.get(productTreeId);
+					int number = StringUtils.toInteger(numberAry[index]);
+					int snp = StringUtils.toInteger(snpAry[index]);
+					int mod = StringUtils.toInteger(modAry[index]);
+					index += 1;
+					
+					int count = number / snp;
+					for(int i =0; i< count; i++){
+						seq++;
+						ProductionDetail detail = new ProductionDetail();
+						detail.setProduction(production);
+						detail.setSerialNum(serialNum+toSeq(seq, 4));
+						detail.setProductTree(productTree);
+						detail.setNumber(snp);
+						productionDetailList.add(detail);
+					}
+					if(mod != 0){
+						seq++;
+						ProductionDetail detail = new ProductionDetail();
+						detail.setProduction(production);
+						detail.setSerialNum(serialNum+toSeq(seq, 4));
+						detail.setProductTree(productTree);
+						detail.setNumber(mod);
+						productionDetailList.add(detail);
+					}
 				}
-				if(mod != 0){
-					seq++;
-					ProductionDetail detail = new ProductionDetail();
-					detail.setProduction(production);
-					detail.setSerialNum(serialNum+toSeq(seq, 4));
-					detail.setProductTree(productTree);
-					detail.setNumber(mod);
-					productionDetailList.add(detail);
-				}
+				productionDetailService.save(productionDetailList);
+			}else{
+				ProductionDetail detail = productionDetailService.get(id);
+				productionDetailList.add(detail);
 			}
-			productionDetailService.save(productionDetailList);
+			
+			
 			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
 			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "flow", "serialNum", "field1", "field2", "field3", "field4", "field5", "field6");
@@ -217,6 +224,9 @@ public class ProductionController extends BaseController {
 		}
 		return "";
 	}
+	
+	
+	
 	
 	/**
 	 * 整数补位
