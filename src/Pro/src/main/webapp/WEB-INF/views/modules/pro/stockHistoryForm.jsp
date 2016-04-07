@@ -36,7 +36,7 @@
 		<div class="control-group">
 			<label class="control-label">产品:</label>
 			<div class="controls">
-				<form:select path="product.id" items="${productList}" itemLabel="serialNum" itemValue="id"></form:select>
+				<form:select path="product.id" items="${productList}" itemLabel="name" itemValue="id"></form:select>
 			</div>
 		</div>
 		<div class="control-group">

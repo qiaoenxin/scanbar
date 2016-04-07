@@ -29,10 +29,13 @@ import com.thinkgem.jeesite.common.persistence.IdEntity;
 @Table(name = "pro_production")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Production extends IdEntity<Production> {
+	public static final int TREE_TYPE = 1;
+	public static final int NORMAL_TYPE = 0;
 	
 	private static final long serialVersionUID = 1L;
 	private ProductionPlan plan;
 	private Product product;
+	private int type;
 	private int number;		//生产目标数量
 	private int priority;	//优先级	1:高;2:中;3:低
 	private	String serialNum;	//编号	20位数
@@ -108,6 +111,14 @@ public class Production extends IdEntity<Production> {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }
 

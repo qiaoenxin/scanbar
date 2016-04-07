@@ -50,6 +50,9 @@ public class ProductService extends BaseService {
 		if(StringUtils.isNotBlank(product.getName())){
 			dc.add(Restrictions.like("name", "%"+product.getName()+"%"));
 		}
+		if(StringUtils.isNotBlank(product.getField1())){
+			dc.add(Restrictions.eq("field1", product.getName()));
+		}
 		dc.add(Restrictions.eq(Product.FIELD_DEL_FLAG, Product.DEL_FLAG_NORMAL));
 		dc.addOrder(Order.desc("id"));
 		return productDao.find(page, dc);

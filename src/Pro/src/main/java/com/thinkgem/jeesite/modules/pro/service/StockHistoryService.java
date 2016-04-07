@@ -49,10 +49,11 @@ public class StockHistoryService extends BaseService {
 			dc.add(Restrictions.eq("type", stockHistory.getType()));
 		}
 		if(StringUtils.isNotBlank(stockHistory.getReason())){
-			dc.add(Restrictions.like("reason", "%,"+stockHistory.getReason()+",%"));
+			dc.add(Restrictions.like("reason", "%"+stockHistory.getReason()+"%"));
 		}
-		if(stockHistory.getProduct()!=null && StringUtils.isNotBlank(stockHistory.getProduct().getSerialNum())){
-			dc.add(Restrictions.like("product.serialNum", "%,"+stockHistory.getProduct().getSerialNum()+",%"));
+		if(stockHistory.getProduct()!=null && StringUtils.isNotBlank(stockHistory.getProduct().getName())){
+			dc.createAlias("product", "pr");
+			dc.add(Restrictions.like("pr.name", "%"+stockHistory.getProduct().getName()+"%"));
 		}
 		
 		dc.add(Restrictions.eq(StockHistory.FIELD_DEL_FLAG, StockHistory.DEL_FLAG_NORMAL));

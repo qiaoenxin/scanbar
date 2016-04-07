@@ -37,7 +37,7 @@ public class ScanStockService {
 	 */
 	@Transactional
 	public void saveStock(ProductionDetail detail, List<ProductTree> subTrees) throws Exception{
-		
+		String reason = "生产扫描";
 		
 		//判断是否重复扫描
 		List<StockHistory> detailScaned = historyService.findByDetailId(detail.getId());
@@ -45,30 +45,43 @@ public class ScanStockService {
 			return;
 		}
 		
-		
-		
-		StockHistory stockHistory = new StockHistory();
-		stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
-		stockHistory.setProduct(detail.getProductTree().getProduct());
-		stockHistory.setProductionDetail(detail);
-		int number  = detail.getNumber();
-		String productId = detail.getProduction().getProduct().getId();
-		if(productId.equals(detail.getProductTree().getProduct().getId())){
+		if(detail.getProduction().getType() == Production.TREE_TYPE){
+			StockHistory stockHistory = new StockHistory();
+			stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
+			stockHistory.setProduct(detail.getProductTree().getProduct());
+			stockHistory.setProductionDetail(detail);
+			stockHistory.setReason(reason);
+			int number  = detail.getNumber();
+			String productId = detail.getProduction().getProduct().getId();
+			if(productId.equals(detail.getProductTree().getProduct().getId())){
+				Production production = detail.getProduction();
+				productionService.updateFinishNum(detail.getNumber(), production.getId());
+			}
+			stockHistory.setNumber(detail.getNumber());
+			for(ProductTree tree: subTrees){
+				Product subProduct = tree.getProduct();
+				StockHistory subHistory = new StockHistory();
+				subHistory.setNumber(tree.getNumber() * number);
+				subHistory.setProduct(subProduct);
+				subHistory.setType(StockHistory.TYPE_SCAN_DESC);
+				subHistory.setProductionDetail(detail);
+				subHistory.setReason(reason);
+				historyService.save(subHistory);
+			}
+			historyService.save(stockHistory);
+		}else{
 			Production production = detail.getProduction();
-			production.setCompleteNum(detail.getNumber());
-			productionService.save(production);
+			productionService.updateFinishNum(detail.getNumber(), production.getId());
+			
+			Product product = detail.getProduction().getProduct();
+			StockHistory stockHistory = new StockHistory();
+			stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
+			stockHistory.setProduct(product);
+			stockHistory.setNumber(detail.getNumber());
+			stockHistory.setProductionDetail(detail);
+			stockHistory.setReason(reason);
+			historyService.save(stockHistory);
 		}
-		stockHistory.setNumber(detail.getNumber());
-		for(ProductTree tree: subTrees){
-			Product subProduct = tree.getProduct();
-			StockHistory subHistory = new StockHistory();
-			subHistory.setNumber(tree.getNumber() * number);
-			subHistory.setProduct(subProduct);
-			subHistory.setType(StockHistory.TYPE_SCAN_DESC);
-			subHistory.setProductionDetail(detail);
-			historyService.save(subHistory);
-		}
-		historyService.save(stockHistory);
 	}
 	
 	/**

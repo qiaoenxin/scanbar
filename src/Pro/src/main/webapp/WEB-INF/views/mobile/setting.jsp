@@ -88,8 +88,8 @@
 		</div>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading">
-				<div style="display: inline-block;;width:50%;"><h3 class="panel-title">工位</h3></div><div style="display: inline-block;width:50%;text-align:right;"><a href="scanFlow">》</a></div>
+			<div class="panel-heading" onclick="location.href='scanFlow';">
+				<div style="display: inline-block;;width:50%;"><h3 class="panel-title">工位设置</h3></div><div style="display: inline-block;width:50%;text-align:right;"><a href="#">》</a></div>
 			</div>
 		</div>
 	</div>

@@ -39,7 +39,8 @@ public class StockBillsService extends BaseService {
 	public Page<StockBills> find(Page<StockBills> page, StockBills stockBills) {
 		DetachedCriteria dc = stockBillsDao.createDetachedCriteria();
 		if (stockBills.getProduct()!=null && StringUtils.isNotEmpty(stockBills.getProduct().getName())){
-			dc.add(Restrictions.like("name", "%"+stockBills.getProduct().getName()+"%"));
+			dc.createAlias("product", "pr");
+			dc.add(Restrictions.like("pr.name", "%"+stockBills.getProduct().getName()+"%"));
 		}
 		if (stockBills.getCreateDate()!=null){
 			Date b =  DateUtils.getDateStart(stockBills.getCreateDate());

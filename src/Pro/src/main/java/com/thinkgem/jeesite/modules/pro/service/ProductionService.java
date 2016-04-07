@@ -49,22 +49,23 @@ public class ProductionService extends BaseService {
 	
 	public Page<Production> find(Page<Production> page, Production production) {
 		DetachedCriteria dc = productionDao.createDetachedCriteria();
-		dc.createAlias("plan", "p");
+		dc.createAlias("plan", "pl");
 		if(StringUtils.isNotBlank(production.getSerialNum())){
 			dc.add(Restrictions.eq("serialNum", production.getSerialNum()));
 		}
 		if(production.getPlan()!=null && StringUtils.isNotBlank(production.getPlan().getSerialNum())){
-			dc.add(Restrictions.eq("p.serialNum", production.getPlan().getSerialNum()));
+			dc.add(Restrictions.eq("pl.serialNum", production.getPlan().getSerialNum()));
 		}
 		if(production.getProduct()!=null && StringUtils.isNotBlank(production.getProduct().getName())){
-			dc.add(Restrictions.like("product.name", "%"+production.getProduct().getName()+"%"));
+			dc.createAlias("product", "pr");
+			dc.add(Restrictions.like("pr.name", "%"+production.getProduct().getName()+"%"));
 		}
 		if(production.getPriority()!=0){
 			dc.add(Restrictions.eq("priority", production.getPriority()));
 		}
 		
 		dc.add(Restrictions.eq(Production.FIELD_DEL_FLAG, Production.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("p.serialNum"));
+		dc.addOrder(Order.desc("pl.serialNum"));
 		dc.addOrder(Order.asc("serialNum"));
 		return productionDao.find(page, dc);
 	}
@@ -78,6 +79,13 @@ public class ProductionService extends BaseService {
 	@Transactional(readOnly = false)
 	public void delete(String id) {
 		productionDao.deleteById(id);
+	}
+	
+	@Transactional
+	public synchronized void updateFinishNum(int num, String id){
+		Production production = productionDao.get(id);
+		production.setCompleteNum(production.getCompleteNum() + num);
+		productionDao.save(production);
 	}
 	
 }

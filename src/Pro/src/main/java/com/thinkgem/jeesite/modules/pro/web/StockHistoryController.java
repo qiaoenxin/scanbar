@@ -62,6 +62,10 @@ public class StockHistoryController extends BaseController {
 		if (!user.isAdmin()){
 			stockHistory.setCreateBy(user);
 		}
+		List<Dict> list = new ArrayList<Dict>(DictUtils.getDictList("stock_type"));
+		Dict dict = new Dict("---", "");
+		list.add(0, dict);
+		model.addAttribute("types", list);
         Page<StockHistory> page = stockHistoryService.find(new Page<StockHistory>(request, response), stockHistory); 
         model.addAttribute("page", page);
         

@@ -9,6 +9,7 @@ import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,13 @@ public class ProductionHistoryService extends BaseService {
 		if(productionHistory.getProductionDetail()!=null && productionHistory.getProductionDetail().getProduction()!=null && productionHistory.getProductionDetail().getProduction().getProduct()!=null){
 			String name =  productionHistory.getProductionDetail().getProduction().getProduct().getName();
 			if(StringUtils.isNotBlank(name)){
-				dc.add(Restrictions.like("productionDetail.production.product.name", "%"+name+"%"));
+				dc.createAlias("productionDetail", "de");
+				dc.createAlias("de.production", "pn");
+				dc.createAlias("pn.product", "pr");
+				dc.createAlias("de.productTree", "tr", JoinType.LEFT_OUTER_JOIN);
+				dc.createAlias("tr.product", "pr2");
+				dc.add(Restrictions.or(Restrictions.like("pr.name", "%"+name+"%"), 
+						Restrictions.like("pr2.name", "%"+name+"%")));
 			}
 		}
 		if(StringUtils.isNotBlank(productionHistory.getStatus())){
@@ -53,7 +60,7 @@ public class ProductionHistoryService extends BaseService {
 		}
 		
 		dc.add(Restrictions.eq(ProductionHistory.FIELD_DEL_FLAG, ProductionHistory.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("id"));
+		dc.addOrder(Order.desc("createDate"));
 		return productionHistoryDao.find(page, dc);
 	}
 	

@@ -68,7 +68,6 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="product_tree_id")
 	@NotFound(action = NotFoundAction.IGNORE)
-	@NotNull
 	public ProductTree getProductTree() {
 		return productTree;
 	}
@@ -101,7 +100,6 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	public void setData(String data) {
 		this.data = data;
 	}
-	
 }
 
 

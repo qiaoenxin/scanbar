@@ -1,7 +1,13 @@
 package com.thinkgem.jeesite.web;
 
 
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
+
 
 import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
@@ -17,7 +23,7 @@ public class Login {
 	private static SystemService systemService = SpringContextHolder.getBean(SystemService.class);
 	private static DeviceService deviceService = SpringContextHolder.getBean(DeviceService.class);
 	public static class LoginService extends BasicService<Request, Response> {
-
+		private List<LoginInfo> loginInfos = new ArrayList<Login.LoginInfo>();
 		@Override
 		protected void service(Request request, Response response) {
 			User user = systemService.getUserByLoginName(request.getLoginName());
@@ -41,11 +47,33 @@ public class Login {
 				return;
 			}
 			
+			//一个账号和设备，仅允许登录一次
+			loginOnce(user.getLoginName(), device.getDeviceKey());
+			
 			HttpSession session = request.getContext().getHttpRequest().getSession();
 			session.setAttribute(UserUtils.USER_SESSION, user);
+			LoginInfo info = new LoginInfo();
+			info.session = session;
+			info.loginName = user.getLoginName();
+			info.device = device.getDeviceKey();
+			loginInfos.add(info);
 		}
-
 		
+		private synchronized void loginOnce(String loginName, String device) {
+			for(Iterator<LoginInfo> iter = loginInfos.iterator(); iter.hasNext();){
+				LoginInfo info = iter.next();
+				if(loginName.equals(info.loginName) || device.equals(info.device)){
+					info.session.invalidate();
+					iter.remove();
+				}
+			}
+		}
+	}
+	
+	public static class LoginInfo {
+		private HttpSession session;
+		private String loginName;
+		private String device;
 	}
 
 	public static class Request extends

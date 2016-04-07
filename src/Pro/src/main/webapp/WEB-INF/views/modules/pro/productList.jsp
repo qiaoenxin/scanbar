@@ -82,6 +82,7 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<label>名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>车种 ：</label><form:input path="field1" htmlEscape="false" maxlength="50" class="input-small"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 		&nbsp;<input id="btnExport" class="btn btn-primary" type="button" value="导出"/>
 		&nbsp;<input id="btnImport" class="btn btn-primary" type="button" value="导入"/
@@ -89,12 +90,13 @@
 	<br>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>编号</th><th>snp数量</th><th>工序</th><th>操作</th></tr></thead>
+		<thead><tr><th>名称</th><th>编号</th><th>车种</th><th>snp数量</th><th>工序</th><th>操作</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="product">
 			<tr>
 				<td>${product.name}</td>
 				<td>${product.serialNum}</td>
+				<td>${product.field1}</td>
 				<td>${product.snpNum}</td>
 				<td>
 				<c:forEach items="${fns:parseArray(product.flow) }" var="flow" varStatus="i">

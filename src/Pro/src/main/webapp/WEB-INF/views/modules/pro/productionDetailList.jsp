@@ -88,8 +88,14 @@
 		<c:forEach items="${page.list}" var="productionDetail">
 			<tr>
 				<td>${productionDetail.serialNum}</td>
+				<c:if test="${productionDetail.production.type == 1}">
 				<td>${productionDetail.productTree.product.name}</td>
 				<td>${productionDetail.productTree.product.serialNum}</td>
+				</c:if>
+				<c:if test="${productionDetail.production.type == 0}">
+				<td>${productionDetail.production.product.name}</td>
+				<td>${productionDetail.production.product.serialNum}</td>
+				</c:if>
 				<td>${productionDetail.number}</td>
 				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
 				<td><a href="javascript:print('${productionDetail.id}');" >打印</a> </td>

@@ -39,7 +39,7 @@ public class ProductionDetailService extends BaseService {
 	
 	public List<ProductionDetail> findByProductionId(String productionId){
 		DetachedCriteria dc = productionDetailDao.createDetachedCriteria();
-		dc.add(Restrictions.like("production.id", productionId));
+		dc.add(Restrictions.eq("production.id", productionId));
 		dc.add(Restrictions.eq(ProductionDetail.FIELD_DEL_FLAG, ProductionDetail.DEL_FLAG_NORMAL));
 		dc.addOrder(Order.desc("createDate"));
 		return productionDetailDao.find(dc);

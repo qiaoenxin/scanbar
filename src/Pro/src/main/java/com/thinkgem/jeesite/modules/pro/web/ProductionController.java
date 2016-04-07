@@ -113,17 +113,27 @@ public class ProductionController extends BaseController {
         List<ProductTreePage> list = Lists.newArrayList();
         
         Product product = production.getProduct();
-       
-        ProductTree root = productTreeService.findParentsByProductId(product.getId()).get(0);
-        String id = IdGen.uuid();
-        ProductTreePage treePage = new ProductTreePage(root.getId(),id,"",product.getName(),number);
-        treePage.setProduct(product);
-        list.add(treePage);
-        List<ProductTree> childrens = productTreeService.findChildrensByProductId(product.getId());
-		for(ProductTree c : childrens){
-			recursiveChildren(id,c,number,list);
+		if (production.getType() == Production.TREE_TYPE) {
+			List<ProductTree> roots = productTreeService
+					.findParentsByProductId(product.getId());
+			ProductTree root = roots.get(0);
+			String id = IdGen.uuid();
+			ProductTreePage treePage = new ProductTreePage(root.getId(), id, "", product.getName(), number);
+			treePage.setProduct(product);
+			list.add(treePage);
+			List<ProductTree> childrens = productTreeService
+					.findChildrensByProductId(product.getId());
+			for (ProductTree c : childrens) {
+				recursiveChildren(id, c, number, list);
+			}
+		} else {
+			String id = IdGen.uuid();
+			ProductTreePage treePage = new ProductTreePage(product.getId(), id,
+					"", product.getName(), number);
+			treePage.setProduct(product);
+			list.add(treePage);
 		}
-        
+       
         model.addAttribute("list", list);
         model.addAttribute("isProduction", isProduction);
         
@@ -275,9 +285,14 @@ public class ProductionController extends BaseController {
 			addMessage(redirectAttributes, "保存失败！该生成计划已经进入生产状态！");
 			return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
 		}
-		
+		List<ProductTree> roots = productTreeService.findParentsByProductId(production.getProduct().getId());
+		if(!roots.isEmpty()){
+			production.setType(Production.TREE_TYPE);
+		}
 		if(StringUtils.isBlank(production.getSerialNum())){
-			String serialNum = DateUtils.formatDate(new Date(), "yyyyMMddHHmmss")+ toSeq(1, 2);
+			ProductionPlan plan = productionPlanService.get(production.getPlan().getId());
+			Product pro = productService.get(production.getProduct().getId());
+			String serialNum = plan.getSerialNum()+ pro.getSerialNum();
 			production.setSerialNum(serialNum);
 		}
 		productionService.save(production);

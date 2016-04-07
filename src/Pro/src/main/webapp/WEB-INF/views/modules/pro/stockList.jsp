@@ -37,13 +37,13 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>产品</th><th>库存数量</th><th>占用数量</th></tr></thead>
+		<thead><tr><th>产品</th><th>产品编号</th><th>库存数量</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="stock">
 			<tr>
 				<td>${stock.product.name}</td>
+				<td>${stock.product.serialNum}</td>
 				<td>${stock.number}</td>
-				<td>${stock.useNumber}</td>
 			</tr>
 		</c:forEach>
 		</tbody>

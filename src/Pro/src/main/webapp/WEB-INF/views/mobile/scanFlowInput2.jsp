@@ -19,6 +19,11 @@
 <script>
 	
 	var flowId = '${param.flowId}';
+	if(!flowId){
+		alert("请先设置工位： 设置》工位");
+		history.go(-1);
+		return;
+	}
 	$(document).ready(function(){
 		$('#scan').focus();
 		$('#scan').keyup(function(e){
@@ -56,7 +61,7 @@
 	<div class="toolbar affix-top">
 		<div class="row">
 			<div class="col-xs-2">
-				<i class="glyphicon glyphicon-menu-left back" data-back="scanFlow"></i>
+				<i class="glyphicon glyphicon-menu-left back" data-back="index"></i>
 			</div>
 			<div class="col-xs-8 title">流程扫描</div>
 		</div>

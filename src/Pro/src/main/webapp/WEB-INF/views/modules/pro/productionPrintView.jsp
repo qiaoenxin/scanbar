@@ -37,6 +37,7 @@
         	params.numbers = numbers.join(',');
         	params.mods = mods.join(',');
         	params.snps = snps.join(",");
+        	params.isTree = "${isTree}";
         	var ok = ''; 
         	var url = "${ctx}/pro/production/print";
         	$.ajax({
