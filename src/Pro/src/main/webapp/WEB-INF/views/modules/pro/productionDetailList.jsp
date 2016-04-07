@@ -48,15 +48,15 @@
 							dataItem.flow1 = flows[0];
 							dataItem.flow2 = flows[1];
 							
-							var QRImg = Canvas2Image.qrcode(dataItem.serialNum,130,130);
+							var QRImg = Canvas2Image.qrcode(dataItem.serialNum,100,100);
 							var QRHtml = QRImg.outerHTML;
 							dataItem.qrImg = QRHtml;
 							var html = myTemplate(dataItem);
 							try{ 
 						    	var LODOP=getLodop();
 						    	LODOP.PRINT_INIT("");
-								LODOP.SET_PRINT_PAGESIZE(1,2000,1000,"CreateCustomPage");
-								LODOP.ADD_PRINT_HTM(28,20,"100%","100%",html);
+								LODOP.SET_PRINT_PAGESIZE(1,1200,800,"CreateCustomPage");
+								LODOP.ADD_PRINT_HTM(16,6,"100%","100%",html);
 								LODOP.PRINT();
 							 }catch(err){ 
 							 	alert(err);
@@ -113,12 +113,10 @@
 
 <style>
 table{
-	font-family: 微软雅黑;
 	font-size:10px;
 }
 div{
-	font-family: 微软雅黑;
-	font-size:14px;
+	font-size:10px;
 }
 table.gridtable {
 	color:#333333;
@@ -136,7 +134,7 @@ table.gridtable td {
 
 <tr>
 	<td>
-<table style="height:310px;width:520px;" class="gridtable">
+<table style="height:260px;width:324px;" class="gridtable">
 <tr>
 	<td colspan="6">制程管理卡 {{productTree.product.field1}}  </td>
 </tr>
@@ -185,15 +183,15 @@ table.gridtable td {
 </table>
 
 </td>
-	<td style="padding-left:10px;">
+	<td style="padding-left:6px;">
 		<div>
 			<div>优先级：{{production.priority}}</div>
 		</div>
-		<div style="padding:20px 0px;">
+		<div style="padding:16px 0px;">
 			<div>计划日期</div>
 			<div>{{production.plan.beginDate}}</div>
 		</div>
-		<div style="padding-bottom:20px;">
+		<div style="padding-bottom:16px;">
 			<div>批次流水号</div>
 			<div>{{serialNum}}</div>
 		</div>
