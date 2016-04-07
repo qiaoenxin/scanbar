@@ -29,7 +29,7 @@ public class AppWebView extends WebView{
         Context context = getContext();
         
         setting.setDomStorageEnabled(true);
-        setting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        setting.setCacheMode(WebSettings.LOAD_DEFAULT);
         setting.setDatabaseEnabled(true);
         File databasePath = context.getDir("web_dbpath", 0);
         if(!databasePath.exists()){
@@ -59,8 +59,9 @@ public class AppWebView extends WebView{
 		
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			
 			view.loadUrl(url);
-			return false;
+			return true;
 		}
 		
 	}
