@@ -7,7 +7,9 @@ $(document).ready(function(){
 });
 
 function back(backUrl){
-	location.href = backUrl;
+	//alert('');
+	history.go(-1);
+	//location.href = backUrl;
 }
 
 function mAlert(msg){
