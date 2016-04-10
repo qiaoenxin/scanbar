@@ -69,7 +69,7 @@ public class ProductTreeController extends BaseController {
 			list.add(new ProductTreePage(root.getId(),id,"",root.getProduct().getName(),root.getNumber()));
 			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
 			for(ProductTree c : childrens){
-				recursiveChildren(id,c,list);
+				recursiveChildren(id,c,list, root.getNumber());
 			}
 		}
         model.addAttribute("list", list);
@@ -77,13 +77,13 @@ public class ProductTreeController extends BaseController {
 		return "modules/pro/productTreeList";
 	}
 	
-	public void recursiveChildren(String parentId,ProductTree productTree,List<ProductTreePage> list){
+	public void recursiveChildren(String parentId,ProductTree productTree,List<ProductTreePage> list, int number){
 		String id = IdGen.uuid();
-		list.add(new ProductTreePage(productTree.getId(),id,parentId,productTree.getProduct().getName(),productTree.getNumber()));
+		list.add(new ProductTreePage(productTree.getId(),id,parentId,productTree.getProduct().getName(),productTree.getNumber() * number));
 		
 		List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
 		for(ProductTree c : childrens){
-			recursiveChildren(id,c,list);
+			recursiveChildren(id,c,list, productTree.getNumber() * number);
 		}
 	}
 	
@@ -115,8 +115,8 @@ public class ProductTreeController extends BaseController {
 			List<ProductTree> list = productTreeService.findParentsByProductId(parent.getId());
 			if(list.isEmpty()){
 				ProductTree pTree  = new ProductTree();
-				productTree.setProduct(parent);
-				productTree.setNumber(1);
+				pTree.setProduct(parent);
+				pTree.setNumber(1);
 				productTreeService.save(pTree);
 			}
 		}

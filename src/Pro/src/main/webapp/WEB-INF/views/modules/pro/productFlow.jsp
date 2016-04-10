@@ -125,9 +125,9 @@
 				html += '<div class="col-2">烘护套：<input type="text" style="width:90px" name="field5"/></div>';
 				html += '</div>'
 				html += '<div class="row">'
-				html += '<div class="col-2">PCO：<input type="text" style="width:90px" name="field6"/></div>';
 				html += '<div class="col-2">印字：<input type="text" style="width:90px" name="field7"/></div>';
 				html += '<div class="col-2">标识：<input type="text" style="width:90px" name="field8"/></div>';
+				html += '<div class="col-2">PCO：<input type="text" style="width:90px" name="field6"/></div>';
 				html += '</div>'
 			}
 			//弯曲

@@ -147,7 +147,7 @@ table.gridtable td {
 </tr>
 <tr>
 	<td>HPC&nbsp;{{flow1.field2}} </td>
-	<td colspan="2">端末&nbsp;{{flow1.field3}}</td>
+	<td colspan="2">端末&nbsp;{{flow1.field3}}&nbsp; {{flow1.field4}}</td>
 	<td>烘护套&nbsp;{{flow1.field5}}</td>
 	<td>印字&nbsp;{{flow1.field7}}</td>
 	<td>标示（{{flow1.field8}}）</td>
@@ -155,10 +155,10 @@ table.gridtable td {
 <tr>
 	<td style="width:13%;">*</td>
 	<td style="width:18%;">*</td>
-	<td style="width:18%;">*</td>
-	<td style="width:22%;">*</td>
-	<td style="width:15%;">*</td>
-	<td>*</td>
+	<td style="width:18%;"></td>
+	<td style="width:22%;">{{#if flow1.field5}}*{{else}}无{{/if}}</td>
+	<td style="width:15%;">{{#if flow1.field7}}*{{else}}无{{/if}}</td>
+	<td>{{#if flow1.field8}}*{{else}}无{{/if}}</td>
 </tr>
 <tr>
 	<td>PCO&nbsp;{{flow1.field6}}</td>
@@ -166,7 +166,7 @@ table.gridtable td {
 	<td colspan="2" rowspan="2">仓库</td>
 </tr>
 <tr>
-	<td>*</td>
+	<td>{{#if flow1.field6}}*{{else}}无{{/if}}</td>
 	<td colspan="3">*</td>
 </tr>
 <tr>
