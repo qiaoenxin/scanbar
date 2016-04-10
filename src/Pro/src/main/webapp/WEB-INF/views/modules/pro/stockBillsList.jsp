@@ -19,6 +19,18 @@
 				location.href="stockBills/saveStock";
 			}
 		}
+		
+		function openDetail(stockBillsId){
+			var url = "iframe:${ctx}/pro/stockBills/detail?stockBillsId="+stockBillsId;
+	    	var buttons = {"关闭":false};
+	    	top.$.jBox.open(url, "明细", 800, 500,{
+				buttons:buttons, submit:function(v, h, f){
+					
+				}, loaded:function(h){
+					$(".jbox-content", top.document).css("overflow-y","hidden");
+				}
+			});
+		}
 	</script>
 </head>
 <body>
@@ -45,7 +57,7 @@
 				<td>${stock.number}</td>
 				<td>${stock.prevNumber}</td>
 				<td>${fns:formatDate(stock.fromDate,'yyyy-MM-dd HH:mm:ss')} - ${fns:formatDate(stock.createDate,'yyyy-MM-dd HH:mm:ss')}</td>
-				<td><a href="#">查看明细</a></td>
+				<td><a href="javascript:openDetail('${stock.id }');">查看明细</a></td>
 			</tr>
 		</c:forEach>
 		</tbody>
