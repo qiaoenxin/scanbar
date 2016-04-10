@@ -90,7 +90,7 @@
 	<br>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>编号</th><th>车种</th><th>snp数量</th><th>工序</th><th>操作</th></tr></thead>
+		<thead><tr><th>名称</th><th>编号</th><th>车种</th><th>snp数量</th><th>assy</th><th>工序</th><th>操作</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="product">
 			<tr>
@@ -98,6 +98,7 @@
 				<td>${product.serialNum}</td>
 				<td>${product.field1}</td>
 				<td>${product.snpNum}</td>
+				<td>${product.assy}</td>
 				<td>
 				<c:forEach items="${fns:parseArray(product.flow) }" var="flow" varStatus="i">
 					${i.index+1 } :${fns:getDictLabel(flow.id,'flow_type','') }

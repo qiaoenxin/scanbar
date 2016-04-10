@@ -33,14 +33,19 @@ public class StockBillsSchedule {
 		logger.info("---开始扎帐("+createDate+")---");
 		isRunning = true;
 		try {
-			List<Stock> stoctList = stockService.find(new Page(), new Stock())
+			List<Stock> stoctList = stockService.find(new Page<Stock>(), new Stock())
 					.getList();
+			Date prevDate = stockBillsService.prevBillsDate();
+			List<StockBills> prevBills = stockBillsService.prevBills(prevDate);
+			
 			List<StockBills> stockBillsList = Lists.newArrayList();
 			for (Stock stock : stoctList) {
 				StockBills stockBills = new StockBills();
 				stockBills.setProduct(stock.getProduct());
 				stockBills.setNumber(stock.getNumber());
 				stockBills.setUseNumber(stock.getUseNumber());
+				stockBills.setPrevNumber(prevNumber(stock, prevBills));
+				stockBills.setFromDate(prevDate);
 				stockBills.setCreateDate(createDate);
 				stockBillsList.add(stockBills);
 			}
@@ -52,6 +57,15 @@ public class StockBillsSchedule {
 		}finally{
 			isRunning = false;
 		}
+	}
+
+	private int prevNumber(Stock stock, List<StockBills> prevBills) {
+		for(StockBills bill : prevBills){
+			if(bill.getProduct().getId().equals(stock.getProduct().getId())){
+				return bill.getNumber();
+			}
+		}
+		return 0;
 	}
 
 }

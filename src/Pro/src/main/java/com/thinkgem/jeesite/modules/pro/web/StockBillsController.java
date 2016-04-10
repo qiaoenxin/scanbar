@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.schedule.StockBillsSchedule;
+import com.thinkgem.jeesite.common.utils.SpringContextHolder;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -32,7 +34,8 @@ import com.thinkgem.jeesite.modules.pro.service.StockBillsService;
 @Controller
 @RequestMapping(value = "${adminPath}/pro/stockBills")
 public class StockBillsController extends BaseController {
-
+	private StockBillsSchedule schedule = SpringContextHolder.getBean("stockBillsTaskJob");
+	
 	@Autowired
 	private StockBillsService stockBillsService;
 	
@@ -55,6 +58,12 @@ public class StockBillsController extends BaseController {
         Page<StockBills> page = stockBillsService.find(new Page<StockBills>(request, response), stockBills); 
         model.addAttribute("page", page);
 		return "modules/pro/stockBillsList";
+	}
+	@RequiresPermissions("pro:stockBills:edit")
+	@RequestMapping(value = "saveStock")
+	public String saveStock(){
+		schedule.start();
+		return "redirect:"+Global.getAdminPath()+"/pro/stockBills?repage";
 	}
 
 	@RequiresPermissions("pro:stockBills:edit")

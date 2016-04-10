@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.pro.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +54,22 @@ public class StockBillsService extends BaseService {
 		return stockBillsDao.find(page, dc);
 	}
 	
+	public Date prevBillsDate(){
+		 List<Date> list = stockBillsDao.find("select max(createDate) from StockBills");
+		 if(list.isEmpty()){
+			 return null;
+		 }
+		 return list.get(0);
+	}
+	
+	public List<StockBills>  prevBills(Date date){
+		if(date == null){
+			return new ArrayList<StockBills>();
+		}
+		DetachedCriteria criteria = stockBillsDao.createDetachedCriteria();
+		criteria.add(Restrictions.eq("createDate", date));
+		return stockBillsDao.find(criteria);
+	}
 	
 	@Transactional(readOnly = false)
 	public void save(StockBills stockBills) {

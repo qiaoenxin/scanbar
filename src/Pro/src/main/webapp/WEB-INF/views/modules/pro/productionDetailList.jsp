@@ -88,11 +88,11 @@
 		<c:forEach items="${page.list}" var="productionDetail">
 			<tr>
 				<td>${productionDetail.serialNum}</td>
-				<c:if test="${productionDetail.production.type == 1}">
+				<c:if test="${productionDetail.production.product.assy == 1}">
 				<td>${productionDetail.productTree.product.name}</td>
 				<td>${productionDetail.productTree.product.serialNum}</td>
 				</c:if>
-				<c:if test="${productionDetail.production.type == 0}">
+				<c:if test="${productionDetail.production.product.assy == 0}">
 				<td>${productionDetail.production.product.name}</td>
 				<td>${productionDetail.production.product.serialNum}</td>
 				</c:if>

@@ -42,6 +42,8 @@ public class StockBills extends IdEntity<StockBills>{
 	private Product product;//产品
 	private int number;	//库存数量
 	private int useNumber;//占用
+	private Date fromDate;//上一次轧账日期
+	private int prevNumber;//上一次轧账数量
 	
 	public StockBills() {
 		super();
@@ -82,7 +84,23 @@ public class StockBills extends IdEntity<StockBills>{
 	public void setUseNumber(int useNumber) {
 		this.useNumber = useNumber;
 	}
-	
+
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public int getPrevNumber() {
+		return prevNumber;
+	}
+
+	public void setPrevNumber(int prevNumber) {
+		this.prevNumber = prevNumber;
+	}
 }
 
 

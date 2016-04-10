@@ -34,11 +34,14 @@ import com.thinkgem.jeesite.common.utils.excel.fieldtype.ProductType;
 public class Product extends IdEntity<Product> {
 	
 	private static final long serialVersionUID = 1L;
+	public static final int ASSY_SIMPLE = 0;
+	public static final int ASSY_COM = 1;
 
 	private String name;
 	private String serialNum;//编号
 	private Integer snpNum;		 //snp数量
 	private String flow;	//功序流
+	private int assy;
 	private String field1;
 	private String field2;
 	private String field3;
@@ -94,6 +97,15 @@ public class Product extends IdEntity<Product> {
 		flows = null;
 	}
 	
+	@ExcelField(title="ASSY", align=2, sort=70)
+	public int getAssy() {
+		return assy;
+	}
+
+	public void setAssy(int assy) {
+		this.assy = assy;
+	}
+
 	@ExcelField(title="车种", align=2, sort=70)
 	public String getField1() {
 		return field1;

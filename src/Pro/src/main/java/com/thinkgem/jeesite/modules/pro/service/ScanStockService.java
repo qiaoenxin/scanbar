@@ -45,7 +45,7 @@ public class ScanStockService {
 			return;
 		}
 		
-		if(detail.getProduction().getType() == Production.TREE_TYPE){
+		if(detail.getProduction().getProduct().getAssy() != Product.ASSY_SIMPLE){
 			StockHistory stockHistory = new StockHistory();
 			stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
 			stockHistory.setProduct(detail.getProductTree().getProduct());

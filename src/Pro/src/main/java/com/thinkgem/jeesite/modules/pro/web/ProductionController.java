@@ -3,8 +3,6 @@
  */
 package com.thinkgem.jeesite.modules.pro.web;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +10,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +110,7 @@ public class ProductionController extends BaseController {
         List<ProductTreePage> list = Lists.newArrayList();
         
         Product product = production.getProduct();
-		if (production.getType() == Production.TREE_TYPE) {
+		if (product.getAssy() != Product.ASSY_SIMPLE) {
 			List<ProductTree> roots = productTreeService
 					.findParentsByProductId(product.getId());
 			ProductTree root = roots.get(0);
@@ -284,10 +281,6 @@ public class ProductionController extends BaseController {
 		if(productionDetailList.size()>0){
 			addMessage(redirectAttributes, "保存失败！该生成计划已经进入生产状态！");
 			return "redirect:"+Global.getAdminPath()+"/pro/production/?repage";
-		}
-		List<ProductTree> roots = productTreeService.findParentsByProductId(production.getProduct().getId());
-		if(!roots.isEmpty()){
-			production.setType(Production.TREE_TYPE);
 		}
 		if(StringUtils.isBlank(production.getSerialNum())){
 			ProductionPlan plan = productionPlanService.get(production.getPlan().getId());

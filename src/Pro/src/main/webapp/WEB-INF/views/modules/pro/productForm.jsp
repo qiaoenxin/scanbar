@@ -59,6 +59,12 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">ASY:</label>
+			<div class="controls">
+				<form:input path="assy" htmlEscape="false" maxlength="1" class="required" />0表示单品，1表示assy品
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">备注:</label>
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="200" class="input-xxlarge"/>
