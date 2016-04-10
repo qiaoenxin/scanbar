@@ -3,11 +3,14 @@
  */
 package com.thinkgem.jeesite.modules.pro.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -47,6 +50,10 @@ public class StockHistory extends IdEntity<StockHistory> {
 	private double number;		//数量
 	private String reason;	//原因
 	private	ProductionDetail productionDetail;
+	
+	private Date queryBeginDate;
+	private Date queryEndDate;
+	
 	
 	public StockHistory() {
 		super();
@@ -103,6 +110,27 @@ public class StockHistory extends IdEntity<StockHistory> {
 	public void setProductionDetail(ProductionDetail productionDetail) {
 		this.productionDetail = productionDetail;
 	}
+
+	
+	@Transient
+	public Date getQueryBeginDate() {
+		return queryBeginDate;
+	}
+
+	public void setQueryBeginDate(Date queryBeginDate) {
+		this.queryBeginDate = queryBeginDate;
+	}
+
+	@Transient
+	public Date getQueryEndDate() {
+		return queryEndDate;
+	}
+
+	public void setQueryEndDate(Date queryEndDate) {
+		this.queryEndDate = queryEndDate;
+	}
+	
+	
 	
 }
 

@@ -24,7 +24,9 @@ import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.StockBills;
+import com.thinkgem.jeesite.modules.pro.entity.StockHistory;
 import com.thinkgem.jeesite.modules.pro.service.StockBillsService;
+import com.thinkgem.jeesite.modules.pro.service.StockHistoryService;
 
 /**
  * 扎帐Controller
@@ -38,6 +40,9 @@ public class StockBillsController extends BaseController {
 	
 	@Autowired
 	private StockBillsService stockBillsService;
+	
+	@Autowired
+	private StockHistoryService stockHistoryService;
 	
 	@ModelAttribute
 	public StockBills get(@RequestParam(required=false) String id) {
@@ -59,6 +64,25 @@ public class StockBillsController extends BaseController {
         model.addAttribute("page", page);
 		return "modules/pro/stockBillsList";
 	}
+	
+	
+	@RequiresPermissions("pro:stockBills:view")
+	@RequestMapping(value = "detail")
+	public String detail(String stockBillsId, HttpServletRequest request, HttpServletResponse response, Model model) {
+		StockBills stockBills = stockBillsService.get(stockBillsId);
+		
+		StockHistory stockHistory = new StockHistory();
+		stockHistory.setProduct(stockBills.getProduct());
+		stockHistory.setQueryBeginDate(stockBills.getFromDate());
+		stockHistory.setQueryEndDate(stockBills.getCreateDate());
+		
+        Page<StockHistory> page = stockHistoryService.findByProductAndDate(new Page<StockHistory>(request, response), stockHistory); 
+        model.addAttribute("page", page);
+        model.addAttribute("stockBillsId", stockBillsId);
+		return "modules/pro/stockBillsDetail";
+	}
+	
+	
 	@RequiresPermissions("pro:stockBills:edit")
 	@RequestMapping(value = "saveStock")
 	public String saveStock(){

@@ -61,6 +61,26 @@ public class StockHistoryService extends BaseService {
 		return stockHistoryDao.find(page, dc);
 	}
 	
+	
+	public Page<StockHistory> findByProductAndDate(Page<StockHistory> page, StockHistory stockHistory) {
+		DetachedCriteria dc = stockHistoryDao.createDetachedCriteria();
+		
+		if(stockHistory.getProduct()!=null && StringUtils.isNotBlank(stockHistory.getProduct().getId())){
+			dc.add(Restrictions.eq("product.id", stockHistory.getProduct().getId()));
+		}
+		if(stockHistory.getQueryBeginDate()!=null && stockHistory.getQueryEndDate()!=null){
+			dc.add(Restrictions.between("createDate", stockHistory.getQueryBeginDate(),stockHistory.getQueryEndDate()));
+		}else if(stockHistory.getQueryEndDate()!=null){
+			dc.add(Restrictions.lt("createDate", stockHistory.getQueryEndDate()));
+		}
+		
+		dc.add(Restrictions.eq(StockHistory.FIELD_DEL_FLAG, StockHistory.DEL_FLAG_NORMAL));
+		dc.addOrder(Order.desc("createDate"));
+		return stockHistoryDao.find(page, dc);
+	}
+	
+	
+	
 	@Transactional(readOnly = false)
 	public synchronized void save(StockHistory stockHistory) throws Exception {
 		
