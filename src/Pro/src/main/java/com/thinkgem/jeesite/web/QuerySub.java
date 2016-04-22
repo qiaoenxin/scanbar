@@ -1,6 +1,7 @@
 package com.thinkgem.jeesite.web;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,9 +35,19 @@ public class QuerySub {
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
 				return;
 			}
-			List<ProductTree> subs = treeService.findSubTree(detail.getProductTree().getProduct());
+			Product product = detail.getProduction().getProduct();
+			List<ProductTree> subs;
+			if(product.getAssy() == Product.ASSY_SIMPLE){
+				subs = new ArrayList<ProductTree>();
+				ProductTree tree = new ProductTree();
+				tree.setNumber(detail.getNumber());
+				tree.setProduct(product);
+				subs.add(tree);
+			}else{
+				subs = treeService.findSubTree(detail.getProductTree().getProduct());
+			}
 			response.setData(subs);
-			response.setJsonFilter(new SimplePropertyPreFilter(ProductTree.class, "product", "number"), new SimplePropertyPreFilter(Product.class,"id", "serialNum"));
+			response.setJsonFilter(new SimplePropertyPreFilter(ProductTree.class, "product", "number"), new SimplePropertyPreFilter(Product.class,"id", "serialNum","name"));
 		}
 	}
 	

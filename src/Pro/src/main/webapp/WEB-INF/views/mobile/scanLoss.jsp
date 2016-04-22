@@ -48,7 +48,7 @@
 			if(code==0){
 				data = data.data;
 				$.each(data,function(i,item){
-					var html = getItemHtml(item.product.id,item.product.serialNum,item.number);
+					var html = getItemHtml(item.product.id,item.product.name,item.number);
 					$('#list').append(html);
 				});
 					

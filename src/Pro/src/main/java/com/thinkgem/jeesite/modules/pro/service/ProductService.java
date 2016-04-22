@@ -54,7 +54,7 @@ public class ProductService extends BaseService {
 			dc.add(Restrictions.eq("field1", product.getName()));
 		}
 		dc.add(Restrictions.eq(Product.FIELD_DEL_FLAG, Product.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("id"));
+		dc.addOrder(Order.desc("name"));
 		return productDao.find(page, dc);
 	}
 	

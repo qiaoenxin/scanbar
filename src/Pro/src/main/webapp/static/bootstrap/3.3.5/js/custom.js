@@ -7,9 +7,9 @@ $(document).ready(function(){
 });
 
 function back(backUrl){
-	//alert('');
-	history.go(-1);
-	//location.href = backUrl;
+	//alert(backUrl);
+	//history.go(-1);
+	location.href = backUrl;
 }
 
 function mAlert(msg){

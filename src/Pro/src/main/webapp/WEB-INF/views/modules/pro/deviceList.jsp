@@ -4,9 +4,11 @@
 <head>
 	<title>生产计划管理</title>
 	<meta name="decorator" content="default"/>
+	<script src="${ctxStatic}/qrcode/jquery.qrcode.min.js" type="text/javascript"></script>
+
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$("#download").qrcode({"width":150,"height":150,"text":"${clientUrl}/static/Pro.apk"});
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -21,6 +23,7 @@
 		<li class="active"><a href="${ctx}/pro/device/">设备号列表</a></li>
 		<shiro:hasPermission name="pro:device:edit"><li><a href="${ctx}/pro/device/form">设备号添加</a></li></shiro:hasPermission>
 	</ul>
+	<div>下载地址：${clientUrl}/static/Pro.apk<span id="download"></span></div>
 	<form:form id="searchForm" modelAttribute="device" action="${ctx}/pro/device/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>

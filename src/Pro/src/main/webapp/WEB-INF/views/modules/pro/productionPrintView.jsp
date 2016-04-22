@@ -48,8 +48,10 @@
 			 		ok = data
 			 	}
 			}); 
-			
-			return ok;
+			if(confirm("是否立即打印？")){
+				return ok;
+			}
+			return "";
         	
         }
 	</script>

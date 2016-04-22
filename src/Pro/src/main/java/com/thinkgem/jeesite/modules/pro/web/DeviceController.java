@@ -54,6 +54,8 @@ public class DeviceController extends BaseController {
 		}
         Page<Device> page = deviceService.find(new Page<Device>(request, response), device); 
         model.addAttribute("page", page);
+        String url = "http://" +  request.getServerName() + ":" + request.getServerPort() +  request.getContextPath();
+		model.addAttribute("clientUrl", url);
 		return  "modules/pro/deviceList";
 	}
 	

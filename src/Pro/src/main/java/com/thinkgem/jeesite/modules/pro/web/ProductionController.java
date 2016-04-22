@@ -220,8 +220,8 @@ public class ProductionController extends BaseController {
 			
 			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
-			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "flow", "serialNum", "field1", "field2", "field3", "field4", "field5", "field6");
-			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan");
+			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "flow", "serialNum", "name", "field1", "field2", "field3", "field4", "field5", "field6");
+			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan", "product");
 			SimplePropertyPreFilter filter5 = new SimplePropertyPreFilter(ProductionPlan.class, "beginDate");
 			
 			String json =  JSONObject.toJSONString(productionDetailList,new SerializeFilter[]{filter1, filter2, filter3,filter4,filter5}, SerializerFeature.DisableCircularReferenceDetect);

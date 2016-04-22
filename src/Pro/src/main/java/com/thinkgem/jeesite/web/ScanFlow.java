@@ -35,8 +35,10 @@ public class ScanFlow {
 			if(request.flow.equals(detail.getStatus())){
 				return;
 			}
-			
-			Product product = detail.getProductTree().getProduct();
+			Product product = detail.getProduction().getProduct();
+			if(product.getAssy() != Product.ASSY_SIMPLE){
+				product = detail.getProductTree().getProduct();
+			}
 			List<Flow> flows = product.getFlows();
 			Flow statusFlow = null;
 			for(Flow flow : flows){

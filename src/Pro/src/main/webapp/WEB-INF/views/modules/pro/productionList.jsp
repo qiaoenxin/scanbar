@@ -30,7 +30,7 @@
 					if(v=="print"){
 						var str = win.print();
 						if(!str){
-							alert('保存失败！');
+							//alert('保存失败！');
 							return false;
 						}
 						var data = JSON.parse(str);
@@ -41,10 +41,17 @@
 							var myTemplate = Handlebars.compile($('#print-templ').html());
 							var dataItem = data[i];
 							
-							var flows = dataItem.productTree.product.flow;
-							flows = JSON.parse(flows);
-							dataItem.flow1 = flows[0];
-							dataItem.flow2 = flows[1];
+							var flows = dataItem.productTree? dataItem.productTree.product.flow : dataItem.production.product.flow;
+							if(flows){
+								flows = JSON.parse(flows);
+								dataItem.flow1 = flows[0];
+								dataItem.flow2 = flows[1];
+							}
+							if(!dataItem.productTree || dataItem.productTree.product.serialNum == dataItem.production.product.serialNum){
+								dataItem.next = "仓库";
+							}else{
+								dataItem.next = "组立";
+							}
 							
 							var QRImg = Canvas2Image.qrcode(dataItem.serialNum,130,130);
 							var QRHtml = QRImg.outerHTML;
@@ -53,9 +60,10 @@
 							try{ 
 						    	var LODOP=getLodop();
 						    	LODOP.PRINT_INIT("");
-								LODOP.SET_PRINT_PAGESIZE(1,1200,800,"CreateCustomPage");
-								LODOP.ADD_PRINT_HTM(16,6,"100%","100%",html);
-								LODOP.PRINT();
+						    	LODOP.SET_PRINT_PAGESIZE(2,800,1200,"CreateCustomPage");
+								LODOP.ADD_PRINT_HTM(0,0,"100%","100%",html);
+								//LODOP.PRINT();
+								LODOP.PREVIEW();
 							 }catch(err){ 
 							 	alert(err);
 					 		 } 
@@ -139,10 +147,10 @@ table.gridtable td {
 	<td>
 <table style="height:260px;width:324px;" class="gridtable">
 <tr>
-	<td colspan="6">制程管理卡 {{productTree.product.field1}}  </td>
+	<td colspan="6">制程管理卡 {{#if productTree}}{{productTree.product.field1}}{{else}}{{production.product.field1}}{{/if}}  </td>
 </tr>
 <tr>
-	<td colspan="4">品   番  {{productTree.product.serialNum}}</td>
+	<td colspan="4">品   番   {{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
 	<td colspan="2">SNP {{number}}</td>
 </tr>
 <tr>
@@ -153,9 +161,9 @@ table.gridtable td {
 	<td>标示（{{flow1.field8}}）</td>
 </tr>
 <tr>
-	<td style="width:13%;">*</td>
-	<td style="width:18%;">*</td>
-	<td style="width:18%;"></td>
+	<td style="width:13%;">{{#if flow1.field2}}*{{else}}无{{/if}}</td>
+	<td style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
+	<td style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
 	<td style="width:22%;">{{#if flow1.field5}}*{{else}}无{{/if}}</td>
 	<td style="width:15%;">{{#if flow1.field7}}*{{else}}无{{/if}}</td>
 	<td>{{#if flow1.field8}}*{{else}}无{{/if}}</td>
@@ -163,11 +171,11 @@ table.gridtable td {
 <tr>
 	<td>PCO&nbsp;{{flow1.field6}}</td>
 	<td colspan="3">弯曲&nbsp;{{flow2.field2}}</td>
-	<td colspan="2" rowspan="2">仓库</td>
+	<td colspan="2" rowspan="2">{{next}}</td>
 </tr>
 <tr>
 	<td>{{#if flow1.field6}}*{{else}}无{{/if}}</td>
-	<td colspan="3">*</td>
+	<td colspan="3">{{#if flow2}}*{{else}}无{{/if}}</td>
 </tr>
 <tr>
 	<td colspan="2">检查</td>

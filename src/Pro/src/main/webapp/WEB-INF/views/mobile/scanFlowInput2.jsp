@@ -38,6 +38,7 @@
 					auth(code);
 					if(code==0){
 						mAlert("入库成功");
+						$('#scan').val('');
 					}else{
 						mAlert(data.reason);
 						alarm();
