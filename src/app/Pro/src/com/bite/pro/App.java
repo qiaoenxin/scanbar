@@ -14,9 +14,16 @@ public class App extends Application{
 		super.onCreate();
 		Log.d("App", "--------init app------");
 		MobileUtil.init(this);
+		
+		//清除cookie
 		CookieSyncManager.createInstance(this);
+		CookieSyncManager.getInstance().startSync(); 
 		CookieManager cookieManager = CookieManager.getInstance();
 		cookieManager.removeSessionCookie();
 		cookieManager.removeExpiredCookie();
+		
+		//清除缓存
+		AppWebView webView = new AppWebView(this);
+		webView.clearCache(true);
 	}
 }

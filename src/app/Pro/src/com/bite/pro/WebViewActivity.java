@@ -1,6 +1,7 @@
 package com.bite.pro;
 
 import com.bite.pro.util.MobileUtil;
+import com.bite.pro.util.PreferUtil;
 
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -16,17 +17,18 @@ public class WebViewActivity extends BaseActivity{
 		setContentView(R.layout.web_activity);
 		ViewGroup root = (ViewGroup) findViewById(R.id.scrollroot);
 		webView = new AppWebView(this);
+		webView.clearCache(true);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		root.addView(webView,params);
 		webView.initWebView();
 		webView.requestFocus();
-//		String setting = PreferUtil.getWebPreferString(MobileUtil.SETTING, "");
-		webView.loadUrl("file:///android_asset/www/setting.html");
-//		if(setting == null || setting.length() == 0){
-//			
-//		}else{
-//			webView.loadUrl(setting + "/m/mobile/index");
-//		}
+		String setting = PreferUtil.getWebPreferString(MobileUtil.SETTING, "");
+		
+		if(setting == null || setting.length() == 0){
+			webView.loadUrl("file:///android_asset/www/setting.html");
+		}else{
+			webView.loadUrl(setting + "/m/mobile/index");
+		}
 	}
 	BackPress backPress = new BackPress();
 	
