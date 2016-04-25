@@ -36,11 +36,15 @@ public class Product extends IdEntity<Product> {
 	private static final long serialVersionUID = 1L;
 	public static final int ASSY_SIMPLE = 0;
 	public static final int ASSY_COM = 1;
+	public static final String FLOW_D="1";
+	public static final String FLOW_W="2";
 
 	private String name;
 	private String serialNum;//编号
 	private Integer snpNum;		 //snp数量
 	private String flow;	//功序流
+	private Product from;
+	private String flowId;
 	private int assy;
 	private String field1;
 	private String field2;
@@ -154,6 +158,23 @@ public class Product extends IdEntity<Product> {
 	public void setField6(String field6) {
 		this.field6 = field6;
 	}
+	
+
+	public Product getFrom() {
+		return from;
+	}
+
+	public void setFrom(Product from) {
+		this.from = from;
+	}
+
+	public String getFlowId() {
+		return flowId;
+	}
+
+	public void setFlowId(String flowId) {
+		this.flowId = flowId;
+	}
 
 	@Transient
 	public List<Flow> getFlows() {
@@ -176,10 +197,6 @@ public class Product extends IdEntity<Product> {
 			
 			if(json.containsKey("fields")){
 				JSONArray fields = json.getJSONArray("fields");
-				if(fields.size()>0){
-					String number = fields.getJSONObject(0).getString("value");
-					flow.setNumber(number);
-				}
 				for(int j=0;j<fields.size();j++){
 					JSONObject fieldJSON = fields.getJSONObject(j);
 					String fieldName = fieldJSON.getString("field");
@@ -204,7 +221,6 @@ public class Product extends IdEntity<Product> {
 		
 		private String id;
 		
-		private String number;
 		
 		private String field1;
 		private String field2;
@@ -214,6 +230,7 @@ public class Product extends IdEntity<Product> {
 		private String field6;
 		private String field7;
 		private String field8;
+		private String field9;
 		
 		private Flow prev;
 		
@@ -224,12 +241,6 @@ public class Product extends IdEntity<Product> {
 		}
 		public void setId(String id) {
 			this.id = id;
-		}
-		public String getNumber() {
-			return number;
-		}
-		public void setNumber(String number) {
-			this.number = number;
 		}
 		
 		
@@ -280,6 +291,13 @@ public class Product extends IdEntity<Product> {
 		}
 		public void setField8(String field8) {
 			this.field8 = field8;
+		}
+		
+		public String getField9() {
+			return field9;
+		}
+		public void setField9(String field9) {
+			this.field9 = field9;
 		}
 		public Flow getNext(){
 			return next;

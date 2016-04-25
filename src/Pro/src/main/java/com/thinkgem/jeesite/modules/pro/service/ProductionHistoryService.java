@@ -17,8 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Flow;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionHistory;
+import com.thinkgem.jeesite.modules.pro.entity.StockHistory;
 import com.thinkgem.jeesite.modules.pro.dao.ProductionHistoryDao;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 
@@ -36,6 +39,12 @@ public class ProductionHistoryService extends BaseService {
 	
 	@Autowired
 	private ProductionDetailService detailService;
+	
+	@Autowired
+	private StockHistoryService stockHistoryService;
+	
+	@Autowired
+	private ProductService productService;
 	
 	public ProductionHistory get(String id) {
 		return productionHistoryDao.get(id);
@@ -81,7 +90,7 @@ public class ProductionHistoryService extends BaseService {
 	}
 	
 	@Transactional
-	public void saveHistory(ProductionDetail productionDetail){
+	public void saveHistory(ProductionDetail productionDetail, Flow from){
 		List<ProductionHistory> detailHistories = findByDetail(productionDetail.getId());
 		for(ProductionHistory history: detailHistories){
 			//重复扫描
@@ -94,5 +103,27 @@ public class ProductionHistoryService extends BaseService {
 		history.setProductionDetail(productionDetail);
 		detailService.save(productionDetail);
 		productionHistoryDao.save(history);
+		
+		StockHistory stockHistory = new StockHistory();
+		
+		String status = productionDetail.getStatus();
+		if(!(status.equals(Product.FLOW_D) || status.equals(Product.FLOW_D))){
+			return;
+		}
+		Product producnt = null;
+		if(productionDetail.getProductTree() != null){
+			producnt = productionDetail.getProductTree().getProduct();
+		}else{
+			producnt = productionDetail.getProduction().getProduct();
+		}
+		if(from != null){
+			producnt = productService.findByName(from.getField1());
+		}
+		
+		stockHistory.setProduct(producnt);
+		stockHistory.setNumber(productionDetail.getNumber());
+		stockHistory.setReason("");
+		stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
+		stockHistoryService.save(stockHistory);
 	}
 }

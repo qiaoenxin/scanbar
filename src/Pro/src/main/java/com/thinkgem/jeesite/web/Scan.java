@@ -46,6 +46,7 @@ public class Scan {
 					return;
 				}
 			}
+			
 			List<ProductTree> subTrees = treeService.findSubTree(product);
 			 try {
 				scanStockService.saveStock(detail, subTrees);

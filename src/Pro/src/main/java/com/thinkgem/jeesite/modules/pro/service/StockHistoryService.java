@@ -91,7 +91,9 @@ public class StockHistoryService extends BaseService {
 		
 		//修改库存
 		Product product = stockHistory.getProduct();
+		
 		Stock stock = stockDao.getByProductId(product.getId());
+		
 		if(stock==null){
 			stock = new Stock();
 			stock.setProduct(product);

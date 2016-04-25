@@ -36,7 +36,7 @@ public class ScanStockService {
 	 * @throws Exception
 	 */
 	@Transactional
-	public void saveStock(ProductionDetail detail, List<ProductTree> subTrees) throws Exception{
+	public void saveStock(ProductionDetail detail, String subName, String subCode, List<ProductTree> subTrees) throws Exception{
 		String reason = "生产扫描";
 		
 		//判断是否重复扫描

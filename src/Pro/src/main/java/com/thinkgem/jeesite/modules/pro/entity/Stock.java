@@ -29,11 +29,11 @@ import com.thinkgem.jeesite.common.utils.excel.fieldtype.ProductType;
 public class Stock extends IdEntity<Stock> {
 	
 	private static final long serialVersionUID = 1L;
+	
 
 	private Product product;//产品
 	private int number;	//库存数量
 	private int useNumber;//占用
-	
 	public Stock() {
 		super();
 	}
@@ -73,8 +73,6 @@ public class Stock extends IdEntity<Stock> {
 	public void setUseNumber(int useNumber) {
 		this.useNumber = useNumber;
 	}
-	
-	
 }
 
 

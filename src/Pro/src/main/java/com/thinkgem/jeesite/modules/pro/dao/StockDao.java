@@ -3,10 +3,13 @@
  */
 package com.thinkgem.jeesite.modules.pro.dao;
 
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.thinkgem.jeesite.common.persistence.BaseDao;
-import com.thinkgem.jeesite.common.persistence.Parameter;
 import com.thinkgem.jeesite.modules.pro.entity.Stock;
 
 /**
@@ -18,6 +21,9 @@ import com.thinkgem.jeesite.modules.pro.entity.Stock;
 public class StockDao extends BaseDao<Stock> {
 
 	public Stock getByProductId(String productId){
-		return this.getByHql("from Stock where product.id=:p1",new Parameter(productId));
+		DetachedCriteria cr = createDetachedCriteria();
+		cr.add(Restrictions.eq("product.id", productId));
+		List<Stock> stocks = find(cr);
+		return stocks.isEmpty() ? null : stocks.get(0);
 	}
 }

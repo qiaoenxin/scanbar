@@ -41,6 +41,8 @@ public class StockBills extends IdEntity<StockBills>{
 
 	private Product product;//产品
 	private int number;	//库存数量
+	private String subName;
+	private String subCode;
 	private int useNumber;//占用
 	private Date fromDate;//上一次轧账日期
 	private int prevNumber;//上一次轧账数量
@@ -100,6 +102,22 @@ public class StockBills extends IdEntity<StockBills>{
 
 	public void setPrevNumber(int prevNumber) {
 		this.prevNumber = prevNumber;
+	}
+
+	public String getSubName() {
+		return subName;
+	}
+
+	public void setSubName(String subName) {
+		this.subName = subName;
+	}
+
+	public String getSubCode() {
+		return subCode;
+	}
+
+	public void setSubCode(String subCode) {
+		this.subCode = subCode;
 	}
 }
 

@@ -118,6 +118,7 @@
 			//端末
 			if(val == 1){
 				html += '<div class="row">'
+				html += '<div class="col-2">名称：<input type="text" style="width:90px" name="field9"/></div>';
 				html += '<div class="col-2">编号：<input type="text" style="width:90px" name="field1"/></div>';
 				html += '<div class="col-2">HPC：<input type="text" style="width:90px" name="field2"/></div>';
 				html += '<div class="col-2">端末：<input type="text" style="width:90px" name="field3"/></div>';
@@ -132,7 +133,8 @@
 			}
 			//弯曲
 			else if(val == 2){
-				html += '<div class="row">'
+				html += '<div class="row">';
+				html += '<div class="col-2">名称：<input type="text" style="width:90px" name="field9"/></div>';
 				html += '<div class="col-2">编号：<input type="text" style="width:90px" name="field1"/></div>';
 				html += '<div class="col-2">规格：<input type="text" style="width:90px" name="field2"/></div>';
 				html += '</div>'
@@ -152,7 +154,7 @@
 				
 				var fields = new Array();
 				$.each($(this).find("input[type=\"text\"]"),function(i,dom){
-					var field = 'field'+(i+1);
+					var field = $(this).attr("name");
 					var value = $(this).val();
 					fields.push({field:field,value:value});
 				});
