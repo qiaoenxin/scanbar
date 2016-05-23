@@ -90,7 +90,7 @@ public class ProductionHistoryService extends BaseService {
 	}
 	
 	@Transactional
-	public void saveHistory(ProductionDetail productionDetail, Flow from){
+	public void saveHistory(ProductionDetail productionDetail){
 		List<ProductionHistory> detailHistories = findByDetail(productionDetail.getId());
 		for(ProductionHistory history: detailHistories){
 			//重复扫描
@@ -115,9 +115,6 @@ public class ProductionHistoryService extends BaseService {
 			producnt = productionDetail.getProductTree().getProduct();
 		}else{
 			producnt = productionDetail.getProduction().getProduct();
-		}
-		if(from != null){
-			producnt = productService.findByName(from.getField1());
 		}
 		
 		stockHistory.setProduct(producnt);

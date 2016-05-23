@@ -82,11 +82,11 @@ public class StockHistoryService extends BaseService {
 	
 	
 	@Transactional(readOnly = false)
-	public synchronized void save(StockHistory stockHistory) throws Exception {
+	public synchronized void save(StockHistory stockHistory) {
 		
 		//判断是否是正在扎帐
 		if(StockBillsSchedule.isRunning){
-			throw new Exception("扎帐中...，不允许入库操作");
+			throw new RuntimeException("扎帐中...，不允许入库操作");
 		}
 		
 		//修改库存
@@ -101,7 +101,7 @@ public class StockHistoryService extends BaseService {
 		int number = stock.getNumber();
 		Dict dict = DictUtils.getDict(stockHistory.getType(), "stock_type", "");
 		if(dict==null){
-			throw new Exception();
+			throw new RuntimeException();
 		}
 		if(StringUtils.toInteger(dict.getDescription())>0){//入库
 //			stockHistory.getNumber();

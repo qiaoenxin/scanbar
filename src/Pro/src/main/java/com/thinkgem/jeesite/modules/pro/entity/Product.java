@@ -43,7 +43,7 @@ public class Product extends IdEntity<Product> {
 	private String serialNum;//编号
 	private Integer snpNum;		 //snp数量
 	private String flow;	//功序流
-	private Product from;
+	private String protoType;
 	private String flowId;
 	private int assy;
 	private String field1;
@@ -160,12 +160,12 @@ public class Product extends IdEntity<Product> {
 	}
 	
 
-	public Product getFrom() {
-		return from;
+	public String getProtoType() {
+		return protoType;
 	}
 
-	public void setFrom(Product from) {
-		this.from = from;
+	public void setProtoType(String protoType) {
+		this.protoType = protoType;
 	}
 
 	public String getFlowId() {

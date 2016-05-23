@@ -73,6 +73,8 @@ public class ProductService extends BaseService {
 		}
 		productDao.save(product);
 		if(isNew){
+			product.setProtoType(product.getProtoType());
+			productDao.save(product);
 			Stock stock = new Stock();
 			stock.setProduct(product);
 			stockDao.save(stock);
@@ -90,7 +92,7 @@ public class ProductService extends BaseService {
 					p.setSerialNum(flow.getField1());
 					p.setSnpNum(product.getSnpNum());
 					p.setFlowId(flow.getId());
-					p.setFrom(product);
+					p.setProtoType(product.getId());
 					productDao.save(p);
 				}
 			}
