@@ -219,6 +219,12 @@ public class Product extends IdEntity<Product> {
 
 	public class Flow{
 		
+		
+		public Flow() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+
 		private String id;
 		
 		
