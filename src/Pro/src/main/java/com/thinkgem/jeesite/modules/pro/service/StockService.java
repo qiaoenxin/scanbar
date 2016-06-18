@@ -47,7 +47,6 @@ public class StockService extends BaseService {
 		}
 		dc.add(Restrictions.eq(Stock.FIELD_DEL_FLAG, Stock.DEL_FLAG_NORMAL));
 		dc.addOrder(Order.desc("product"));
-		dc.addOrder(Order.asc("subCode"));
 		return stockDao.find(page, dc);
 	}
 	

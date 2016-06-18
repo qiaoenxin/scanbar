@@ -73,7 +73,7 @@ public class ProductService extends BaseService {
 		}
 		productDao.save(product);
 		if(isNew){
-			product.setProtoType(product.getProtoType());
+			product.setProtoType(product.getId());
 			productDao.save(product);
 			Stock stock = new Stock();
 			stock.setProduct(product);
@@ -83,7 +83,7 @@ public class ProductService extends BaseService {
 			for(Flow flow: product.getFlows()){
 				if(flow.getId().equals(Product.FLOW_D) || flow.getId().equals(Product.FLOW_W)){
 					Product p = new Product();
-					List<Product> list = findByName(flow.getField1());
+					List<Product> list = findByName(flow.getField9());
 					
 					if(!list.isEmpty()){
 						p = list.get(0);

@@ -41,8 +41,8 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="stock">
 			<tr>
-				<td><c:if test="${empty stock.subName}">${stock.product.name}</c:if><c:if test="${not empty stock.subName }">${stock.subName }</c:if></td>
-				<td><c:if test="${empty stock.subName}">${stock.product.serialNum}</c:if><c:if test="${not empty stock.subName }">${stock.subName }</c:if>${stock.subCode}</td>
+				<td>${stock.product.name}</td>
+				<td>${stock.product.serialNum}</td>
 				<td>${stock.number}</td>
 			</tr>
 		</c:forEach>
