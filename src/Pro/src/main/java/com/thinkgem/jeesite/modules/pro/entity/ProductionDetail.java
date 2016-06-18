@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
@@ -35,6 +36,9 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	private int number;			//数量
 	private String data;		//数据
 	
+	
+	
+	private int remainder;
 	
 	public ProductionDetail() {
 		super();
@@ -100,6 +104,21 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	public void setData(String data) {
 		this.data = data;
 	}
+
+	
+	@Transient
+	public int getRemainder() {
+		return remainder;
+	}
+
+	public void setRemainder(int remainder) {
+		this.remainder = remainder;
+	}
+	
+	
+	
+	
+	
 }
 
 

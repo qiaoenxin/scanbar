@@ -191,6 +191,7 @@ public class ProductionController extends BaseController {
 					int mod = StringUtils.toInteger(modAry[index]);
 					index += 1;
 					
+					int remainder = number%snp;
 					int count = number / snp;
 					for(int i =0; i< count; i++){
 						seq++;
@@ -199,6 +200,7 @@ public class ProductionController extends BaseController {
 						detail.setSerialNum(serialNum+toSeq(seq, 4));
 						detail.setProductTree(productTree);
 						detail.setNumber(snp);
+						detail.setRemainder(remainder);
 						productionDetailList.add(detail);
 					}
 					if(mod != 0){
@@ -208,17 +210,20 @@ public class ProductionController extends BaseController {
 						detail.setSerialNum(serialNum+toSeq(seq, 4));
 						detail.setProductTree(productTree);
 						detail.setNumber(mod);
+						detail.setRemainder(remainder);
 						productionDetailList.add(detail);
 					}
 				}
 				productionDetailService.save(productionDetailList);
 			}else{
 				ProductionDetail detail = productionDetailService.get(id);
+				int remainder = detail.getNumber()%detail.getProduction().getProduct().getSnpNum();
+				detail.setRemainder(remainder);
 				productionDetailList.add(detail);
 			}
 			
 			
-			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number");
+			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
 			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "flow", "serialNum", "name", "field1", "field2", "field3", "field4", "field5", "field6");
 			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan", "product");
