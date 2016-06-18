@@ -61,8 +61,8 @@
 							try{ 
 						    	var LODOP=getLodop();
 						    	LODOP.PRINT_INIT("");
-								LODOP.SET_PRINT_PAGESIZE(2,800,1200,"CreateCustomPage");
-								LODOP.ADD_PRINT_HTM(0,0,"100%","100%",html);
+								LODOP.SET_PRINT_PAGESIZE(2,1000,1500,"CreateCustomPage");
+								LODOP.ADD_PRINT_HTM(10,0,"100%","100%",html);
 								//LODOP.PRINT();
 								LODOP.PREVIEW();
 							 }catch(err){ 
@@ -139,22 +139,28 @@ table.gridtable td {
 }
 </style>
 
+<table style="height:340px;width:100%;" class="gridtable" id="c">
 <tr>
-	<td>
-<table style="height:260px;width:324px;" class="gridtable">
-<tr>
-	<td colspan="6">制程管理卡 {{#if productTree}}{{productTree.product.field1}}{{else}}{{production.product.field1}}{{/if}}  </td>
+	<td colspan="7" style="text-align:center;font-weight:bold;font-size:14px">制程管理卡 </td>
 </tr>
 <tr>
-	<td colspan="4">品   番   {{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
-	<td colspan="2">SNP {{number}}</td>
+	<td colspan="3" style="font-weight:bold;font-size:14px">管理NO:{{serialNum}}</td>
+	<td colspan="2" style="font-weight:bold;font-size:14px">品番</td>
+	<td>SNP</td>
+	<td>尾数</td>
+</tr>
+<tr style="height:100px;">
+	<td colspan="3" style="font-weight:bold;font-size:14px">{{productTree.product.field1}}</td>
+	<td colspan="2" style="font-weight:bold;font-size:14px">{{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
+	<td>{{number}}</td>
+	<td>{{remainder}}</td>
 </tr>
 <tr>
-	<td>HPC&nbsp;{{flow1.field2}} </td>
-	<td colspan="2">端末&nbsp;{{flow1.field3}}&nbsp; {{flow1.field4}}</td>
+	<td>HPC&nbsp;/&nbsp;{{flow1.field2}} </td>
+	<td colspan="2">端末&nbsp;{{flow1.field3}}&nbsp;{{flow1.field4}} </td>
 	<td>烘护套&nbsp;{{flow1.field5}}</td>
 	<td>印字&nbsp;{{flow1.field7}}</td>
-	<td>标示（{{flow1.field8}}）</td>
+	<td colspan="2">标示（{{flow1.field8}}）</td>
 </tr>
 <tr>
 	<td style="width:13%;">{{#if flow1.field2}}*{{else}}无{{/if}}</td>
@@ -162,12 +168,13 @@ table.gridtable td {
 	<td style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
 	<td style="width:22%;">{{#if flow1.field5}}*{{else}}无{{/if}}</td>
 	<td style="width:15%;">{{#if flow1.field7}}*{{else}}无{{/if}}</td>
-	<td>{{#if flow1.field8}}*{{else}}无{{/if}}</td>
+	<td colspan="2">{{#if flow1.field8}}*{{else}}无{{/if}}</td>
 </tr>
 <tr>
 	<td>PCO&nbsp;{{flow1.field6}}</td>
 	<td colspan="3">弯曲&nbsp;{{flow2.field2}}</td>
-	<td colspan="2" rowspan="2">{{next}}</td>
+	<td rowspan="2">{{{qrImg}}}</td>
+	<td colspan="2" rowspan="2" style="font-weight:bold;font-size:14px;text-align:center">{{next}}</td>
 </tr>
 <tr>
 	<td>{{#if flow1.field6}}*{{else}}无{{/if}}</td>
@@ -176,38 +183,17 @@ table.gridtable td {
 <tr>
 	<td colspan="2">检查</td>
 	<td colspan="2">管材 LOT . NO</td>
-	<td colspan="2">出货日期年月日</td>
+	<td colspan="3">出货日期年月日</td>
 </tr>
 <tr>
 	<td colspan="2">*</td>
 	<td colspan="2">*</td>
-	<td colspan="2">*</td>
+	<td colspan="3">*</td>
 </tr>
 <tr>
 	<td colspan="3">日期/名字</td>
-	<td colspan="3">三楼（武汉）汽车部件有限公司</td>
+	<td colspan="4">三楼（武汉）汽车部件有限公司</td>
 </tr>
-</table>
-
-</td>
-	<td style="padding-left:6px;">
-		<div>
-			<div>优先级：{{production.priority}}</div>
-		</div>
-		<div style="padding:16px 0px;">
-			<div>计划日期</div>
-			<div>{{production.plan.beginDate}}</div>
-		</div>
-		<div style="padding-bottom:16px;">
-			<div>批次流水号</div>
-			<div>{{serialNum}}</div>
-		</div>
-		<div>
-			<div>{{{qrImg}}}</div>
-		</div>
-	</td>
-</tr>
-
 </table>
 	</script>
 </body>
