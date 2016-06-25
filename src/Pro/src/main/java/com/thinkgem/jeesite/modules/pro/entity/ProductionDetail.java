@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.pro.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -35,6 +37,7 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	private String status;		//状态
 	private int number;			//数量
 	private String data;		//数据
+	private Date date;
 	
 	
 	
@@ -104,7 +107,6 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	public void setData(String data) {
 		this.data = data;
 	}
-
 	
 	@Transient
 	public int getRemainder() {
@@ -114,10 +116,14 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	public void setRemainder(int remainder) {
 		this.remainder = remainder;
 	}
-	
-	
-	
-	
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 	
 }
 
