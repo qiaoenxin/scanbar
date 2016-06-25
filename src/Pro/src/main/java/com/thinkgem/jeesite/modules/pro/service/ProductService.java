@@ -54,7 +54,6 @@ public class ProductService extends BaseService {
 			dc.add(Restrictions.eq("field1", product.getField1()));
 		}
 		dc.add(Restrictions.eq(Product.FIELD_DEL_FLAG, Product.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("protoType"));
 		return productDao.find(page, dc);
 	}
 	
@@ -72,7 +71,6 @@ public class ProductService extends BaseService {
 		}
 		productDao.save(product);
 		if(isNew){
-			product.setProtoType(product.getId());
 			productDao.save(product);
 			Stock stock = new Stock();
 			stock.setProduct(product);

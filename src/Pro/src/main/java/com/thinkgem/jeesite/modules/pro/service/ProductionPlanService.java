@@ -43,12 +43,6 @@ public class ProductionPlanService extends BaseService {
 	
 	public Page<ProductionPlan> find(Page<ProductionPlan> page, ProductionPlan productionPlan) {
 		DetachedCriteria dc = productionPlanDao.createDetachedCriteria();
-		if(StringUtils.isNotBlank(productionPlan.getName())){
-			dc.add(Restrictions.like("name", "%"+productionPlan.getName()+"%"));
-		}
-		if(StringUtils.isNotBlank(productionPlan.getField1())){
-			dc.add(Restrictions.like("field1", "%"+productionPlan.getField1()+"%"));
-		}
 		dc.add(Restrictions.eq(ProductionPlan.FIELD_DEL_FLAG, ProductionPlan.DEL_FLAG_NORMAL));
 		dc.addOrder(Order.desc("serialNum"));
 		return productionPlanDao.find(page, dc);

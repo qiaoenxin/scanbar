@@ -21,7 +21,7 @@ import org.hibernate.annotations.NotFoundAction;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
 
 /**
- * 生产管理Entity
+ * 指令中的产品
  * @author Generate Tools
  * @version 2016-03-12
  */
@@ -34,8 +34,12 @@ public class Production extends IdEntity<Production> {
 	private ProductionPlan plan;
 	private Product product;
 	private int number;		//生产目标数量
+	
 	private int priority = 3;	//优先级	1:高;2:中;3:低
-	private	String serialNum;	//编号	20位数
+	
+	private	String serialNum;	//生产指令编号+产品编号
+	
+	private int isProducing;
 	
 	private int completeNum;
 	
@@ -109,6 +113,15 @@ public class Production extends IdEntity<Production> {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
+	public int getIsProducing() {
+		return isProducing;
+	}
+
+	public void setIsProducing(int isProducing) {
+		this.isProducing = isProducing;
+	}
+	
 }
 
 

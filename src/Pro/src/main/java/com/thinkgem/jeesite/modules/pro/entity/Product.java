@@ -58,22 +58,22 @@ public class Product extends IdEntity<Product> {
 	 */
 	public static final int TYPE_PRODUCT = 2;
 
-	private String name;
-	private String unionName;//统称
+	private String name; //产品名称
+	private String unionName;//统称，可空
 	private String serialNum;//编号
-	private Integer snpNum;		 //snp数量
-	private int type;
+	private Integer snpNum; //snp数量
+	private int type; //种类
 	
-	private String protoType;
+	private int assy; //是否组合产品
 	
-	private int assy;
+	private String unit;//数量单位
 	
-	private String unit;
-	
-	private String field1;//车型
+	private String machine; //车型
 	
 	private String bomString;
 	
+	
+	private String field1;
 	private String field2;
 	private String field3;
 	private String field4;
@@ -137,6 +137,14 @@ public class Product extends IdEntity<Product> {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+	
+	public String getMachine() {
+		return machine;
+	}
+
+	public void setMachine(String machine) {
+		this.machine = machine;
 	}
 
 	@ExcelField(title="车种", align=2, sort=70)
@@ -205,13 +213,6 @@ public class Product extends IdEntity<Product> {
 	}
 	
 
-	public String getProtoType() {
-		return protoType;
-	}
-
-	public void setProtoType(String protoType) {
-		this.protoType = protoType;
-	}
 
 	public String getBomString() {
 		return bomString;
@@ -237,7 +238,11 @@ public class Product extends IdEntity<Product> {
 	
 	public static class Bom{
 		private boolean isPrint;
+		
 		private String action;
+		
+		private String printCard;
+		
 		private Map<String, String> properties;
 		
 		public String toJson(){
@@ -263,6 +268,12 @@ public class Product extends IdEntity<Product> {
 		}
 		public void setAction(String action) {
 			this.action = action;
+		}
+		public String getPrintCard() {
+			return printCard;
+		}
+		public void setPrintCard(String printCard) {
+			this.printCard = printCard;
 		}
 	}
 }

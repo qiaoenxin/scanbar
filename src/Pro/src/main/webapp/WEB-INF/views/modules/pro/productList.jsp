@@ -96,18 +96,15 @@
 			<tr>
 				<td>${product.name}</td>
 				<td>${product.serialNum}</td>
-				<td>${product.field1}</td>
+				<td>${product.machine}</td>
 				<td>${product.snpNum}</td>
 				<td>${product.assy}</td>
 				<td>
 				</td>
 				<td>
 					<shiro:hasPermission name="pro:product:edit">
-					<c:if test="${product.protoType == product.id}">
-						<a href="javascript:flow('${product.id}');">工序流</a>
 	    				<a href="${ctx}/pro/product/form?id=${product.id}">修改</a>
 						<a href="${ctx}/pro/product/delete?id=${product.id}" onclick="return confirmx('确认要删除该产品管理吗？', this.href)">删除</a>
-					</c:if>
 					</shiro:hasPermission>
 				</td>
 			</tr>

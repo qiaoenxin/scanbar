@@ -30,7 +30,7 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	
 	private static final long serialVersionUID = 1L;
 	private Production production;//生产
-	private	String serialNum;	//编号	24位数
+	private	String serialNum;	//编号	生产指令中的产品编号 + xxxx（4位数字）
 	private ProductTree productTree;	//产品
 	private String status;		//状态
 	private int number;			//数量
