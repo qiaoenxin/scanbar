@@ -80,7 +80,7 @@ public class Product extends IdEntity<Product> {
 	private String field5;
 	private String field6;
 	
-	private Bom bom;
+	private transient Bom bom;
 	
 	
 	
@@ -217,6 +217,7 @@ public class Product extends IdEntity<Product> {
 		return bomString;
 	}
 
+	@Transient
 	public void setBomString(String bomString) {
 		this.bomString = bomString;
 		bom = null;

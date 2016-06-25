@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NotFound;
@@ -68,6 +70,7 @@ public class ProductTree extends IdEntity<ProductTree> {
 		this.parent = parent;
 	}
 	
+	@Transient
 	public Bom getBom(){
 		if(parent == null){
 			return null;
