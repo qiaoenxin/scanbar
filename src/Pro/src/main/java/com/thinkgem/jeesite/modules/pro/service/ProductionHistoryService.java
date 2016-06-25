@@ -18,7 +18,6 @@ import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
-import com.thinkgem.jeesite.modules.pro.entity.Product.Flow;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionHistory;
 import com.thinkgem.jeesite.modules.pro.entity.StockHistory;
@@ -89,38 +88,24 @@ public class ProductionHistoryService extends BaseService {
 		return productionHistoryDao.find(criteria);
 	}
 	
-	@Transactional
-	public void saveHistory(ProductionDetail productionDetail){
+	public boolean hasSaved(ProductionDetail productionDetail){
 		List<ProductionHistory> detailHistories = findByDetail(productionDetail.getId());
 		for(ProductionHistory history: detailHistories){
 			//重复扫描
 			if(productionDetail.getStatus().equals(history.getStatus())){
-				return;
+				return true;
 			}
 		}
+		return false;
+	}
+	
+	@Transactional
+	public ProductionHistory saveHistory(ProductionDetail productionDetail){
 		ProductionHistory history = new ProductionHistory();
 		history.setStatus(productionDetail.getStatus());
 		history.setProductionDetail(productionDetail);
 		detailService.save(productionDetail);
 		productionHistoryDao.save(history);
-		
-		StockHistory stockHistory = new StockHistory();
-		
-		String status = productionDetail.getStatus();
-		if(!(status.equals(Product.FLOW_D) || status.equals(Product.FLOW_D))){
-			return;
-		}
-		Product producnt = null;
-		if(productionDetail.getProductTree() != null){
-			producnt = productionDetail.getProductTree().getProduct();
-		}else{
-			producnt = productionDetail.getProduction().getProduct();
-		}
-		
-		stockHistory.setProduct(producnt);
-		stockHistory.setNumber(productionDetail.getNumber());
-		stockHistory.setReason("");
-		stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
-		stockHistoryService.save(stockHistory);
+		return history;
 	}
 }

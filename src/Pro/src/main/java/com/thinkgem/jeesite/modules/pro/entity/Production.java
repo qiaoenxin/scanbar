@@ -34,7 +34,7 @@ public class Production extends IdEntity<Production> {
 	private ProductionPlan plan;
 	private Product product;
 	private int number;		//生产目标数量
-	private int priority;	//优先级	1:高;2:中;3:低
+	private int priority = 3;	//优先级	1:高;2:中;3:低
 	private	String serialNum;	//编号	20位数
 	
 	private int completeNum;

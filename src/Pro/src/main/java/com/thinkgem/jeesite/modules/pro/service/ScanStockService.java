@@ -32,18 +32,16 @@ public class ScanStockService {
 	 * 扫描入库
 	 * @param detail
 	 * @param subTrees
+	 * @param flows 
 	 * @throws Exception
 	 */
 	@Transactional
 	public void saveStock(ProductionDetail detail, List<ProductTree> subTrees) throws Exception{
 		String reason = "生产扫描";
-		
-		//判断是否重复扫描
-		List<StockHistory> detailScaned = historyService.findByDetailId(detail.getId());
-		if(detailScaned.size() > 0){
+		List<StockHistory> stockList = historyService.findByDetailId(detail.getId());
+		if(stockList.size() > 0){
 			return;
 		}
-		
 		if(detail.getProduction().getProduct().getAssy() != Product.ASSY_SIMPLE){
 			StockHistory stockHistory = new StockHistory();
 			stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
@@ -82,6 +80,7 @@ public class ScanStockService {
 			historyService.save(stockHistory);
 		}
 	}
+	
 	
 	/**
 	 * 生产报损失

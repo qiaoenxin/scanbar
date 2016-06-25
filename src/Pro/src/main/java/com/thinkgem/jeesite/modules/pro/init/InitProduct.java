@@ -63,43 +63,45 @@ public class InitProduct {
 					//端末  flowId=1
 					JSONObject flow = new JSONObject();
 					JSONArray fields = new JSONArray();
-					JSONObject field = new JSONObject();
-					if(StringUtils.isNotBlank(dmNum)){
+					JSONObject field = null;
+					if(StringUtils.isNotBlank(dmNum) && StringUtils.isNotBlank(dmName)){
+						field = new JSONObject();
 						field.put("field", "field1");//编号
 						field.put("value", dmNum);
 						fields.add(field);
-					}
-					if(StringUtils.isNotBlank(dmName)){
+						
 						field = new JSONObject();
 						field.put("field", "field9");//名称
 						field.put("value", dmName);
 						fields.add(field);
+						
+						flow.put("id", "1");
+						flow.put("fields", fields);
+						flows.add(flow);
 					}
-					flow.put("id", "1");
-					flow.put("fields", fields);
-					flows.add(flow);
+					
+					
 					
 					//弯曲  flowId=2
 					flow = new JSONObject();
 					fields = new JSONArray();
-					if(StringUtils.isNotBlank(wqNum)){
+					if(StringUtils.isNotBlank(wqNum) && StringUtils.isNotBlank(wqName)){
 						field = new JSONObject();
 						field.put("field", "field1");//编号
 						field.put("value", wqNum);
 						fields.add(field);
-					}
-					if(StringUtils.isNotBlank(wqName)){
+						
 						field = new JSONObject();
 						field.put("field", "field9");//名称
 						field.put("value", wqName);
 						fields.add(field);
+						
+						flow.put("id", "2");
+						flow.put("fields", fields);
+						flows.add(flow);
 					}
-					flow.put("id", "2");
-					flow.put("fields", fields);
-					flows.add(flow);
 					
-					
-					product.setFlow(flows.toJSONString());
+//					product.setFlow(flows.toJSONString());
 					
 					productService.save(product);
 				} catch (Exception e) {
@@ -110,7 +112,6 @@ public class InitProduct {
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

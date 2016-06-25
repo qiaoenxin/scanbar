@@ -35,8 +35,8 @@
 		<c:forEach items="${page.list}" var="productionHistory">
 			<tr>
 				<td>${productionHistory.productionDetail.production.serialNum}</td>
-				<td>${productionHistory.productionDetail.productTree.product.name}</td>
-				<td>${productionHistory.productionDetail.productTree.product.serialNum}</td>
+				<td>${productionHistory.productionDetail.production.product.name}</td>
+				<td>${productionHistory.productionDetail.production.product.serialNum}</td>
 				<td>${fns:getDictLabel(productionHistory.status,'flow_type','')}</td>
 				<td>${productionHistory.createBy.loginName }</td>
 				<td>${fns:formatDate(productionHistory.createDate,'yyyy-MM-dd HH:mm')}</td>

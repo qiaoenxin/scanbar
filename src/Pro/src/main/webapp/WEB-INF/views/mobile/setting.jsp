@@ -48,6 +48,25 @@
 	function submit(){
 		var address = $('#address').val();
 		var device = $('#device').val();
+		$.ajax({
+			url: address + "/interface/test",
+			data: {device: device},
+			success: function(data){
+				if(data.result == 0){
+					submit0();
+				}else{
+					mAlert(data.reason);
+				}
+			},
+			error: function(){
+				mAlert("无法连接服务器，");
+			}
+		});
+	}
+	
+	function submit0(){
+		var address = $('#address').val();
+		var device = $('#device').val();
 		setSetting("addressUrl",address);
 		setSetting("deviceKey",device);
 		mAlert("提交成功");

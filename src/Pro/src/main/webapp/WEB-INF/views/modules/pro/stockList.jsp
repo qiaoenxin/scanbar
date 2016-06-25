@@ -1,5 +1,10 @@
+<%@page import="com.thinkgem.jeesite.modules.pro.init.InitProduct"%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<%
+ //InitProduct product = new InitProduct();
+ //product.init();
+%>
 <html>
 <head>
 	<title>库存管理管理</title>

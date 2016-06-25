@@ -25,7 +25,7 @@ public class InterfaceConfig {
 		//查询子树
 		interfaces.registerInterface(new InterfaceDef("querySub", "/querySub", QuerySubService.class, false));
 		//损失
-		interfaces.registerInterface(new InterfaceDef("loss", "/loss", LossService.class, false));
+		interfaces.registerInterface(new InterfaceDef("loss", "/loss", LossService.class));
 		//登出
 		interfaces.registerInterface(new InterfaceDef("logout", "/logout", LogoutService.class, false));
 		//工序流
@@ -33,6 +33,9 @@ public class InterfaceConfig {
 		
 		//判断登录
 		interfaces.registerInterface(new InterfaceDef("checkLogin", "/checkLogin", CheckLoginService.class, false));
+		
+		//测试客户端设置
+		interfaces.registerInterface(new InterfaceDef("test", "/test", Test.TestService.class, false));
 	}
 	
 }

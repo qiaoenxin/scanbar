@@ -17,7 +17,6 @@ import com.thinkgem.jeesite.common.persistence.Parameter;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
-import com.thinkgem.jeesite.modules.pro.entity.Product.Flow;
 import com.thinkgem.jeesite.modules.pro.entity.Stock;
 import com.thinkgem.jeesite.modules.pro.dao.ProductDao;
 import com.thinkgem.jeesite.modules.pro.dao.StockDao;
@@ -55,7 +54,7 @@ public class ProductService extends BaseService {
 			dc.add(Restrictions.eq("field1", product.getField1()));
 		}
 		dc.add(Restrictions.eq(Product.FIELD_DEL_FLAG, Product.DEL_FLAG_NORMAL));
-		dc.addOrder(Order.desc("name"));
+		dc.addOrder(Order.desc("protoType"));
 		return productDao.find(page, dc);
 	}
 	
@@ -79,25 +78,6 @@ public class ProductService extends BaseService {
 			stock.setProduct(product);
 			stockDao.save(stock);
 		}
-		if(!product.getFlows().isEmpty()){
-			for(Flow flow: product.getFlows()){
-				if(flow.getId().equals(Product.FLOW_D) || flow.getId().equals(Product.FLOW_W)){
-					Product p = new Product();
-					List<Product> list = findByName(flow.getField9());
-					
-					if(!list.isEmpty()){
-						p = list.get(0);
-					}
-					p.setName(flow.getField9());
-					p.setSerialNum(flow.getField1());
-					p.setSnpNum(product.getSnpNum());
-					p.setFlowId(flow.getId());
-					p.setProtoType(product.getId());
-					productDao.save(p);
-				}
-			}
-		}
-		
 	}
 	
 	

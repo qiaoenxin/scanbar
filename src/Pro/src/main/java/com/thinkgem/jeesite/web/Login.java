@@ -52,6 +52,7 @@ public class Login {
 			
 			HttpSession session = request.getContext().getHttpRequest().getSession();
 			session.setAttribute(UserUtils.USER_SESSION, user);
+			session.setMaxInactiveInterval(60 * 60 * 5);
 			LoginInfo info = new LoginInfo();
 			info.session = session;
 			info.loginName = user.getLoginName();

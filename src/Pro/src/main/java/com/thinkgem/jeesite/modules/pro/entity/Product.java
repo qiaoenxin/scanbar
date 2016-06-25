@@ -6,22 +6,18 @@ package com.thinkgem.jeesite.modules.pro.entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
-import com.thinkgem.jeesite.common.utils.Reflections;
 import com.thinkgem.jeesite.common.utils.excel.annotation.ExcelField;
-import com.thinkgem.jeesite.common.utils.excel.fieldtype.ProductType;
 
 /**
  * 产品管理Entity
@@ -34,27 +30,59 @@ import com.thinkgem.jeesite.common.utils.excel.fieldtype.ProductType;
 public class Product extends IdEntity<Product> {
 	
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 单品
+	 */
 	public static final int ASSY_SIMPLE = 0;
+	/**
+	 * 组装品
+	 */
 	public static final int ASSY_COM = 1;
+	
 	public static final String FLOW_D="1";
 	public static final String FLOW_W="2";
+	
+	/**
+	 * 原料
+	 */
+	public static final int TYPE_META = 0;
+	
+	/**
+	 * 半成品
+	 */
+	public static final int TYPE_MID_PRODUCT = 1;
+	
+	/**
+	 * 产成品
+	 */
+	public static final int TYPE_PRODUCT = 2;
 
 	private String name;
+	private String unionName;//统称
 	private String serialNum;//编号
 	private Integer snpNum;		 //snp数量
-	private String flow;	//功序流
+	private int type;
+	
 	private String protoType;
-	private String flowId;
+	
 	private int assy;
-	private String field1;
+	
+	private String unit;
+	
+	private String field1;//车型
+	
+	private String bomString;
+	
 	private String field2;
 	private String field3;
 	private String field4;
 	private String field5;
 	private String field6;
 	
+	private Bom bom;
 	
-	private transient List<Flow> flows;
+	
 	
 	public Product() {
 		super();
@@ -92,14 +120,6 @@ public class Product extends IdEntity<Product> {
 		this.snpNum = snpNum;
 	}
 
-	public String getFlow() {
-		return StringEscapeUtils.unescapeHtml4(flow);
-	}
-
-	public void setFlow(String flow) {
-		this.flow = flow;
-		flows = null;
-	}
 	
 	@ExcelField(title="ASSY", align=2, sort=70)
 	public int getAssy() {
@@ -108,6 +128,15 @@ public class Product extends IdEntity<Product> {
 
 	public void setAssy(int assy) {
 		this.assy = assy;
+	}
+	
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	@ExcelField(title="车种", align=2, sort=70)
@@ -125,6 +154,22 @@ public class Product extends IdEntity<Product> {
 
 	public void setField2(String field2) {
 		this.field2 = field2;
+	}
+
+	public String getUnionName() {
+		return unionName;
+	}
+
+	public void setUnionName(String unionName) {
+		this.unionName = unionName;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public String getField3() {
@@ -168,153 +213,55 @@ public class Product extends IdEntity<Product> {
 		this.protoType = protoType;
 	}
 
-	public String getFlowId() {
-		return flowId;
+	public String getBomString() {
+		return bomString;
 	}
 
-	public void setFlowId(String flowId) {
-		this.flowId = flowId;
+	public void setBomString(String bomString) {
+		this.bomString = bomString;
+		bom = null;
 	}
 
 	@Transient
-	public List<Flow> getFlows() {
-		if(StringUtils.isBlank(this.getFlow())){
-			return Collections.emptyList();
-		}
-		
-		if(flows != null){
-			return flows;
-		}
-		//StringEscapeUtils.unescapeHtml4
-		JSONArray arrays = JSONArray.parseArray(this.getFlow());
-		List<Flow> list = new ArrayList<Product.Flow>();
-		Flow prev = null;
-		for(int i =0, len = arrays.size(); i < len;i++){
-			JSONObject json = arrays.getJSONObject(i);
-			String id = json.getString("id");
-			Flow flow = new Flow();
-			flow.setId(id);
-			
-			if(json.containsKey("fields")){
-				JSONArray fields = json.getJSONArray("fields");
-				for(int j=0;j<fields.size();j++){
-					JSONObject fieldJSON = fields.getJSONObject(j);
-					String fieldName = fieldJSON.getString("field");
-					String fieldValue = fieldJSON.getString("value");
-					Reflections.setFieldValue(flow, fieldName, fieldValue);
-				}
-			}
-			
-			
-			flow.prev = prev;
-			if(prev != null){
-				prev.next = flow;
-			}
-			list.add(flow);
-			prev = flow;
-		}
-		flows = Collections.unmodifiableList(list);
-		return flows;
+	public Bom getBom() {
+		if(bom == null && bomString != null){
+			bom = new Bom(bomString);		}
+		return bom;
 	}
 
-	public class Flow{
+	public void setBom(Bom bom) {
+		this.bom = bom;
+		this.bomString = bom.toJson();
+	}
+	
+	public static class Bom{
+		private boolean isPrint;
+		private String action;
+		private Map<String, String> properties;
 		
-		
-		public Flow() {
+		public String toJson(){
+			return JSONObject.toJSONString(this);
+		}
+		public Bom(String json) {
 			super();
-			// TODO Auto-generated constructor stub
 		}
-
-		private String id;
-		
-		
-		private String field1;
-		private String field2;
-		private String field3;
-		private String field4;
-		private String field5;
-		private String field6;
-		private String field7;
-		private String field8;
-		private String field9;
-		
-		private Flow prev;
-		
-		private Flow next;
-		
-		public String getId() {
-			return id;
+		public Map<String, String> getProperties() {
+			return properties;
 		}
-		public void setId(String id) {
-			this.id = id;
+		public void setProperties(Map<String, String> properties) {
+			this.properties = properties;
 		}
-		
-		
-		public String getField1() {
-			return field1;
+		public boolean isPrint() {
+			return isPrint;
 		}
-		public void setField1(String field1) {
-			this.field1 = field1;
+		public void setPrint(boolean isPrint) {
+			this.isPrint = isPrint;
 		}
-		public String getField2() {
-			return field2;
+		public String getAction() {
+			return action;
 		}
-		public void setField2(String field2) {
-			this.field2 = field2;
-		}
-		public String getField3() {
-			return field3;
-		}
-		public void setField3(String field3) {
-			this.field3 = field3;
-		}
-		public String getField4() {
-			return field4;
-		}
-		public void setField4(String field4) {
-			this.field4 = field4;
-		}
-		public String getField5() {
-			return field5;
-		}
-		public void setField5(String field5) {
-			this.field5 = field5;
-		}
-		public String getField6() {
-			return field6;
-		}
-		public void setField6(String field6) {
-			this.field6 = field6;
-		}
-		public String getField7() {
-			return field7;
-		}
-		public void setField7(String field7) {
-			this.field7 = field7;
-		}
-		public String getField8() {
-			return field8;
-		}
-		public void setField8(String field8) {
-			this.field8 = field8;
-		}
-		
-		public String getField9() {
-			return field9;
-		}
-		public void setField9(String field9) {
-			this.field9 = field9;
-		}
-		public Flow getNext(){
-			return next;
-		}
-		
-		public boolean isFirst(){
-			return prev == null;
-		}
-		
-		public boolean isLast(){
-			return next == null;
+		public void setAction(String action) {
+			this.action = action;
 		}
 	}
 }

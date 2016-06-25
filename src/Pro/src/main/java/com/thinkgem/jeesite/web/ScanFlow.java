@@ -9,16 +9,18 @@ import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
-import com.thinkgem.jeesite.modules.pro.entity.Product.Flow;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
+import com.thinkgem.jeesite.modules.pro.entity.ProductionHistory;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionHistoryService;
+import com.thinkgem.jeesite.modules.pro.service.ScanStockService;
 
 
 public class ScanFlow {
 
 	private static ProductionDetailService detailService = SpringContextHolder.getBean(ProductionDetailService.class);
 	
+	private static ScanStockService scanStockService = SpringContextHolder.getBean(ScanStockService.class);
 	
 	private static ProductionHistoryService historyService = SpringContextHolder.getBean(ProductionHistoryService.class);;
 	
@@ -26,7 +28,7 @@ public class ScanFlow {
 		
 		@Override
 		protected void service(Request request, Response response) {
-			
+			/*
 			ProductionDetail detail = detailService.findByDetailNo(request.detailNo);
 			if(detail == null){
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
@@ -38,6 +40,8 @@ public class ScanFlow {
 			Product product = detail.getProduction().getProduct();
 			if(product.getAssy() != Product.ASSY_SIMPLE){
 				product = detail.getProductTree().getProduct();
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "不支持组合品");
+				return;
 			}
 			List<Flow> flows = product.getFlows();
 			Flow statusFlow = null;
@@ -61,11 +65,23 @@ public class ScanFlow {
 			}
 			if(next.getId().equals(request.getFlow())){
 				detail.setStatus(request.getFlow());
-				historyService.saveHistory(detail);
+				boolean saved = historyService.hasSaved(detail);
+				if(!saved){
+					ProductionHistory hitory = historyService.saveHistory(detail);
+					if(next.getId().equals("1") || next.getId().equals("2") ){
+						try {
+							scanStockService.fromTo(detail, statusFlow, next, hitory);
+						} catch (Exception e) {
+							response.setResultAndReason(ReturnCode.FLOW_ERROR, "入库异常");
+							return;
+						}
+					}
+				}
+				
 			}else{
 				response.setResultAndReason(ReturnCode.FLOW_ERROR, "流程不匹配");
 				return;
-			}
+			}*/
 		}
 	}
 	

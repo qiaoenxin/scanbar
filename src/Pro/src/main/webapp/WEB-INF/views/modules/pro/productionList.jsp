@@ -120,14 +120,13 @@
 	<div class="pagination">${page}</div>
 	
 	<script id="print-templ" type="text/x-handlebars-template">
-			<table style="font-size:14px;" id="c"> 
 
 <style>
 table{
-	font-size:10px;
+	font-size:12px;
 }
 div{
-	font-size:10px;
+	font-size:12px;
 }
 table.gridtable {
 	color:#333333;
@@ -143,7 +142,7 @@ table.gridtable td {
 }
 </style>
 
-<table style="height:340px;width:100%;" class="gridtable" id="c">
+<table style="height:350px;width:98%;" class="gridtable" id="c" cellspacing="0" cellpadding="0">
 <tr>
 	<td colspan="7" style="text-align:center;font-weight:bold;font-size:14px">制程管理卡 </td>
 </tr>
@@ -153,11 +152,11 @@ table.gridtable td {
 	<td>SNP</td>
 	<td>尾数</td>
 </tr>
-<tr style="height:100px;">
-	<td colspan="3" style="font-weight:bold;font-size:14px">{{productTree.product.field1}}</td>
-	<td colspan="2" style="font-weight:bold;font-size:14px">{{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
-	<td>{{number}}</td>
-	<td>{{remainder}}</td>
+<tr style="height:80px;">
+	<td colspan="3" style="font-weight:bold;font-size:18px;text-align:center">{{production.product.field1}}</td>
+	<td colspan="2" style="font-weight:bold;font-size:18px;text-align:center">{{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
+	<td style="font-weight:bold;font-size:18px">{{number}}</td>
+	<td style="font-weight:bold;font-size:18px">{{remainder}}</td>
 </tr>
 <tr>
 	<td>HPC&nbsp;/&nbsp;{{flow1.field2}} </td>
@@ -167,20 +166,23 @@ table.gridtable td {
 	<td colspan="2">标示（{{flow1.field8}}）</td>
 </tr>
 <tr>
-	<td style="width:13%;">{{#if flow1.field2}}*{{else}}无{{/if}}</td>
-	<td style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
-	<td style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
-	<td style="width:22%;">{{#if flow1.field5}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:13%;">{{#if flow1.field2}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:22%;">{{#if flow1.field5}}*{{else}}无{{/if}}</td>
 	<td style="width:15%;">{{#if flow1.field7}}*{{else}}无{{/if}}</td>
-	<td colspan="2">{{#if flow1.field8}}*{{else}}无{{/if}}</td>
+	<td colspan="2" rowspan=2>{{#if flow1.field8}}*{{else}}无{{/if}}</td>
 </tr>
-<tr>
+<tr style="height:20px;">
+	<td rowspan="3">{{{qrImg}}}</td>
+	<td style="width:1px;"></td>
+</tr>
+<tr >
 	<td>PCO&nbsp;{{flow1.field6}}</td>
 	<td colspan="3">弯曲&nbsp;{{flow2.field2}}</td>
-	<td rowspan="2">{{{qrImg}}}</td>
-	<td colspan="2" rowspan="2" style="font-weight:bold;font-size:14px;text-align:center">{{next}}</td>
+	<td colspan="2" rowspan="2" style="font-weight:bold;font-size:16px;text-align:center">{{next}}</td>
 </tr>
-<tr>
+<tr style="height:40px;">
 	<td>{{#if flow1.field6}}*{{else}}无{{/if}}</td>
 	<td colspan="3">{{#if flow2}}*{{else}}无{{/if}}</td>
 </tr>
@@ -196,7 +198,7 @@ table.gridtable td {
 </tr>
 <tr>
 	<td colspan="3">日期/名字</td>
-	<td colspan="4">三楼（武汉）汽车部件有限公司</td>
+	<td colspan="4">三樱武汉汽车部件有限公司</td>
 </tr>
 </table>
 	</script>

@@ -91,14 +91,6 @@ public class ProductController extends BaseController {
 		model.addAttribute("product", product);
 		
 		JSONArray flows = new JSONArray();
-		try {
-			if(StringUtils.isNotBlank(product.getFlow())){
-				flows = JSONObject.parseArray(product.getFlow());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		model.addAttribute("flowList", flows);
 		
@@ -114,7 +106,6 @@ public class ProductController extends BaseController {
 		map.put("ok", true);
 		try {
 			Product product = productService.get(id);
-			product.setFlow(flows);
 			productService.save(product);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

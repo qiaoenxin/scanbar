@@ -3,25 +3,18 @@
  */
 package com.thinkgem.jeesite.modules.pro.entity;
 
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.annotations.Where;
-import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 
 /**
  * 产品树管理Entity
@@ -40,6 +33,7 @@ public class ProductTree extends IdEntity<ProductTree> {
 	private Product product;	//产品
 	private Product parent;		//父
 	private int number;			//数量
+	
 	
 	
 	public ProductTree() {
@@ -72,6 +66,13 @@ public class ProductTree extends IdEntity<ProductTree> {
 
 	public void setParent(Product parent) {
 		this.parent = parent;
+	}
+	
+	public Bom getBom(){
+		if(parent == null){
+			return null;
+		}
+		return parent.getBom();
 	}
 
 
