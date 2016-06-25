@@ -100,9 +100,6 @@
 				<td>${product.snpNum}</td>
 				<td>${product.assy}</td>
 				<td>
-				<c:forEach items="${fns:parseArray(product.flow) }" var="flow" varStatus="i">
-					${i.index+1 } :${fns:getDictLabel(flow.id,'flow_type','') }
-				</c:forEach>
 				</td>
 				<td>
 					<shiro:hasPermission name="pro:product:edit">
