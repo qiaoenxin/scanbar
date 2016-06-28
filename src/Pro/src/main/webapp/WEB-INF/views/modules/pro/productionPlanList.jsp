@@ -24,26 +24,27 @@
 	<form:form id="searchForm" modelAttribute="productionPlan" action="${ctx}/pro/productionPlan/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<label>指令名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-small"/>
-		<label>机台：</label><form:input path="field1" htmlEscape="false" maxlength="50" class="input-small"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>编号</th><th>机台</th><th>计划开始时间</th><th>计划完成时间</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><tr><th>批次</th><th>指令编号</th><th>产品</th><th>产品编号</th><th>数量</th><th>完成数</th><shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
-		<c:forEach items="${page.list}" var="productionPlan">
+		<c:forEach items="${page.list}" var="production">
 			<tr>
-				<td>${productionPlan.name}</td>
-				<td>${productionPlan.serialNum}</td>
-				<td>${productionPlan.field1}</td>
-				<td>${fns:formatDate(productionPlan.beginDate,'yyyy-MM-dd')}</td>
-				<td>${fns:formatDate(productionPlan.endDate,'yyyy-MM-dd')}</td>
+				<td>${production.plan.serialNum}</td>
+				<td>${production.serialNum}</td>
+				<td>${production.product.name}</td>
+				<td>${production.product.serialNum}</td>
+				<td>${production.number}</td>
+				<td>${production.completeNum}</td>
 				<shiro:hasPermission name="pro:productionPlan:edit"><td>
-    				<a href="${ctx}/pro/productionPlan/form?id=${productionPlan.id}">修改</a>
-					<a href="${ctx}/pro/productionPlan/delete?id=${productionPlan.id}" onclick="return confirmx('确认要删除该生产计划吗？', this.href)">删除</a>
+    				<a href="${ctx}/pro/productionPlan/form?id=${production.plan.id}">投产</a>
+    				<a href="${ctx}/pro/productionPlan/form?id=${production.id}">明细</a>
+    				<a href="${ctx}/pro/productionPlan/form?id=${production.plan.id}">修改</a>
+					<a href="${ctx}/pro/productionPlan/delete?id=${production.plan.id}" onclick="return confirmx('确认要删除该生产计划吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
-			</tr>
+			</tr>			
 		</c:forEach>
 		</tbody>
 	</table>

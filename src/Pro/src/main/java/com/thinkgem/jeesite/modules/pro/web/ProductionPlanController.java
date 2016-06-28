@@ -19,18 +19,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
-import com.thinkgem.jeesite.modules.sys.entity.User;
-import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
-import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionPlan;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionPlanService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionService;
+import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
  * 生产计划Controller
@@ -64,12 +64,12 @@ public class ProductionPlanController extends BaseController {
 	
 	@RequiresPermissions("pro:productionPlan:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(ProductionPlan productionPlan, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list(Production production, HttpServletRequest request, HttpServletResponse response, Model model) {
 		User user = UserUtils.getUser();
 		if (!user.isAdmin()){
-			productionPlan.setCreateBy(user);
+			production.setCreateBy(user);
 		}
-        Page<ProductionPlan> page = productionPlanService.find(new Page<ProductionPlan>(request, response), productionPlan); 
+        Page<Production> page = productionService.find(new Page<Production>(request, response), production); 
         model.addAttribute("page", page);
 		return "modules/pro/productionPlanList";
 	}
@@ -79,15 +79,18 @@ public class ProductionPlanController extends BaseController {
 	public String form(ProductionPlan productionPlan, Model model) {
 		model.addAttribute("productionPlan", productionPlan);
 		
-		List<Product> productList = productService.findAll();
+		List<Product> productList = productService.findAllEndProduct();
         model.addAttribute("productList", productList);
+        
+        List<Production> productionList = productionService.findByPlanId(productionPlan.getId());
+        model.addAttribute("productionList", productionList);
         
 		return "modules/pro/productionPlanForm";
 	}
 
 	@RequiresPermissions("pro:productionPlan:edit")
 	@RequestMapping(value = "save")
-	public String save(ProductionPlan productionPlan, Model model, RedirectAttributes redirectAttributes) {
+	public String save(ProductionPlan productionPlan,ProductionModel productionModel, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, productionPlan)){
 			return form(productionPlan, model);
 		}
@@ -102,7 +105,26 @@ public class ProductionPlanController extends BaseController {
 			}
 		}
 		
+		String productionPlanId = productionPlan.getId();
+		
+		if (StringUtils.isBlank(productionPlanId)) {
+			productionPlanId = IdGen.uuid();
+			productionPlan.setId(productionPlanId);
+		}
+		
+		
+		productionList = productionModel.getProductionList();
+		
+		for (Production production : productionList) {
+			production.setPlan(productionPlan);
+			Product product = productService.get(production.getProduct().getId());
+			production.setSerialNum(productionPlan.getSerialNum()+product.getSerialNum());
+		}
+		
 		productionPlanService.save(productionPlan);
+		
+		productionService.save(productionList);
+		
 		addMessage(redirectAttributes, "保存生产计划成功");
 		return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/?repage";
 	}

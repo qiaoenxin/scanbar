@@ -38,8 +38,6 @@ public class ProductionPlan extends IdEntity<ProductionPlan> {
 		this.id = id;
 	}
 
-	
-
 	public Date getEndDate() {
 		return endDate;
 	}

@@ -44,6 +44,11 @@ public class ProductService extends BaseService {
 		String hql = "from Product where delFlag=:p1";
 		return productDao.find(hql, new Parameter(Product.DEL_FLAG_NORMAL));
 	}
+
+	public List<Product> findAllEndProduct(){
+		String hql = "from Product where delFlag=:p1 and type=:p2";
+		return productDao.find(hql, new Parameter(Product.DEL_FLAG_NORMAL,Product.TYPE_PRODUCT));
+	}
 	
 	public Page<Product> find(Page<Product> page, Product product) {
 		DetachedCriteria dc = productDao.createDetachedCriteria();

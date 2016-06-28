@@ -77,6 +77,12 @@ public class ProductionService extends BaseService {
 	}
 	
 	@Transactional(readOnly = false)
+	public void save(List<Production> productions) {
+		productionDao.clear();
+		productionDao.save(productions);
+	}
+	
+	@Transactional(readOnly = false)
 	public void delete(String id) {
 		productionDao.deleteById(id);
 	}

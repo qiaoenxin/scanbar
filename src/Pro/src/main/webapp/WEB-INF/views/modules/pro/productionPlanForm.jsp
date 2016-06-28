@@ -23,6 +23,38 @@
 				}
 			});
 		});
+		
+		function addRow(list, idx, tpl, row){
+			$(list).append(Mustache.render(tpl, {
+				idx: idx, delBtn: true, row: row
+			}));
+			$(list+idx).find("select").each(function(){
+				$(this).val($(this).attr("data-value"));
+			});
+			$(list+idx).find("input[type='checkbox'], input[type='radio']").each(function(){
+				var ss = $(this).attr("data-value").split(',');
+				for (var i=0; i<ss.length; i++){
+					if($(this).val() == ss[i]){
+						$(this).attr("checked","checked");
+					}
+				}
+			});
+		}
+		function delRow(obj, prefix){
+			var id = $(prefix+"_id");
+			var delFlag = $(prefix+"_delFlag");
+			if (id.val() == ""){
+				$(obj).parent().parent().remove();
+			}else if(delFlag.val() == "0"){
+				delFlag.val("1");
+				$(obj).html("撤销删除").attr("title", "撤销删除");
+				$(obj).parent().parent().addClass("error");
+			}else if(delFlag.val() == "1"){
+				delFlag.val("0");
+				$(obj).html("删除").attr("title", "删除");
+				$(obj).parent().parent().removeClass("error");
+			}
+		}	
 	</script>
 </head>
 <body>
@@ -32,50 +64,80 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="productionPlan" action="${ctx}/pro/productionPlan/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<form:hidden path="status"/>
 		<tags:message content="${message}"/>
-		<div class="control-group">
-			<label class="control-label">名称:</label>
-			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="200" class="required"/>
-			</div>
-		</div>
 		
 		<div class="control-group">
-			<label class="control-label">机台:</label>
-			<div class="controls">
-				<form:input path="field1" htmlEscape="false" maxlength="200" class="required"/>
-			</div>
-		</div>
-		
-		<div class="control-group">
-			<label class="control-label">编号:</label>
+			<label class="control-label">批次:</label>
 			<div class="controls">
 				<form:input path="serialNum" htmlEscape="false" maxlength="200" class="required"/>
 			</div>
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label">计划开始时间:</label>
-			<div class="controls">
-				<input id="beginDate" name="beginDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate required"
-				value="${fns:formatDate(productionPlan.beginDate,'yyyy-MM-dd')}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">计划完成时间:</label>
+			<label class="control-label">日期:</label>
 			<div class="controls">
 				<input id="endDate" name="endDate" type="text" readonly="readonly" maxlength="20" class="input-small Wdate required"
 				value="${fns:formatDate(productionPlan.endDate,'yyyy-MM-dd')}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</div>
 		</div>
 		
-		<div class="control-group">
-			<label class="control-label">备注:</label>
-			<div class="controls">
-				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="200" class="input-xxlarge"/>
+			<div class="control-group">
+				<label class="control-label">产品：</label>
+				<div class="controls">
+					<table id="contentTable" class="table table-striped table-bordered table-condensed">
+						<thead>
+							<tr>
+								<th class="hide"></th>
+								<th>产品</th>
+								<th>当前库存</th>
+								<th>数量</th>
+								<shiro:hasPermission name="pro:productionPlan:edit"><th>操作</th></shiro:hasPermission>
+							</tr>
+						</thead>
+						<tbody id="productionList">
+						</tbody>
+						<shiro:hasPermission name="pro:productionPlan:edit"><tfoot>
+							<tr><td colspan="5"><a href="javascript:" onclick="addRow('#productionList', productionRowIdx, productionTpl);productionRowIdx = productionRowIdx + 1;" class="btn">新增</a></td></tr>
+						</tfoot></shiro:hasPermission>
+					</table>
+					<script type="text/template" id="productionTpl">//<!--
+							<tr id="productionList{{idx}}">
+								<td class="hide">
+									<input id="productionList{{idx}}_id" name="productionList[{{idx}}].id" type="hidden" value="{{row.id}}"/>
+									<input id="productionList{{idx}}_delFlag" name="productionList[{{idx}}].delFlag" type="hidden" value="0"/>
+								</td>
+								<td style="width: 40%;">
+									<select id="productionList{{idx}}_id" name="productionList[{{idx}}].product.id" data-value="{{row.product.id}}" class="input-small " style="width: 80%;" required>
+										<c:forEach items="${productList}" var="product">
+											<option value="${product.id}">${product.name}</option>
+										</c:forEach>
+									</select>
+								</td>
+								<td style="width: 20%;">
+									<input type="text" readonly value="123" />
+								</td>
+								<td style="width: 25%;">
+									<input id="productionList{{idx}}_number" name="productionList[{{idx}}].number" type="text" value="{{row.number}}" style="width: 80%;">
+								</td>
+								<shiro:hasPermission name="pro:productionPlan:edit"><td class="text-center" style="width: 15%;line-height: 30px;">
+    								<a href="javascript:void(0);">预览</a>
+									<a href="javascript:void(0);" onclick="delRow(this, '#productionList{{idx}}');">删除</a>
+								</td></shiro:hasPermission>
+							</tr>//-->
+						</script>
+					<script type="text/javascript">
+						var productionRowIdx = 0, productionTpl = $("#productionTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
+						$(document).ready(function() {
+							var data = ${fns:toJson(productionList)};
+							for (var i=0; i<data.length; i++){
+								addRow('#productionList', productionRowIdx, productionTpl, data[i]);
+								productionRowIdx = productionRowIdx + 1;
+							}
+						});
+					</script>
+				</div>
 			</div>
-		</div>
+
 		<div class="form-actions">
 			<shiro:hasPermission name="pro:productionPlan:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
