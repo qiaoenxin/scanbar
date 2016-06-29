@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.RequestToViewNameTranslator;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.persistence.Parameter;
@@ -45,9 +46,13 @@ public class ProductService extends BaseService {
 		return productDao.find(hql, new Parameter(Product.DEL_FLAG_NORMAL));
 	}
 
-	public List<Product> findAllEndProduct(){
+	public List<Product> findAllByType(int type){
 		String hql = "from Product where delFlag=:p1 and type=:p2";
-		return productDao.find(hql, new Parameter(Product.DEL_FLAG_NORMAL,Product.TYPE_PRODUCT));
+		return productDao.find(hql, new Parameter(Product.DEL_FLAG_NORMAL,type));
+	}
+	
+	public List<Product> findAllEndProduct(){
+		return findAllByType(Product.TYPE_PRODUCT);
 	}
 	
 	public Page<Product> find(Page<Product> page, Product product) {

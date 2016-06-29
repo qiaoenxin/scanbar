@@ -5,8 +5,14 @@
 	<title>生产计划管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
+	
+		jQuery.validator.addMethod("productUnique",function(value, element, param) {
+			return $("#contentTable select option[value="+value+"]:selected").length < 2;
+		},"产品不得重复!");
+		
+		var stock = ${fns:toJson(stock)};
 		$(document).ready(function() {
-			$("#name").focus();
+			$("#serialNum").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
@@ -25,11 +31,20 @@
 		});
 		
 		function addRow(list, idx, tpl, row){
+			row = row || {};
+			row.numberRenderer = function(){  
+		        return this.row.number || 1;
+		    };
 			$(list).append(Mustache.render(tpl, {
 				idx: idx, delBtn: true, row: row
 			}));
 			$(list+idx).find("select").each(function(){
 				$(this).val($(this).attr("data-value"));
+				$(this).change(function(e){
+					var productId = $(this).val();
+					($(list+idx+"_stock").val(stock[productId] || 0));
+				});		
+				$(this).change();
 			});
 			$(list+idx).find("input[type='checkbox'], input[type='radio']").each(function(){
 				var ss = $(this).attr("data-value").split(',');
@@ -55,6 +70,7 @@
 				$(obj).parent().parent().removeClass("error");
 			}
 		}	
+		
 	</script>
 </head>
 <body>
@@ -107,17 +123,17 @@
 									<input id="productionList{{idx}}_delFlag" name="productionList[{{idx}}].delFlag" type="hidden" value="0"/>
 								</td>
 								<td style="width: 40%;">
-									<select id="productionList{{idx}}_id" name="productionList[{{idx}}].product.id" data-value="{{row.product.id}}" class="input-small " style="width: 80%;" required>
+									<select id="productionList{{idx}}_id" name="productionList[{{idx}}].product.id" data-value="{{row.product.id}}" class="input-small " style="width: 80%;" productUnique="true" required>
 										<c:forEach items="${productList}" var="product">
 											<option value="${product.id}">${product.name}</option>
 										</c:forEach>
 									</select>
 								</td>
 								<td style="width: 20%;">
-									<input type="text" readonly value="123" />
+									<input id="productionList{{idx}}_stock" type="text" readonly value="0" />
 								</td>
 								<td style="width: 25%;">
-									<input id="productionList{{idx}}_number" name="productionList[{{idx}}].number" type="text" value="{{row.number}}" style="width: 80%;">
+									<input id="productionList{{idx}}_number" name="productionList[{{idx}}].number" type="text" value="{{row.numberRenderer}}" min="1" style="width: 80%;">
 								</td>
 								<shiro:hasPermission name="pro:productionPlan:edit"><td class="text-center" style="width: 15%;line-height: 30px;">
     								<a href="javascript:void(0);">预览</a>
@@ -131,6 +147,10 @@
 							var data = ${fns:toJson(productionList)};
 							for (var i=0; i<data.length; i++){
 								addRow('#productionList', productionRowIdx, productionTpl, data[i]);
+								productionRowIdx = productionRowIdx + 1;
+							}
+							if(data.length == 0){
+								addRow('#productionList', productionRowIdx, productionTpl);
 								productionRowIdx = productionRowIdx + 1;
 							}
 						});

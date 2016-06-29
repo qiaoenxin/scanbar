@@ -3,11 +3,14 @@
  */
 package com.thinkgem.jeesite.modules.pro.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,10 +28,12 @@ import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionPlan;
+import com.thinkgem.jeesite.modules.pro.entity.Stock;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionPlanService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionService;
+import com.thinkgem.jeesite.modules.pro.service.StockService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
@@ -52,6 +57,9 @@ public class ProductionPlanController extends BaseController {
 	
 	@Autowired
 	private ProductionDetailService productionDetailService;
+	
+	@Autowired
+	private StockService stockService;
 	
 	@ModelAttribute
 	public ProductionPlan get(@RequestParam(required=false) String id) {
@@ -79,9 +87,20 @@ public class ProductionPlanController extends BaseController {
 	public String form(ProductionPlan productionPlan, Model model) {
 		model.addAttribute("productionPlan", productionPlan);
 		
+		//所有种类为成品的产品
 		List<Product> productList = productService.findAllEndProduct();
         model.addAttribute("productList", productList);
         
+        //产品库存
+        List<Stock> stocks = stockService.findAll();
+        Map<String, Integer> stockMap = new HashMap<String, Integer>();
+        for (Stock stock : stocks) {
+			stockMap.put(stock.getProduct().getId(), stock.getNumber());
+		}
+        model.addAttribute("stock", stockMap);
+        
+        
+        //生产指令下的所有生产
         List<Production> productionList = productionService.findByPlanId(productionPlan.getId());
         model.addAttribute("productionList", productionList);
         

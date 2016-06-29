@@ -35,6 +35,11 @@ public class StockService extends BaseService {
 		return stockDao.get(id);
 	}
 	
+	public List<Stock> findAll(){
+		String hql = "from Stock where delFlag=:p1";
+		return stockDao.find(hql, new Parameter(Stock.DEL_FLAG_NORMAL));
+	}	
+	
 	public Stock getByProductId(String productId) {
 		return stockDao.getByHql("from Stock where product.id=:p1",new Parameter(productId));
 	}
