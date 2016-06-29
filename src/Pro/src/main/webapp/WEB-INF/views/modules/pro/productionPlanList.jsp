@@ -18,7 +18,7 @@
 		function production(id,isProducing){
 			
 			if(isProducing == '1'){
-				top.$.jBox.error("该生产已投产，无法再次投产！","提示");
+				top.$.jBox.error("该指令已投产，无法再次投产！","提示");
 				top.$(".jbox-body .jbox-icon").css("top", "55px");
 				return false;
 			}
