@@ -62,7 +62,6 @@ public class ProductTreeController extends BaseController {
 	public String list(HttpServletRequest request, HttpServletResponse response, Model model) {
 		
 		List<ProductTreePage> list = Lists.newArrayList();
-		
 		List<ProductTree> roots = productTreeService.findRoots();
 		for(ProductTree root : roots){
 			String id = IdGen.uuid();

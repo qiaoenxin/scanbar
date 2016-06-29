@@ -39,9 +39,13 @@ public class Production extends IdEntity<Production> {
 	
 	private	String serialNum;	//生产指令编号+产品编号
 	
-	private int isProducing;
+	private int isProducing;    //0:未投产，1:投产
 	
 	private int completeNum;
+	
+	public static final int PRODUCTION_NO = 0; //未投产
+	
+	public static final int PRODUCTION_YES = 1;	//投产
 	
 	public Production() {
 		super();

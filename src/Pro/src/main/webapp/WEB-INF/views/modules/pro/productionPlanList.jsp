@@ -14,6 +14,40 @@
 			$("#searchForm").submit();
         	return false;
         }
+		
+		function production(id){
+	    	var url = "iframe:${ctx}/pro/productionPlanTree/list?productionId="+id;
+		    var buttons = {"投产":"product","关闭":false};
+		    top.$.jBox.open(url, "明细预览", 800, 500,{
+				buttons:buttons, submit:function(v, h, f){
+					var win = h.find("iframe")[0].contentWindow;
+					if(v=="product"){
+				    	loading('正在提交，请稍等...');
+				    	$('#productionForm').attr('action','${ctx}/pro/productionPlanTree/createPlanDetail?productionId='+id).submit();
+				    	return true;
+					}else{
+						return true;
+					}
+					return false;
+				}, loaded:function(h){
+					$(".jbox-content", top.document).css("overflow-y","hidden");
+				}
+			});
+        	
+        }
+		
+		function showDetail(id){
+	    	var url = "iframe:${ctx}/pro/productionPlanTree/list?productionId="+id;
+		    var buttons = {"关闭":false};
+		    top.$.jBox.open(url, "明细预览", 800, 500,{
+				buttons:buttons, submit:function(v, h, f){
+					return true;
+				}, loaded:function(h){
+					$(".jbox-content", top.document).css("overflow-y","hidden");
+				}
+			});
+        	
+        }
 	</script>
 </head>
 <body>
@@ -39,8 +73,8 @@
 				<td>${production.number}</td>
 				<td>${production.completeNum}</td>
 				<shiro:hasPermission name="pro:productionPlan:edit"><td>
-    				<a href="${ctx}/pro/productionPlan/form?id=${production.plan.id}">投产</a>
-    				<a href="${ctx}/pro/productionPlan/form?id=${production.id}">明细</a>
+    				<a href="javascript:production('${production.id }');">投产</a>
+    				<a href="javascript:showDetail('${production.id }');">明细</a>
     				<a href="${ctx}/pro/productionPlan/form?id=${production.plan.id}">修改</a>
 					<a href="${ctx}/pro/productionPlan/delete?id=${production.plan.id}" onclick="return confirmx('确认要删除该生产计划吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
@@ -49,5 +83,6 @@
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>
+	<form id="productionForm" action="" method="post" class="hide"></form>
 </body>
 </html>

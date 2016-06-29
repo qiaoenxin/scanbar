@@ -88,7 +88,22 @@
 				$(obj).parent().parent().removeClass("error");
 			}
 		}	
-		
+		function preview(prefix){
+			var id = $(prefix+" select").val();
+			var number = $(prefix+"_number").val();
+			var endDate = $("#endDate").val();
+			
+			var url = "iframe:${ctx}/pro/productionPlanTree/previewList?productId="+id+"&number="+number+"&date="+endDate;
+		    var buttons = {"关闭":false};
+		    top.$.jBox.open(url, "明细预览", 800, 500,{
+				buttons:buttons, submit:function(v, h, f){
+					return true;
+				}, loaded:function(h){
+					$(".jbox-content", top.document).css("overflow-y","hidden");
+				}
+			});
+			
+		}		
 	</script>
 </head>
 <body>
@@ -154,8 +169,8 @@
 									<input id="productionList{{idx}}_number" name="productionList[{{idx}}].number" type="text" value="{{row.numberRenderer}}" min="1" style="width: 80%;">
 								</td>
 								<shiro:hasPermission name="pro:productionPlan:edit"><td class="text-center" style="width: 15%;line-height: 30px;">
-    								<a href="javascript:void(0);">预览</a>
-									<a href="javascript:void(0);" onclick="delRow(this, '#productionList{{idx}}');">删除</a>
+    								<a href="javascript:preview('#productionList{{idx}}');">预览</a>
+									<a href="javascript:delRow(this, '#productionList{{idx}}');" >删除</a>
 								</td></shiro:hasPermission>
 							</tr>//-->
 						</script>

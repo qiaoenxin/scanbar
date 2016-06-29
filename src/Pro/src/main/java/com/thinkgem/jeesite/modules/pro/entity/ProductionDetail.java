@@ -39,6 +39,9 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	private String data;		//数据
 	private Date date;
 	
+	private int completeNum;
+	private int unqualifiedNum;
+	
 	
 	
 	private int remainder;
@@ -124,6 +127,24 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public int getCompleteNum() {
+		return completeNum;
+	}
+
+	public void setCompleteNum(int completeNum) {
+		this.completeNum = completeNum;
+	}
+
+	public int getUnqualifiedNum() {
+		return unqualifiedNum;
+	}
+
+	public void setUnqualifiedNum(int unqualifiedNum) {
+		this.unqualifiedNum = unqualifiedNum;
+	}
+
+	
 	
 }
 
