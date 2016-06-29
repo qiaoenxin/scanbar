@@ -16,10 +16,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.persistence.Parameter;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
+import com.thinkgem.jeesite.modules.pro.entity.ProductionPlan;
 import com.thinkgem.jeesite.modules.pro.dao.ProductionDao;
 
 /**
@@ -85,6 +87,18 @@ public class ProductionService extends BaseService {
 	@Transactional(readOnly = false)
 	public void delete(String id) {
 		productionDao.deleteById(id);
+	}
+
+	@Transactional(readOnly = false)
+	public void deleteByFlag() {
+		String hql = "delete Production p where p.delFlag="+Production.DEL_FLAG_DELETE;
+		productionDao.update(hql);
+	}
+	
+	@Transactional(readOnly = false)
+	public void deleteByPlan(String planId) {
+		String hql = "delete Production p where p.plan.id=:p1";
+		productionDao.update(hql,new Parameter(planId));
 	}
 	
 	@Transactional

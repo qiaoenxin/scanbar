@@ -8,7 +8,25 @@
 	
 		jQuery.validator.addMethod("productUnique",function(value, element, param) {
 			return $("#contentTable select option[value="+value+"]:selected").length < 2;
-		},"产品不得重复!");
+		},"产品不得重复");
+
+		jQuery.validator.addMethod("checkUnique", function(value, element) {
+			var id = $("#id").val();
+		    var deferred = $.Deferred();//创建一个延迟对象
+		    $.ajax({
+		        url:"${ctx}/pro/productionPlan/checkSerial?id="+id+"&serialNum="+value,
+		        async:false,//要指定不能异步,必须等待后台服务校验完成再执行后续代码
+		        dataType:"json",
+		        success:function(data) {
+		            if (data) {
+		                deferred.resolve();    
+		            } else {
+		                deferred.reject();
+		            }               
+		        }
+		    });
+		    return deferred.state() == "resolved" ? true : false;
+		}, "批次已存在");		
 		
 		var stock = ${fns:toJson(stock)};
 		$(document).ready(function() {
@@ -85,7 +103,7 @@
 		<div class="control-group">
 			<label class="control-label">批次:</label>
 			<div class="controls">
-				<form:input path="serialNum" htmlEscape="false" maxlength="200" class="required"/>
+				<form:input path="serialNum" htmlEscape="false" maxlength="200" checkUnique="true" class="required"/>
 			</div>
 		</div>
 		

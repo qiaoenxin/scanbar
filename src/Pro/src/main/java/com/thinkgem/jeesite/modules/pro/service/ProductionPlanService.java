@@ -48,6 +48,12 @@ public class ProductionPlanService extends BaseService {
 		return productionPlanDao.find(page, dc);
 	}
 	
+	public long countBySerialNum(String SerialNum) {
+		DetachedCriteria dc = productionPlanDao.createDetachedCriteria();
+		dc.add(Restrictions.eq("serialNum", SerialNum));
+		return productionPlanDao.count(dc);
+	}	
+	
 	@Transactional(readOnly = false)
 	public void save(ProductionPlan productionPlan) {
 		productionPlanDao.save(productionPlan);
