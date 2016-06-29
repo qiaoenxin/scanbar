@@ -15,7 +15,14 @@
         	return false;
         }
 		
-		function production(id){
+		function production(id,isProducing){
+			
+			if(isProducing == '1'){
+				top.$.jBox.error("该生产已投产，无法再次投产！","提示");
+				top.$(".jbox-body .jbox-icon").css("top", "55px");
+				return false;
+			}
+			
 	    	var url = "iframe:${ctx}/pro/productionPlanTree/list?productionId="+id;
 		    var buttons = {"投产":"product","关闭":false};
 		    top.$.jBox.open(url, "明细预览", 800, 500,{
@@ -55,9 +62,12 @@
 		<li class="active"><a href="${ctx}/pro/productionPlan/">生产指令列表</a></li>
 		<shiro:hasPermission name="pro:productionPlan:edit"><li><a href="${ctx}/pro/productionPlan/form">生产指令添加</a></li></shiro:hasPermission>
 	</ul>
-	<form:form id="searchForm" modelAttribute="productionPlan" action="${ctx}/pro/productionPlan/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="production" action="${ctx}/pro/productionPlan/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+		<label>批次 ：</label><form:input path="plan.serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>指令编码 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
+		<label>产品名称：</label><form:input path="product.name" htmlEscape="false" maxlength="50" class="input-small"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 	</form:form>
 	<tags:message content="${message}"/>
@@ -73,7 +83,7 @@
 				<td>${production.number}</td>
 				<td>${production.completeNum}</td>
 				<shiro:hasPermission name="pro:productionPlan:edit"><td>
-    				<a href="javascript:production('${production.id }');">投产</a>
+    				<a href="javascript:production('${production.id }','${production.isProducing }');">投产</a>
     				<a href="javascript:showDetail('${production.id }');">明细</a>
     				<a href="${ctx}/pro/productionPlan/form?id=${production.plan.id}">修改</a>
 					<a href="${ctx}/pro/productionPlan/delete?id=${production.plan.id}" onclick="return confirmx('确认要删除该生产计划吗？', this.href)">删除</a>
