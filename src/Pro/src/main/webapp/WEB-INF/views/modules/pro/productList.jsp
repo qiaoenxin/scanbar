@@ -105,6 +105,8 @@
 					<shiro:hasPermission name="pro:product:edit">
 	    				<a href="${ctx}/pro/product/form?id=${product.id}">修改</a>
 						<a href="${ctx}/pro/product/delete?id=${product.id}" onclick="return confirmx('确认要删除该产品管理吗？', this.href)">删除</a>
+						<a href="${ctx}/pro/product/productTreeForm?id=${product.id}">BOM编辑</a>
+						<a href="${ctx}/pro/product/delete?id=${product.id}" onclick="return confirmx('确认要删除该产品管理吗？', this.href)">样品打印</a>
 					</shiro:hasPermission>
 				</td>
 			</tr>
