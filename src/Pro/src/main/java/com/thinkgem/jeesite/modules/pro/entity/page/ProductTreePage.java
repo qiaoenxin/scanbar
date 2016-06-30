@@ -1,91 +1,116 @@
 package com.thinkgem.jeesite.modules.pro.entity.page;
 
-import java.util.List;
-
 import com.thinkgem.jeesite.modules.pro.entity.Product;
-import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 
-public class ProductTreePage {
+public class ProductTreePage
+{
 
-	private String treeId;
-	private String id;
-	private String parent;
-	private String name;
-	private int number;
-	private Product product;
-	
-	
+    private String treeId;
 
-	public ProductTreePage() {
-		this(null, null, null, null, 0);
-	}
-	
+    private String id;
 
-	public Product getProduct() {
-		return product;
-	}
+    private String parent;
 
-	public int getSnpNum(){
-		 return number / product.getSnpNum();
-	}
+    private String name;
 
-	public int getModNum(){
-		return number % product.getSnpNum();
-	}
-	
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    private int number;
 
+    private Product product;
 
-	public ProductTreePage(String treeId, String id, String parent,
-			String name, int number) {
-		super();
-		this.treeId = treeId;
-		this.id = id;
-		this.parent = parent;
-		this.name = name;
-		this.number = number;
-	}
+    public ProductTreePage()
+    {
+        this(null, null, null, null, 0);
+    }
 
-	public String getTreeId() {
-		return treeId;
-	}
+    public Product getProduct()
+    {
+        return product;
+    }
 
-	public void setTreeId(String treeId) {
-		this.treeId = treeId;
-	}
+    public int getSnpNum()
+    {
+        return number / product.getSnpNum();
+    }
 
-	public String getId() {
-		return id;
-	}
+    public int getModNum()
+    {
+        return number % product.getSnpNum();
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setProduct(Product product)
+    {
+        this.product = product;
+    }
 
-	public String getParent() {
-		return parent;
-	}
+    public ProductTreePage(String treeId, String id, String parent, String name, int number)
+    {
+        super();
+        this.treeId = treeId;
+        this.id = id;
+        this.parent = parent;
+        this.name = name;
+        this.number = number;
+    }
 
-	public void setParent(String parent) {
-		this.parent = parent;
-	}
+    public ProductTreePage(String treeId, String id, String parent, String name, int number,
+                           Product product)
+    {
+        super();
+        this.id = id;
+        this.parent = parent;
+        this.name = name;
+        this.number = number;
+        this.product = product;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getTreeId()
+    {
+        return treeId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setTreeId(String treeId)
+    {
+        this.treeId = treeId;
+    }
 
-	public int getNumber() {
-		return number;
-	}
+    public String getId()
+    {
+        return id;
+    }
 
-	public void setNumber(int number) {
-		this.number = number;
-	}
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    public String getParent()
+    {
+        return parent;
+    }
+
+    public void setParent(String parent)
+    {
+        this.parent = parent;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public int getNumber()
+    {
+        return number;
+    }
+
+    public void setNumber(int number)
+    {
+        this.number = number;
+    }
 
 }

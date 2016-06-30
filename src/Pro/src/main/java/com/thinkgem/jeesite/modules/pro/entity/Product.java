@@ -9,9 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.alibaba.fastjson.JSONObject;
 import com.thinkgem.jeesite.common.persistence.IdEntity;
 import com.thinkgem.jeesite.common.utils.excel.annotation.ExcelField;
@@ -25,7 +22,6 @@ import com.thinkgem.jeesite.common.utils.excel.annotation.ExcelField;
  */
 @Entity
 @Table(name = "pro_product")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Product extends IdEntity<Product>
 {
 
@@ -89,7 +85,9 @@ public class Product extends IdEntity<Product>
     private String field5;
 
     private String field6;
-
+    
+    private transient String showBom;
+    
     private transient Bom bom;
 
     public Product()
@@ -259,11 +257,23 @@ public class Product extends IdEntity<Product>
         this.bomString = bomString;
         bom = null;
     }
+    
+    @Transient
+    public String getShowBom()
+    {
+        return showBom;
+    }
+
+    @Transient
+    public void setShowBom(String showBom)
+    {
+        this.showBom = showBom;
+    }
 
     @Transient
     public Bom getBom()
     {
-        if (bom == null && bomString != null)
+        if (bom == null && bomString != null && !"".equals(bomString))
         {
             bom = new Bom(bomString);
         }
