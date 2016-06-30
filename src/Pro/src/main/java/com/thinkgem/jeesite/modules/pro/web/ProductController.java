@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.beanvalidator.BeanValidators;
 import com.thinkgem.jeesite.common.config.Global;
@@ -39,11 +37,13 @@ import com.thinkgem.jeesite.common.utils.excel.ImportExcel;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.sys.entity.Dict;
 import com.thinkgem.jeesite.modules.sys.entity.User;
-import com.thinkgem.jeesite.modules.sys.service.SystemService;
-import com.thinkgem.jeesite.modules.sys.utils.DictUtils;
+import com.thinkgem.jeesite.modules.sys.service.DictService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
+import com.thinkgem.jeesite.modules.pro.entity.ProductTreeModel;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
+import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 
 /**
  * 产品管理Controller
@@ -56,6 +56,12 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+    private ProductTreeService productTreeService;
+	
+	@Autowired
+    private DictService dictService;
 	
 	@ModelAttribute
 	public Product get(@RequestParam(required=false) String id) {
@@ -82,8 +88,30 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(Product product, Model model) {
 		model.addAttribute("product", product);
+		Dict dict = new Dict();
+        dict.setType("flow_type");
+	    List<Dict> dicts =  dictService.find(dict);
+		model.addAttribute("dicts", dicts);
 		return "modules/pro/productForm";
 	}
+	
+
+    @RequiresPermissions("pro:product:view")
+    @RequestMapping(value = "productTreeForm")
+    public String bomForm(Product product, Model model) 
+    {
+        // 获取所有子节点
+        List<ProductTree> ProductTrees = productTreeService.findChildrensByProductId(product.getId());
+        model.addAttribute("productTrees", ProductTrees);
+        
+        // 获取父节点
+        model.addAttribute("product", product);
+        
+        // 获取子节点
+        List<Product> productList = productService.findAll();
+        model.addAttribute("productList", productList);
+        return "modules/pro/productTreeForm";
+    }
 	
 	@RequiresPermissions("pro:product:edit")
 	@RequestMapping(value = "flow")
@@ -118,14 +146,54 @@ public class ProductController extends BaseController {
 
 	@RequiresPermissions("pro:product:edit")
 	@RequestMapping(value = "save")
-	public String save(Product product, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, product)){
+	public String save(Product product,MapVo mapVo, Model model, RedirectAttributes redirectAttributes) {
+	    
+		if (!beanValidator(model,  product)){
 			return form(product, model);
 		}
+		
+		product.getBom().setProperties(mapVo.getProperties());
+		
+		// bom属性
+		product.setBomString(product.getBom().toJson());
+		
 		productService.save(product);
 		addMessage(redirectAttributes, "保存产品管理成功");
 		return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
 	}
+	
+    @RequiresPermissions("pro:product:edit")
+    @RequestMapping(value = "productTreeSave")
+    public String productTreeSave(Product product, ProductTreeModel productTreeModel, Model model, RedirectAttributes redirectAttributes) 
+    {
+        if (!beanValidator(model,  product)){
+            return form(product, model);
+        }
+        
+        // 获取当前页面传递过来的子节点
+        List<ProductTree> productTreeList = productTreeModel.getProductTreeList();
+        
+        for (ProductTree productTree : productTreeList)
+        {
+            // 父节点和子节点不是同一个产品
+            if ((product.getId()).equals(productTree.getProduct().getId()))
+            {
+                addMessage(redirectAttributes, "保存BOM失败，父节点和子节点不能相同!");
+                return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
+            }
+            
+            productTree.setParent(product);
+        }        
+        
+        // 批量保存
+        productTreeService.saveList(productTreeList);
+        
+        // 删除多余的子节点
+        productTreeService.deleteByDelFlag(ProductTree.SYS_ID);
+        
+        addMessage(redirectAttributes, "保存BOM成功!");
+        return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
+    }
 	
 	@RequiresPermissions("pro:product:edit")
 	@RequestMapping(value = "delete")
@@ -134,9 +202,6 @@ public class ProductController extends BaseController {
 		addMessage(redirectAttributes, "删除产品管理成功");
 		return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
 	}
-	
-	
-	
 	
 	@RequiresPermissions("pro:product:view")
     @RequestMapping(value = "export", method=RequestMethod.POST)

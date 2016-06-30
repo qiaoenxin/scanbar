@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import com.thinkgem.jeesite.common.persistence.Page;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.page.ProductTreePage;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
@@ -59,37 +60,101 @@ public class ProductTreeController extends BaseController {
 	
 	@RequiresPermissions("pro:productTree:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(HttpServletRequest request, HttpServletResponse response, Model model) {
-		
+	public String list(Product product, HttpServletRequest request, HttpServletResponse response, Model model) 
+	{
 		List<ProductTreePage> list = Lists.newArrayList();
-		List<ProductTree> roots = productTreeService.findRoots();
-		for(ProductTree root : roots){
+		Page<ProductTreePage> page = new Page<ProductTreePage>();
+		
+		// 1. 查询所有的产品
+		Page<Product> page_products = productService.find(new Page<Product>(request, response), product);
+		List<Product> products = page_products.getList();
+		for(Product productInfo : products)
+		{
+	        // 2. 根据当前产品，循环查询下面的子节点
 			String id = IdGen.uuid();
-			list.add(new ProductTreePage(root.getId(),id,"",root.getProduct().getName(),root.getNumber()));
-			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
+			
+			// 设置bomString
+			productInfo.setShowBom(getBomString(productInfo));
+			
+			// 设置父节点
+			list.add(new ProductTreePage(productInfo.getId(),id,"",productInfo.getName(),1,productInfo));
+			
+			// 查询二级节点
+			List<ProductTree> childrens = productTreeService.findChildrensByProductId(productInfo.getId());
+			
+			// 查询下面的子节点
 			for(ProductTree c : childrens){
-				recursiveChildren(id,c,list, root.getNumber());
+				recursiveChildren(id,c,list, c.getNumber());
 			}
 		}
+		page.setList(list);
+		page.setCount(page_products.getCount());
+		page.setPageNo(page_products.getPageNo());
+		page.setPageSize(page_products.getPageSize());
+		
         model.addAttribute("list", list);
+        model.addAttribute("page", page);
         
 		return "modules/pro/productTreeList";
 	}
 	
+	private String getBomString(Product productInfo)
+	{
+	    StringBuffer bomString = new StringBuffer();
+	    Bom bom = productInfo.getBom();
+	    if (null == bom)
+        {
+	        return bomString.toString();
+        }
+	    
+        if ("1".equals(productInfo.getBom().getAction()))
+        {
+            bomString.append("HPC:");
+            bomString.append(productInfo.getBom().getProperties().get("HPC"));
+            bomString.append(",");
+            bomString.append("ISO:");
+            bomString.append(productInfo.getBom().getProperties().get("ISO"));
+            bomString.append(",");
+            bomString.append("PCO:");
+            bomString.append(productInfo.getBom().getProperties().get("PCO"));
+            bomString.append(",");
+            bomString.append("标识:");
+            bomString.append(productInfo.getBom().getProperties().get("biaoShi"));
+            bomString.append(",");
+            bomString.append("端末:");
+            bomString.append(productInfo.getBom().getProperties().get("duanMo"));
+            bomString.append(",");
+            bomString.append("烘护套:");
+            bomString.append(productInfo.getBom().getProperties().get("hongHuTao"));
+            bomString.append(",");
+            bomString.append("印字:");
+            bomString.append(productInfo.getBom().getProperties().get("yinZi"));
+        }
+        if ("2".equals(productInfo.getBom().getAction()))
+        {
+            bomString.append("规格");
+            bomString.append(productInfo.getBom().getProperties().get("guiGe"));
+        }
+        
+        return bomString.toString();
+	}
+	
 	public void recursiveChildren(String parentId,ProductTree productTree,List<ProductTreePage> list, int number){
 		String id = IdGen.uuid();
-		list.add(new ProductTreePage(productTree.getId(),id,parentId,productTree.getProduct().getName(),productTree.getNumber() * number));
+		// 设置bomString
+		productTree.getProduct().setShowBom(getBomString(productTree.getProduct()));
+		list.add(new ProductTreePage(productTree.getId(),id,parentId,productTree.getProduct().getName(),productTree.getNumber() * number,productTree.getProduct()));
 		
 		List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
 		for(ProductTree c : childrens){
 			recursiveChildren(id,c,list, productTree.getNumber() * number);
 		}
 	}
-	
 
 	@RequiresPermissions("pro:productTree:view")
 	@RequestMapping(value = "form")
 	public String form(ProductTree productTree, Model model) {
+	    productTree = new ProductTree();
 		if(productTree.getNumber() == 0){
 			productTree.setNumber(1);
 		}
