@@ -307,6 +307,16 @@ public class BaseDao<T> {
 	}
 	
 	/**
+     * 根据删除标识删除
+     * @param delFlag 删除标识
+     * @return int
+     */
+    public int deleteByDelFlag(String delFlag)
+    {
+        return update("delete from " +entityClass.getSimpleName() +" where del_flag = :p1",  new Parameter(delFlag));
+    }
+	
+	/**
 	 * 逻辑删除
 	 * @param id
 	 * @param likeParentIds
