@@ -126,7 +126,7 @@
 					<option value="组装卡" <c:if test="${product.bom.printCard eq '组装卡'}">selected</c:if>>组装卡</option>
 					<option value="制程卡" <c:if test="${product.bom.printCard eq '制程卡'}">selected</c:if>>制程卡</option>
 				</select>
-				&nbsp;打印SNP：<form:input path="bom.printSnpNum" htmlEscape="false" maxlength="200" class="required"/>
+				&nbsp;打印SNP：<form:input path="bom.printSnpNum" htmlEscape="false" maxlength="200" />
 			</div>
 		</div>
 		<div class="control-group">
