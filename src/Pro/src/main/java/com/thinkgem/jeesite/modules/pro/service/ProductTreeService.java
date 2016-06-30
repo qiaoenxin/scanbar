@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.persistence.Parameter;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
@@ -98,10 +96,38 @@ public class ProductTreeService extends BaseService {
 		productTreeDao.save(productTree);
 	}
 	
+	/**
+	 * 
+	 * 批量保存或者修改
+	 * 
+	 * @param productTreeList 产品树列表
+	 * @see
+	 */
+	@Transactional(readOnly = false)
+    public void saveList(List<ProductTree> productTreeList) 
+	{
+        if(productTreeList == null || productTreeList.isEmpty())
+        {
+            return;
+        }
+        
+        productTreeDao.save(productTreeList);
+    }
+	
 	@Transactional(readOnly = false)
 	public void delete(String id) {
 		productTreeDao.deleteById(id);
 	}
+	
+	/**
+     * 根据删除标识删除
+     * @param delFlag 删除标识
+     */
+	@Transactional(readOnly = false)
+    public void deleteByDelFlag(String delFlag) 
+	{
+	    productTreeDao.deleteByDelFlag(delFlag);
+    }
 	
 	
 	/**
