@@ -43,12 +43,13 @@
 							var myTemplate = Handlebars.compile($('#print-templ').html());
 							var dataItem = data[i];
 							
-							var flows = dataItem.productTree? dataItem.productTree.product.flow : dataItem.production.product.flow;
+							/* var flows = dataItem.productTree? dataItem.productTree.product.flow : dataItem.production.product.flow;
 							if(flows){
 								flows = JSON.parse(flows);
 								dataItem.flow1 = flows[0];
 								dataItem.flow2 = flows[1];
-							}
+							} */
+							dataItem.bom = JSON.parse(dataItem.productTree.product.bomString).properties;
 							if(!dataItem.productTree || dataItem.productTree.product.serialNum == dataItem.production.product.serialNum){
 								dataItem.next = "仓库";
 							}else{
@@ -156,19 +157,19 @@ table.gridtable td {
 	<td style="font-weight:bold;font-size:18px">{{remainder}}</td>
 </tr>
 <tr>
-	<td>HPC&nbsp;/&nbsp;{{flow1.field2}} </td>
-	<td colspan="2">端末&nbsp;{{flow1.field3}}&nbsp;{{flow1.field4}} </td>
-	<td>烘护套&nbsp;{{flow1.field5}}</td>
-	<td>印字&nbsp;{{flow1.field7}}</td>
-	<td colspan="2">标示（{{flow1.field8}}）</td>
+	<td>HPC&nbsp;/&nbsp;{{bom.HPC}} </td>
+	<td colspan="2">端末&nbsp;{{bom.duanMo}}&nbsp;{{bom.ISO}} </td>
+	<td>烘护套&nbsp;{{bom.hongHuTao}}</td>
+	<td>印字&nbsp;{{bom.yinZi}}</td>
+	<td colspan="2">标识（{{bom.biaoShi}}）</td>
 </tr>
 <tr>
-	<td rowspan=2 style="width:13%;">{{#if flow1.field2}}*{{else}}无{{/if}}</td>
-	<td rowspan=2 style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
-	<td rowspan=2 style="width:18%;">{{#if flow1}}*{{else}}无{{/if}}</td>
-	<td rowspan=2 style="width:22%;">{{#if flow1.field5}}*{{else}}无{{/if}}</td>
-	<td style="width:15%;">{{#if flow1.field7}}*{{else}}无{{/if}}</td>
-	<td colspan="2" rowspan=2>{{#if flow1.field8}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:13%;">{{#if bom.HPC}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:18%;">{{#if bom.duanMo}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:18%;">{{#if bom.ISO}}*{{else}}无{{/if}}</td>
+	<td rowspan=2 style="width:22%;">{{#if bom.hongHuTao}}*{{else}}无{{/if}}</td>
+	<td style="width:15%;">{{#if bom.yinZi}}*{{else}}无{{/if}}</td>
+	<td colspan="2" rowspan=2>{{#if bom.biaoShi}}*{{else}}无{{/if}}</td>
 </tr>
 <tr style="height:20px;">
 	<td rowspan="3">{{{qrImg}}}</td>

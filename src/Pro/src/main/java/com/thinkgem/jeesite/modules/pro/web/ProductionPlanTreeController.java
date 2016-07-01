@@ -101,7 +101,7 @@ public class ProductionPlanTreeController extends BaseController {
 				detail.setCompleteNum(0);
 				detail.setUnqualifiedNum(0);
 				detail.setProductTree(new ProductTree(treePage.getTreeId()));
-				detail.setStatus("");
+				detail.setStatus(treePage.getProduct().getBom().getAction());
 				if (j == (length-1)) {
 					detail.setNumber((int) (toatl-snp*j));
 				}else{

@@ -36,6 +36,7 @@ import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
@@ -217,6 +218,7 @@ public class ProductionController extends BaseController {
 				productionDetailService.save(productionDetailList);
 			}else{
 				ProductionDetail detail = productionDetailService.get(id);
+				detail.getProductTree().getProduct().getBom();
 				int remainder = detail.getNumber()%detail.getProduction().getProduct().getSnpNum();
 				detail.setRemainder(remainder);
 				productionDetailList.add(detail);
@@ -225,11 +227,12 @@ public class ProductionController extends BaseController {
 			
 			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
-			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "flow", "serialNum", "name", "field1", "field2", "field3", "field4", "field5", "field6");
+			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "serialNum", "name", "bomString");
 			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan", "product");
 			SimplePropertyPreFilter filter5 = new SimplePropertyPreFilter(ProductionPlan.class, "beginDate");
 			
-			String json =  JSONObject.toJSONString(productionDetailList,new SerializeFilter[]{filter1, filter2, filter3,filter4,filter5}, SerializerFeature.DisableCircularReferenceDetect);
+			String json =  JSONObject.toJSONString(productionDetailList, new SerializeFilter[]{filter1, filter2, filter3, filter4, filter5}, SerializerFeature.DisableCircularReferenceDetect);
+			System.out.println(json);
 			return json;
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
