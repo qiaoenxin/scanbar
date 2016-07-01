@@ -207,7 +207,7 @@ table.gridtable td {
 	{{#if showBom}}{{{showBom}}}{{else}}{{/if}}
 	</td>
 	<td style="position:relative;">
-		<div style="width:150px;height:150px;margin:auto;position:absolute;top: 0;left:0;bottom:0;right:0;">{{{qrImg}}}</div>
+		<div style="width:100%;height:210px;padding:30px 0;text-align:center;">{{{qrImg}}}</div>
 	</td>
 </tr>
 <tr style="height:20px;">
