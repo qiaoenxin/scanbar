@@ -216,16 +216,35 @@ public class ProductionController extends BaseController {
 					}
 				}
 				productionDetailService.save(productionDetailList);
-			}else{
+			}else if("detail".equals(type)){
 				ProductionDetail detail = productionDetailService.get(id);
 				detail.getProductTree().getProduct().getBom();
 				int remainder = detail.getNumber()%detail.getProduction().getProduct().getSnpNum();
 				detail.setRemainder(remainder);
 				productionDetailList.add(detail);
+			}else {
+				ProductionDetail detail = productionDetailService.get(id);
+				
+				Product product = null;
+				if (detail.getProductTree() != null) {
+					product = detail.getProductTree().getProduct();
+				}else {
+					product = detail.getProduction().getProduct();
+				}
+				
+				List<ProductTree> childrens = productTreeService.findChildrensByProductId(product.getId());
+				StringBuffer elements = new StringBuffer();
+				for (int i = 0; i < childrens.size(); i++) {
+					ProductTree tree = childrens.get(i);
+					elements.append((i + 1) + "，"+tree.getProduct().getName()).append("<br>");
+				}
+				detail.setData(elements.toString());
+				
+				productionDetailList.add(detail);
 			}
 			
 			
-			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder");
+			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder","data");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
 			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "serialNum", "name", "bomString");
 			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan", "product");

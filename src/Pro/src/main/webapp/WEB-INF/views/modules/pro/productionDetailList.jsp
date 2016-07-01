@@ -22,10 +22,10 @@
         	return false;
         }
         
-        function print(id){
+        function print(id,type){
         	var params = {};
         	params.id = id;
-        	params.type = 'detail';
+        	params.type = type;
         	var ok = ''; 
         	var url = "${ctx}/pro/production/print";
         	$.ajax({
@@ -40,7 +40,8 @@
 					data = JSON.parse(data);
 					for(var i = 0; i< data.length; i++){
 							//打印
-							var myTemplate = Handlebars.compile($('#print-templ').html());
+							var tplId = "#" + type + "-templ";
+							var myTemplate = Handlebars.compile($(tplId).html());
 							var dataItem = data[i];
 							
 							/* var flows = dataItem.productTree? dataItem.productTree.product.flow : dataItem.production.product.flow;
@@ -55,7 +56,11 @@
 							}else{
 								dataItem.next = "组立";
 							}
-							var QRImg = Canvas2Image.qrcode(dataItem.serialNum,100,100);
+							var imgSize = 100;
+							if(type="package"){
+								imgSize = 150;
+							}
+							var QRImg = Canvas2Image.qrcode(dataItem.serialNum,imgSize,imgSize);
 							var QRHtml = QRImg.outerHTML;
 							dataItem.qrImg = QRHtml;
 							var html = myTemplate(dataItem);
@@ -99,14 +104,30 @@
 				<c:if test="${productionDetail.production.product.assy == 1}">
 				<td>${productionDetail.productTree.product.name}</td>
 				<td>${productionDetail.productTree.product.serialNum}</td>
+				<td>${productionDetail.number}</td>
+				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
+				<td>
+				<c:if test="${productionDetail.productTree.product.bom.printCard ==  '组装卡'}">
+				<a href="javascript:print('${productionDetail.id}','package');" >组装卡</a>
+				</c:if>	
+				<c:if test="${productionDetail.productTree.product.bom.printCard ==  '制程卡'}">
+				<a href="javascript:print('${productionDetail.id}','detail');" >制程卡</a>
+				</c:if>	
+				</td>			
 				</c:if>
 				<c:if test="${productionDetail.production.product.assy == 0}">
 				<td>${productionDetail.production.product.name}</td>
 				<td>${productionDetail.production.product.serialNum}</td>
-				</c:if>
 				<td>${productionDetail.number}</td>
 				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
-				<td><a href="javascript:print('${productionDetail.id}');" >打印</a> </td>
+				<c:if test="${productionDetail.production.product.bom.printCard ==  '组装卡'}">
+				<a href="javascript:print('${productionDetail.id}','package');" >组装卡</a>
+				</c:if>	
+				<c:if test="${productionDetail.production.product.bom.printCard ==  '制程卡'}">
+				<a href="javascript:print('${productionDetail.id}','detail');" >制程卡</a>
+				</c:if>	
+				</td>					
+				</c:if>
 			</tr>
 		</c:forEach>
 		</tbody>
@@ -116,7 +137,7 @@
 	
 	
 	
-	<script id="print-templ" type="text/x-handlebars-template">
+	<script id="detail-templ" type="text/x-handlebars-template">
 				
 
 <style>
@@ -200,5 +221,57 @@ table.gridtable td {
 </tr>
 </table>
 	</script>
+	
+	<script id="package-templ" type="text/x-handlebars-template">
+<style>
+table{
+	font-size:12px;
+}
+div{
+	font-size:12px;
+}
+table.gridtable {
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable td {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+</style>
+
+<table style="width:98%;" class="gridtable" id="c" cellspacing="0" cellpadding="0">
+<tr style="height:20px;">
+	<td colspan="2" style="text-align:center;font-weight:bold;font-size:14px">制程管理组装卡</td>
+</tr>
+<tr style="height:30px;">
+	<td colspan="2" style="font-weight:bold;font-size:14px">品番:{{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
+</tr>
+<tr style="height:30px;">
+	<td style="width:50%;font-weight:bold;font-size:14px">组立内容</td>
+	<td style="width:50%;font-weight:bold;font-size:14px">编号:{{serialNum}}</td>
+</tr>
+<tr style="height:210px;vertical-align: top;font-size:14px">
+	<td>
+	{{#if data}}{{{data}}}{{else}}{{/if}}
+	</td>
+	<td style="">
+		<div style="width:100%;height:210px;padding:30px 0;text-align:center;">{{{qrImg}}}</div>
+	</td>
+</tr>
+<tr style="height:30px;">
+	<td>组立:</td>
+	<td>检查:</td>
+</tr>
+<tr style="height:20px;">
+	<td>日期:</td>
+	<td>三樱武汉汽车部件有限公司</td>
+</tr>
+</table>
+	</script>	
 </body>
 </html>
