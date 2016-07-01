@@ -5,7 +5,11 @@
 	<title>产品管理管理</title>
 	<meta name="decorator" content="default"/>
 	<%@include file="/WEB-INF/views/include/dialog.jsp" %>
+	<script src="${ctxStatic}/lodop/LodopFuncs.js" type="text/javascript"></script>
+	<script src="${ctxStatic}/handlebars/handlebars.min.js" type="text/javascript"></script>
 	
+	<script src="${ctxStatic}/qrcode/jquery.qrcode.min.js" type="text/javascript"></script>
+	<script src="${ctxStatic}/qrcode/canvas2Image.js" type="text/javascript"></script>	
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
@@ -60,6 +64,54 @@
 				}
 			});
         }
+        
+        function printt(id){
+        	var params = {};
+        	params.id = id;
+        	var ok = ''; 
+        	var url = "${ctx}/pro/product/detail";
+        	$.ajax({
+				url: url,
+			 	data: params,
+			 	async :false,
+			 	dataType: "json",
+			 	success: function(data){
+					if(!data){
+						top.$.jBox.error("操作失败！","提示");
+						top.$(".jbox-body .jbox-icon").css("top", "55px");
+						return false;
+					}
+					//打印
+					var myTemplate = Handlebars.compile($('#print-templ').html());
+					var dataItem = data;
+					var showBom = "";
+					if(dataItem.bom && dataItem.bom.properties){
+						var text ={"guiGe":"规格","yinZi":"印字","PCO":"PCO","hongHuTao":"烘护套","biaoShi":"标识","duanMo":"端末","HPC":"HPC","ISO":"ISO"};
+						var prop = dataItem.bom.properties || {};
+						for(key in prop){
+							showBom += (text[key] || key) +" : "+(prop[key] || "-");
+							showBom +="<br>";
+						}
+						dataItem.showBom = showBom;
+					}
+					
+					var QRImg = Canvas2Image.qrcode(dataItem.serialNum,150,150);
+					var QRHtml = QRImg.outerHTML;
+					dataItem.qrImg = QRHtml;
+					var html = myTemplate(dataItem);
+					try{ 
+				    	var LODOP=getLodop();
+				    	LODOP.PRINT_INIT("");
+						LODOP.SET_PRINT_PAGESIZE(2,1000,1500,"CreateCustomPage");
+						LODOP.ADD_PRINT_HTM(0,5,"100%","100%",html);
+						//LODOP.PRINT();
+						LODOP.PREVIEW();
+					 }catch(err){ 
+					 	alert(err);
+			 		 } 
+			 	}
+			}); 
+        }        
 	</script>
 </head>
 <body>
@@ -106,7 +158,9 @@
 	    				<a href="${ctx}/pro/product/form?id=${product.id}">修改</a>
 						<a href="${ctx}/pro/product/delete?id=${product.id}" onclick="return confirmx('确认要删除该产品管理吗？', this.href)">删除</a>
 						<a href="${ctx}/pro/product/productTreeForm?id=${product.id}">BOM编辑</a>
-						<a href="${ctx}/pro/product/delete?id=${product.id}" onclick="return confirmx('确认要删除该产品管理吗？', this.href)">样品打印</a>
+						<c:if test="${product.bom.print && not empty product.bom.print}">
+						<a href="javascript:printt('${product.id}')">样品打印</a>
+						</c:if>
 					</shiro:hasPermission>
 				</td>
 			</tr>
@@ -114,5 +168,53 @@
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>
+	
+	<script id="print-templ" type="text/x-handlebars-template">
+<style>
+table{
+	font-size:12px;
+}
+div{
+	font-size:12px;
+}
+table.gridtable {
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable td {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+</style>
+
+<table style="width:98%;" class="gridtable" id="c" cellspacing="0" cellpadding="0">
+<tr style="height:20px;">
+	<td colspan="2" style="text-align:center;font-weight:bold;font-size:14px">制程管理样品卡</td>
+</tr>
+<tr style="height:30px;">
+	<td colspan="2" style="font-weight:bold;font-size:14px">品番:{{name}}</td>
+</tr>
+<tr style="height:30px;">
+	<td style="width:50%;font-weight:bold;font-size:14px">细节</td>
+	<td style="width:50%;font-weight:bold;font-size:14px">二维码</td>
+</tr>
+<tr style="height:210px;vertical-align: top;font-size:14px">
+	<td>
+	{{#if showBom}}{{{showBom}}}{{else}}{{/if}}
+	</td>
+	<td style="position:relative;">
+		<div style="width:150px;height:150px;margin:auto;position:absolute;top: 0;left:0;bottom:0;right:0;">{{{qrImg}}}</div>
+	</td>
+</tr>
+<tr style="height:20px;">
+	<td>日期:</td>
+	<td>三樱武汉汽车部件有限公司</td>
+</tr>
+</table>
+	</script>	
 </body>
 </html>
