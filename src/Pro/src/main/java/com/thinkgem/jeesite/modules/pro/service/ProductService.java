@@ -6,12 +6,10 @@ package com.thinkgem.jeesite.modules.pro.service;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.RequestToViewNameTranslator;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.persistence.Parameter;
@@ -60,12 +58,34 @@ public class ProductService extends BaseService {
 		if(StringUtils.isNotBlank(product.getName())){
 			dc.add(Restrictions.like("name", "%"+product.getName()+"%"));
 		}
-		if(StringUtils.isNotBlank(product.getField1())){
-			dc.add(Restrictions.eq("field1", product.getField1()));
+		if(StringUtils.isNotBlank(product.getMachine())){
+			dc.add(Restrictions.eq("machine", product.getMachine()));
 		}
 		dc.add(Restrictions.eq(Product.FIELD_DEL_FLAG, Product.DEL_FLAG_NORMAL));
 		return productDao.find(page, dc);
 	}
+	
+	/**
+	 * 
+	 * 查询成品的分页
+	 * 
+	 * @param page 分页
+	 * @param product 产品
+	 * @return Page
+	 * @see
+	 */
+	public Page<Product> findChengPin(Page<Product> page, Product product) {
+        DetachedCriteria dc = productDao.createDetachedCriteria();
+        if(StringUtils.isNotBlank(product.getName())){
+            dc.add(Restrictions.like("name", "%"+product.getName()+"%"));
+        }
+        if(StringUtils.isNotBlank(product.getMachine())){
+            dc.add(Restrictions.eq("machine", product.getMachine()));
+        }
+        dc.add(Restrictions.eq(Product.FIELD_DEL_FLAG, Product.DEL_FLAG_NORMAL));
+        dc.add(Restrictions.eq("type", Product.TYPE_PRODUCT));
+        return productDao.find(page, dc);
+    }
 	
 	public List<Product> findByName(String name) {
 		DetachedCriteria dc = productDao.createDetachedCriteria();
