@@ -40,6 +40,7 @@ import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.DictService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTreeModel;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
@@ -274,5 +275,13 @@ public class ProductController extends BaseController {
 		}
 		return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
     }
-
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "detail")
+	public Product detail(String id) {
+		Product product = productService.get(id);
+		product.getBom();
+		return product;
+	}	
 }
