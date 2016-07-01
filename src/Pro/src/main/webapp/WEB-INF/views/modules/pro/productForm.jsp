@@ -5,6 +5,14 @@
 	<title>产品管理管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
+		jQuery.validator.addMethod("productUnique",function(value, element, param) {
+			var assy = $("#assy").val();
+			var flag = true;
+			if (assy == 0 && value == '组装卡'){
+				flag = false;
+			}
+		return flag;},"当前为单品，不能选择组装卡！");
+		
 		$(document).ready(function() {
 			$("#name").focus();
 			$("#inputForm").validate({
@@ -121,7 +129,7 @@
 	    <div class="control-group">
 			<label class="control-label">打印生产卡:</label>
 			<div class="controls">
-				<select id="printCard" name="bom.printCard" value="${product.bom.printCard}" class="input-small ">
+				<select id="printCard" name="bom.printCard" value="${product.bom.printCard}" class="input-small " productUnique="true">
 					<option value=" " <c:if test="${product.bom.printCard eq ''}">selected</c:if>></option>
 					<option value="组装卡" <c:if test="${product.bom.printCard eq '组装卡'}">selected</c:if>>组装卡</option>
 					<option value="制程卡" <c:if test="${product.bom.printCard eq '制程卡'}">selected</c:if>>制程卡</option>

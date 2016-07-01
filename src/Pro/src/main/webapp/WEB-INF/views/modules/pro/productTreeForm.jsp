@@ -6,8 +6,16 @@
 <meta name="decorator" content="default" />
 <script type="text/javascript">
 	jQuery.validator.addMethod("productUnique",function(value, element, param) {
-		return $("#contentTable select option[value="+value+"]:selected").length < 2;
-	},"产品不得重复!");
+		return $("#contentTable select option[value="+value+"]:selected").length < 2;},"子节点不能重复！");
+	
+	jQuery.validator.addMethod("checkParent",function(value, element, param) {
+		var flag = true;
+		var productId = $("#product_id").val();
+		if (value == productId){
+			flag = false;
+		}
+		
+		return flag;},"父节点和子节点不能相同！");
 
 	$(document).ready(
 		function() {
@@ -108,6 +116,7 @@
 	<form:form id="inputForm" modelAttribute="product" action="${ctx}/pro/product/productTreeSave" method="post"
 		class="form-horizontal">
 		<form:hidden path="id" />
+		<input type="hidden" id="product_id" value="${product.id}">
 		<tags:message content="${message}" />
 		<div class="control-group">
 			<label class="control-label">父节点:</label>
@@ -139,7 +148,7 @@
 									<input id="productTreeList{{idx}}_delFlag" name="productTreeList[{{idx}}].delFlag" type="hidden" value="0"/>
 								</td>
 								<td style="width: 40%;">
-									<select id="productTreeList{{idx}}_id" name="productTreeList[{{idx}}].product.id" data-value="{{row.product.id}}" class="input-small " productUnique="true" style="width: 80%;" required>
+									<select id="productTreeList{{idx}}_id" name="productTreeList[{{idx}}].product.id" data-value="{{row.product.id}}" class="input-small " productUnique="true" checkParent="true" style="width: 80%;" required>
 										<c:forEach items="${productList}" var="product">
 											<option value="${product.id}">${product.name}</option>
 										</c:forEach>
