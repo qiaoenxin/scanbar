@@ -42,6 +42,7 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 	private int completeNum;
 	private int unqualifiedNum;
 	
+	private String nextPart;
 	
 	
 	private int remainder;
@@ -144,6 +145,22 @@ public class ProductionDetail extends IdEntity<ProductionDetail> {
 		this.unqualifiedNum = unqualifiedNum;
 	}
 
+	@Transient
+	public Product getProduct(){
+		if(productTree == null){
+			return production.getProduct();
+		}
+		return productTree.getProduct();
+	}
+
+	@Transient
+	public String getNextPart() {
+		return nextPart;
+	}
+
+	public void setNextPart(String nextPart) {
+		this.nextPart = nextPart;
+	}
 	
 	
 }

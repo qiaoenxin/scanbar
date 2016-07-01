@@ -167,70 +167,28 @@ public class ProductionController extends BaseController {
 			
 			List<ProductionDetail> productionDetailList = Lists.newArrayList();
 			
-			if("production".equals(type)){
-				List <ProductionDetail> list = productionDetailService.findByProductionId(id);
-				//检查是否投产
-				if(list.size()>0){
-					return "";
-				}
-				
-				Production production = productionService.get(id);
-				ProductionPlan plan = production.getPlan();//获取生产指令
-				Product product  = production.getProduct();//获取要生产的产品
-				String serialNum = plan.getSerialNum()+product.getSerialNum();//生产详情编号规则  指令号+产品编号+流水号
-				
-				String[] productTreeAry = productTreeIds.split(",");
-				String[] numberAry = numbers.split(",");
-				String[] snpAry = snps.split(",");
-				String[] modAry = mods.split(",");
-				int index = 0;
-				int seq = 0;
-				for(String productTreeId : productTreeAry){
-					ProductTree productTree = productTreeService.get(productTreeId);
-					int number = StringUtils.toInteger(numberAry[index]);
-					int snp = StringUtils.toInteger(snpAry[index]);
-					int mod = StringUtils.toInteger(modAry[index]);
-					index += 1;
-					
-					int remainder = number%snp;
-					int count = number / snp;
-					for(int i =0; i< count; i++){
-						seq++;
-						ProductionDetail detail = new ProductionDetail();
-						detail.setProduction(production);
-						detail.setSerialNum(serialNum+toSeq(seq, 4));
-						detail.setProductTree(productTree);
-						detail.setNumber(snp);
-						detail.setRemainder(remainder);
-						productionDetailList.add(detail);
-					}
-					if(mod != 0){
-						seq++;
-						ProductionDetail detail = new ProductionDetail();
-						detail.setProduction(production);
-						detail.setSerialNum(serialNum+toSeq(seq, 4));
-						detail.setProductTree(productTree);
-						detail.setNumber(mod);
-						detail.setRemainder(remainder);
-						productionDetailList.add(detail);
-					}
-				}
-				productionDetailService.save(productionDetailList);
-			}else if("detail".equals(type)){
+			if("detail".equals(type)){
 				ProductionDetail detail = productionDetailService.get(id);
-				detail.getProductTree().getProduct().getBom();
+				
+				if (null != detail.getProductTree() && detail.getProductTree().getParent().getAssy() == Product.ASSY_COM) {
+					detail.setNextPart("组立");
+				}else{
+					detail.setNextPart("仓库");
+				}
+				
 				int remainder = detail.getNumber()%detail.getProduction().getProduct().getSnpNum();
 				detail.setRemainder(remainder);
 				productionDetailList.add(detail);
 			}else {
 				ProductionDetail detail = productionDetailService.get(id);
 				
-				Product product = null;
-				if (detail.getProductTree() != null) {
-					product = detail.getProductTree().getProduct();
-				}else {
-					product = detail.getProduction().getProduct();
+				if (null != detail.getProductTree() && detail.getProductTree().getParent().getAssy() == Product.ASSY_COM) {
+					detail.setNextPart("组立");
+				}else{
+					detail.setNextPart("仓库");
 				}
+				
+				Product product = detail.getProduct();
 				
 				List<ProductTree> childrens = productTreeService.findChildrensByProductId(product.getId());
 				StringBuffer elements = new StringBuffer();
@@ -243,10 +201,9 @@ public class ProductionController extends BaseController {
 				productionDetailList.add(detail);
 			}
 			
-			
-			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder","data");
+			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder","data","product","nextPart");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
-			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "serialNum", "name", "bomString");
+			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "serialNum", "name", "bomString", "machine");
 			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan", "product");
 			SimplePropertyPreFilter filter5 = new SimplePropertyPreFilter(ProductionPlan.class, "beginDate");
 			

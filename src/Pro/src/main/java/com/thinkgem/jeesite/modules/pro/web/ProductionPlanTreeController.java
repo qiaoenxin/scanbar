@@ -26,6 +26,7 @@ import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.entity.page.ProductionPlanTreePage;
+import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionPlanService;
@@ -42,6 +43,9 @@ public class ProductionPlanTreeController extends BaseController {
 
 	@Autowired
 	private ProductTreeService productTreeService;
+	
+	@Autowired
+	private ProductService productService;
 	
 	@Autowired
 	private ProductionService productionService;
@@ -68,7 +72,7 @@ public class ProductionPlanTreeController extends BaseController {
 	public String previewList(String productId, int number, Date date, HttpServletRequest request, HttpServletResponse response, Model model) {
 		
 		Production production = new Production();
-		production.setProduct(new Product(productId));
+		production.setProduct(productService.get(productId));
 		production.setNumber(number);
 		
         model.addAttribute("list", makePlanList(production, date));
@@ -88,6 +92,7 @@ public class ProductionPlanTreeController extends BaseController {
 		//计数产品，用于编号
 		int count = 0;
 		List<ProductionPlanTreePage> list = makePlanList(production, production.getPlan().getEndDate());
+		List<ProductionDetail> detailList = Lists.newArrayList();
 		for (int i = 0; i < list.size(); i++) {
 			
 			ProductionPlanTreePage treePage = list.get(i);
@@ -100,7 +105,9 @@ public class ProductionPlanTreeController extends BaseController {
 				detail.setSerialNum(toSeq(production.getSerialNum(), count, 4));
 				detail.setCompleteNum(0);
 				detail.setUnqualifiedNum(0);
-				detail.setProductTree(new ProductTree(treePage.getTreeId()));
+				if(!"".equals(treePage.getTreeId())){
+					detail.setProductTree(new ProductTree(treePage.getTreeId()));
+				}
 				detail.setStatus(treePage.getProduct().getBom().getAction());
 				if (j == (length-1)) {
 					detail.setNumber((int) (toatl-snp*j));
@@ -112,11 +119,11 @@ public class ProductionPlanTreeController extends BaseController {
 				
 				detail.setDate(treePage.getDate());
 				
-				productionDetailService.save(detail);
+				detailList.add(detail);
 			}
 			
 		}
-		
+		productionDetailService.save(detailList);
 		production.setIsProducing(Production.PRODUCTION_YES);
 		productionService.save(production);
         
@@ -135,11 +142,13 @@ public class ProductionPlanTreeController extends BaseController {
 		if (null == date) {
 			date = new Date();
 		}
-		List<ProductTree> roots = productTreeService.findParentsByProductId(production.getProduct().getId());
+		String topId = IdGen.uuid();
+		list.add(new ProductionPlanTreePage("", topId, "", production.getProduct(), picinumber, date, countComplateNum(details, "")));
+		List<ProductTree> roots = productTreeService.findChildrensByProductId(production.getProduct().getId());
 		for(ProductTree root : roots){
 			int totalNum = root.getNumber()*picinumber;
 			String id = IdGen.uuid();
-			list.add(new ProductionPlanTreePage(root.getId(),id,"",root.getProduct(),totalNum,date,countComplateNum(details, root.getId())));
+			list.add(new ProductionPlanTreePage(root.getId(),id,topId,root.getProduct(),totalNum,date,countComplateNum(details, root.getId())));
 			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
 			for(ProductTree c : childrens){
 				recursiveChildren(id,c,list, totalNum, toPreDate(date), details);
@@ -170,9 +179,14 @@ public class ProductionPlanTreeController extends BaseController {
 	private int countComplateNum(List<ProductionDetail> list, String treeId){
 		int count = 0;
 		for (ProductionDetail productionDetail : list) {
-			if(productionDetail.getProductTree().getId().equals(treeId)){
+			if(null == productionDetail.getProductTree() && "".equals(treeId)){
 				count += productionDetail.getCompleteNum();
 			}
+			
+			if(null != productionDetail.getProductTree() && productionDetail.getProductTree().getId().equals(treeId)){
+				count += productionDetail.getCompleteNum();
+			}
+			
 		}
 		
 		return count;

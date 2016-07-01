@@ -44,18 +44,8 @@
 							var myTemplate = Handlebars.compile($(tplId).html());
 							var dataItem = data[i];
 							
-							/* var flows = dataItem.productTree? dataItem.productTree.product.flow : dataItem.production.product.flow;
-							if(flows){
-								flows = JSON.parse(flows);
-								dataItem.flow1 = flows[0];
-								dataItem.flow2 = flows[1];
-							} */
-							dataItem.bom = JSON.parse(dataItem.productTree.product.bomString).properties;
-							if(!dataItem.productTree || dataItem.productTree.product.serialNum == dataItem.production.product.serialNum){
-								dataItem.next = "仓库";
-							}else{
-								dataItem.next = "组立";
-							}
+							dataItem.bom = JSON.parse(dataItem.product.bomString).properties;
+							
 							var imgSize = 100;
 							if(type="package"){
 								imgSize = 150;
@@ -101,33 +91,18 @@
 		<c:forEach items="${page.list}" var="productionDetail">
 			<tr>
 				<td>${productionDetail.serialNum}</td>
-				<c:if test="${productionDetail.production.product.assy == 1}">
-				<td>${productionDetail.productTree.product.name}</td>
-				<td>${productionDetail.productTree.product.serialNum}</td>
+				<td>${productionDetail.product.name}</td>
+				<td>${productionDetail.product.serialNum}</td>
 				<td>${productionDetail.number}</td>
 				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
 				<td>
-				<c:if test="${productionDetail.productTree.product.bom.printCard ==  '组装卡'}">
+				<c:if test="${productionDetail.product.bom.printCard ==  '组装卡'}">
 				<a href="javascript:print('${productionDetail.id}','package');" >组装卡</a>
 				</c:if>	
-				<c:if test="${productionDetail.productTree.product.bom.printCard ==  '制程卡'}">
-				<a href="javascript:print('${productionDetail.id}','detail');" >制程卡</a>
-				</c:if>	
-				</td>			
-				</c:if>
-				<c:if test="${productionDetail.production.product.assy == 0}">
-				<td>${productionDetail.production.product.name}</td>
-				<td>${productionDetail.production.product.serialNum}</td>
-				<td>${productionDetail.number}</td>
-				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
-				<c:if test="${productionDetail.production.product.bom.printCard ==  '组装卡'}">
-				<a href="javascript:print('${productionDetail.id}','package');" >组装卡</a>
-				</c:if>	
-				<c:if test="${productionDetail.production.product.bom.printCard ==  '制程卡'}">
+				<c:if test="${productionDetail.product.bom.printCard ==  '制程卡'}">
 				<a href="javascript:print('${productionDetail.id}','detail');" >制程卡</a>
 				</c:if>	
 				</td>					
-				</c:if>
 			</tr>
 		</c:forEach>
 		</tbody>
@@ -172,8 +147,8 @@ table.gridtable td {
 	<td>尾数</td>
 </tr>
 <tr style="height:80px;">
-	<td colspan="3" style="font-weight:bold;font-size:18px;text-align:center">{{production.product.field1}}</td>
-	<td colspan="2" style="font-weight:bold;font-size:18px;text-align:center">{{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
+	<td colspan="3" style="font-weight:bold;font-size:18px;text-align:center">{{product.machine}}</td>
+	<td colspan="2" style="font-weight:bold;font-size:18px;text-align:center">{{product.name}}</td>
 	<td style="font-weight:bold;font-size:18px">{{number}}</td>
 	<td style="font-weight:bold;font-size:18px">{{remainder}}</td>
 </tr>
@@ -197,13 +172,13 @@ table.gridtable td {
 	<td style="width:1px;"></td>
 </tr>
 <tr >
-	<td>PCO&nbsp;{{flow1.field6}}</td>
-	<td colspan="3">弯曲&nbsp;{{flow2.field2}}</td>
-	<td colspan="2" rowspan="2" style="font-weight:bold;font-size:16px;text-align:center">{{next}}</td>
+	<td>PCO&nbsp;{{bom.PCO}}</td>
+	<td colspan="3">弯曲&nbsp;{{bom.guiGe}}</td>
+	<td colspan="2" rowspan="2" style="font-weight:bold;font-size:16px;text-align:center">{{nextPart}}</td>
 </tr>
 <tr style="height:40px;">
-	<td>{{#if flow1.field6}}*{{else}}无{{/if}}</td>
-	<td colspan="3">{{#if flow2}}*{{else}}无{{/if}}</td>
+	<td>{{#if bom.PCO}}*{{else}}无{{/if}}</td>
+	<td colspan="3">{{#if bom.guiGe}}*{{else}}无{{/if}}</td>
 </tr>
 <tr>
 	<td colspan="2">检查</td>
@@ -249,7 +224,7 @@ table.gridtable td {
 	<td colspan="2" style="text-align:center;font-weight:bold;font-size:14px">制程管理组装卡</td>
 </tr>
 <tr style="height:30px;">
-	<td colspan="2" style="font-weight:bold;font-size:14px">品番:{{#if productTree}}{{productTree.product.name}}{{else}}{{production.product.name}}{{/if}}</td>
+	<td colspan="2" style="font-weight:bold;font-size:14px">品番:{{product.name}}</td>
 </tr>
 <tr style="height:30px;">
 	<td style="width:50%;font-weight:bold;font-size:14px">组立内容</td>
