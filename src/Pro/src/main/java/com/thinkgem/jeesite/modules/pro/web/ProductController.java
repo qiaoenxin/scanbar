@@ -199,6 +199,10 @@ public class ProductController extends BaseController {
         // 删除多余的子节点
         productTreeService.deleteByDelFlag(ProductTree.SYS_ID);
         
+//        ProductTree productTree = new ProductTree();
+//        productTree.setProduct(product);
+//        productTree.setNumber(1);
+//        productTreeService.save(productTree);
         addMessage(redirectAttributes, "保存BOM成功!");
         return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
     }

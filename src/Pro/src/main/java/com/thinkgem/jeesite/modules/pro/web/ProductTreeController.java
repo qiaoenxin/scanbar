@@ -114,12 +114,13 @@ public class ProductTreeController extends BaseController {
 	        return bomString.toString();
         }
 	    
+	    // 操作为端末
         if ("1".equals(productInfo.getBom().getAction()) && null != productInfo.getBom().getProperties())
         {
             bomString.append("HPC:");
             bomString.append(productInfo.getBom().getProperties().get("HPC"));
             bomString.append(",");
-            bomString.append("ISO:");
+            bomString.append("ISO/ISO:");
             bomString.append(productInfo.getBom().getProperties().get("ISO"));
             bomString.append(",");
             bomString.append("PCO:");
@@ -137,6 +138,8 @@ public class ProductTreeController extends BaseController {
             bomString.append("印字:");
             bomString.append(productInfo.getBom().getProperties().get("yinZi"));
         }
+        
+        // 操作为弯曲
         if ("2".equals(productInfo.getBom().getAction()) && null != productInfo.getBom().getProperties())
         {
             bomString.append("规格");
