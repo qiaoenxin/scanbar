@@ -98,6 +98,13 @@ public class ProductTreeController extends BaseController {
 		return "modules/pro/productTreeList";
 	}
 	
+	/**
+	 * 拼接属性
+	 * 
+	 * @param productInfo 产品
+	 * @return string
+	 * @see
+	 */
 	private String getBomString(Product productInfo)
 	{
 	    StringBuffer bomString = new StringBuffer();
@@ -107,7 +114,7 @@ public class ProductTreeController extends BaseController {
 	        return bomString.toString();
         }
 	    
-        if ("1".equals(productInfo.getBom().getAction()))
+        if ("1".equals(productInfo.getBom().getAction()) && null != productInfo.getBom().getProperties())
         {
             bomString.append("HPC:");
             bomString.append(productInfo.getBom().getProperties().get("HPC"));
@@ -130,7 +137,7 @@ public class ProductTreeController extends BaseController {
             bomString.append("印字:");
             bomString.append(productInfo.getBom().getProperties().get("yinZi"));
         }
-        if ("2".equals(productInfo.getBom().getAction()))
+        if ("2".equals(productInfo.getBom().getAction()) && null != productInfo.getBom().getProperties())
         {
             bomString.append("规格");
             bomString.append(productInfo.getBom().getProperties().get("guiGe"));

@@ -172,7 +172,7 @@ public class ProductController extends BaseController {
         
         // 获取当前页面传递过来的子节点
         List<ProductTree> productTreeList = productTreeModel.getProductTreeList();
-        
+        Map<ProductTree, ProductTree> map = new HashMap<ProductTree, ProductTree>();
         for (ProductTree productTree : productTreeList)
         {
             // 父节点和子节点不是同一个产品
@@ -183,7 +183,14 @@ public class ProductController extends BaseController {
             }
             
             productTree.setParent(product);
-        }        
+            map.put(productTree, productTree);
+        }  
+        
+        if (map.size() != productTreeList.size())
+        {
+            addMessage(redirectAttributes, "保存BOM失败，子节点不能相同!");
+            return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
+        }
         
         // 批量保存
         productTreeService.saveList(productTreeList);
