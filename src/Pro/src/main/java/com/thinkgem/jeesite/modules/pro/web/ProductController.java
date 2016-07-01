@@ -3,10 +3,13 @@
  */
 package com.thinkgem.jeesite.modules.pro.web;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +43,6 @@ import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.DictService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
-import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTreeModel;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
@@ -173,20 +175,28 @@ public class ProductController extends BaseController {
         
         // 获取当前页面传递过来的子节点
         List<ProductTree> productTreeList = productTreeModel.getProductTreeList();
+        
+        // 存储当前子节点防止冲突
         Map<ProductTree, ProductTree> map = new HashMap<ProductTree, ProductTree>();
-        for (ProductTree productTree : productTreeList)
+        
+        // 获取所有的父节点
+        Set<String> ids = getAllParentWithSelf(product);
+        
+        for (ProductTree tree : productTreeList)
         {
-            // 父节点和子节点不是同一个产品
-            if ((product.getId()).equals(productTree.getProduct().getId()))
+            // 当前的子节点和父节点进行比较
+            if (ids.contains(tree.getProduct().getId()))
             {
                 addMessage(redirectAttributes, "保存BOM失败，父节点和子节点不能相同!");
-                return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
+              return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
             }
             
-            productTree.setParent(product);
-            map.put(productTree, productTree);
-        }  
+            // 当前子节点添加父节点
+            tree.setParent(product);
+            map.put(tree, tree);
+        }
         
+        // 后台判断子节点不能重复
         if (map.size() != productTreeList.size())
         {
             addMessage(redirectAttributes, "保存BOM失败，子节点不能相同!");
@@ -199,14 +209,47 @@ public class ProductController extends BaseController {
         // 删除多余的子节点
         productTreeService.deleteByDelFlag(ProductTree.SYS_ID);
         
-//        ProductTree productTree = new ProductTree();
-//        productTree.setProduct(product);
-//        productTree.setNumber(1);
-//        productTreeService.save(productTree);
         addMessage(redirectAttributes, "保存BOM成功!");
         return "redirect:"+Global.getAdminPath()+"/pro/product/?repage";
     }
-	
+    
+    
+    /**
+     * 放进set中为比较做准备
+     * 
+     * @param product 当前的父节点
+     * @return Set
+     * @see
+     */
+    private Set<String> getAllParentWithSelf(Product product){
+        Set<String> set = new HashSet<String>();
+        List<Product> list = new ArrayList<Product>();
+        getParentRecursively(product, list);
+        for (Product p : list)
+        {
+            set.add(p.getId());
+        }
+        return set;
+    }
+    
+    /**
+     * 递归获取所有的父节点
+     * 
+     * @param product 产品
+     * @param list 添加list
+     * @see
+     */
+    private void getParentRecursively(Product product,List<Product> list){
+        list.add(product);
+        List<ProductTree> productTrees = productTreeService.findParentsByProductId(product.getId());
+        
+        for (ProductTree productTree : productTrees)
+        {   
+            getParentRecursively(productTree.getParent(), list);
+            
+        }
+    }
+    
 	@RequiresPermissions("pro:product:edit")
 	@RequestMapping(value = "delete")
 	public String delete(String id, RedirectAttributes redirectAttributes) {

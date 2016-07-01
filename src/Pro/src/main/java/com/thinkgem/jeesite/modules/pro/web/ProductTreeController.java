@@ -66,7 +66,7 @@ public class ProductTreeController extends BaseController {
 		Page<ProductTreePage> page = new Page<ProductTreePage>();
 		
 		// 1. 查询所有的产品
-		Page<Product> page_products = productService.find(new Page<Product>(request, response), product);
+		Page<Product> page_products = productService.findChengPin(new Page<Product>(request, response), product);
 		List<Product> products = page_products.getList();
 		for(Product productInfo : products)
 		{
