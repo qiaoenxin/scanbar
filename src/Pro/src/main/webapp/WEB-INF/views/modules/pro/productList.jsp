@@ -142,7 +142,7 @@
 	<br>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>编号</th><th>车种</th><th>snp数量</th><th>assy</th><th>工序</th><th>操作</th></tr></thead>
+		<thead><tr><th>名称</th><th>编号</th><th>车种</th><th>snp数量</th><th>assy</th><th>操作</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="product">
 			<tr>
@@ -150,8 +150,9 @@
 				<td>${product.serialNum}</td>
 				<td>${product.machine}</td>
 				<td>${product.snpNum}</td>
-				<td>${product.assy}</td>
 				<td>
+					<c:if test="${product.assy == 0}">单品</c:if>
+					<c:if test="${product.assy == 1}">组装产品</c:if>
 				</td>
 				<td>
 					<shiro:hasPermission name="pro:product:edit">

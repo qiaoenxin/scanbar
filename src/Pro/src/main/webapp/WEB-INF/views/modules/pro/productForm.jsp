@@ -91,13 +91,23 @@
 		<div class="control-group">
 			<label class="control-label">车种:</label>
 			<div class="controls">
-				<form:input path="field1" htmlEscape="false" maxlength="200" class="required"/>
+				<form:input path="machine" htmlEscape="false" maxlength="200" class="required"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">ASY:</label>
 			<div class="controls">
 				<form:input path="assy" htmlEscape="false" maxlength="1" class="required" />0表示单品，1表示assy品
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">种类:</label>
+			<div class="controls">
+				<select id="printCard" name="product.type" value="${product.type}">
+					<option value=" " <c:if test="${product.type eq 0}">selected</c:if>>原料</option>
+					<option value="组装卡" <c:if test="${product.type eq 1}">selected</c:if>>半成品</option>
+					<option value="制程卡" <c:if test="${product.type eq 2}">selected</c:if>>产成品</option>
+				</select>
 			</div>
 		</div>
 		<div>
