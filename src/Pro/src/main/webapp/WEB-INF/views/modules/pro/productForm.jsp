@@ -103,10 +103,10 @@
 		<div class="control-group">
 			<label class="control-label">种类:</label>
 			<div class="controls">
-				<select id="printCard" name="product.type" value="${product.type}">
-					<option value=" " <c:if test="${product.type eq 0}">selected</c:if>>原料</option>
-					<option value="组装卡" <c:if test="${product.type eq 1}">selected</c:if>>半成品</option>
-					<option value="制程卡" <c:if test="${product.type eq 2}">selected</c:if>>产成品</option>
+				<select id="printCard" name="type" value="${product.type}">
+					<option value="0" <c:if test="${product.type eq 0}">selected</c:if>>原料</option>
+					<option value="1" <c:if test="${product.type eq 1}">selected</c:if>>半成品</option>
+					<option value="2" <c:if test="${product.type eq 2}">selected</c:if>>产成品</option>
 				</select>
 			</div>
 		</div>
