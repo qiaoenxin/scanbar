@@ -74,6 +74,7 @@
 		}));
 		$(list+idx).find("select").each(function(){
 			$(this).val($(this).attr("data-value"));
+			$(this).select2();
 		});
 		$(list+idx).find("input[type='checkbox'], input[type='radio']").each(function(){
 			var ss = $(this).attr("data-value").split(',');
