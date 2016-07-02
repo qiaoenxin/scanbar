@@ -120,7 +120,7 @@
 		<tags:message content="${message}" />
 		<div class="control-group">
 			<label class="control-label">父节点:</label>
-			<label class="control-label">${product.name}</label>
+			<label class="control-label" style="width: auto;margin-left: 20px;">${product.name}</label>
 		</div>
 
 		<div class="control-group">
