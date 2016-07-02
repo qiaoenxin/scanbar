@@ -227,8 +227,8 @@ table.gridtable td {
 	<td colspan="2" style="font-weight:bold;font-size:14px">品番:{{product.name}}</td>
 </tr>
 <tr style="height:30px;">
-	<td style="width:50%;font-weight:bold;font-size:14px">组立内容</td>
-	<td style="width:50%;font-weight:bold;font-size:14px">编号:{{serialNum}}</td>
+	<td style="width:50%;font-weight:bold;font-size:14px">SNP：{{number}} 尾数：{{remainder}}</td>
+	<td style="width:50%;font-weight:bold;font-size:14px">编号:</td>
 </tr>
 <tr style="height:210px;vertical-align: top;font-size:14px">
 	<td>

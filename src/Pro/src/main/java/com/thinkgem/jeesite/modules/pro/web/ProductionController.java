@@ -190,11 +190,14 @@ public class ProductionController extends BaseController {
 				
 				Product product = detail.getProduct();
 				
+				int remainder = detail.getNumber()%product.getSnpNum();
+				detail.setRemainder(remainder);
+				
 				List<ProductTree> childrens = productTreeService.findChildrensByProductId(product.getId());
 				StringBuffer elements = new StringBuffer();
 				for (int i = 0; i < childrens.size(); i++) {
 					ProductTree tree = childrens.get(i);
-					elements.append((i + 1) + "，"+tree.getProduct().getName()).append("<br>");
+					elements.append(i + 1).append("，").append(tree.getProduct().getName()).append(" * ").append(tree.getNumber()).append("<br>");
 				}
 				detail.setData(elements.toString());
 				

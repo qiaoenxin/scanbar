@@ -63,6 +63,7 @@
 					($(list+idx+"_stock").val(stock[productId] || 0));
 				});		
 				$(this).change();
+				$(this).select2();
 			});
 			$(list+idx).find("input[type='checkbox'], input[type='radio']").each(function(){
 				var ss = $(this).attr("data-value").split(',');
