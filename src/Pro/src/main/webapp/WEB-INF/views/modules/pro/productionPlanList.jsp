@@ -4,9 +4,13 @@
 <head>
 	<title>生产计划管理</title>
 	<meta name="decorator" content="default"/>
+	<%@include file="/WEB-INF/views/include/dialog.jsp" %>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$("#btnImport").click(function(){
+				$.jBox($("#importBox").html(), {title:"导入数据", buttons:{"关闭":true}, 
+					bottomText:"导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！"});
+			});			
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -58,6 +62,16 @@
 	</script>
 </head>
 <body>
+
+	<div id="importBox" class="hide">
+		<form id="importForm" action="${ctx}/pro/productionPlan/import" method="post" enctype="multipart/form-data"
+			style="padding-left:20px;text-align:center;" class="form-search" onsubmit="loading('正在导入，请稍等...');"><br/>
+			<input id="uploadFile" name="file" type="file" style="width:330px"/><br/><br/>　　
+			<input id="btnImportSubmit" class="btn btn-primary" type="submit" value="   导    入   "/>
+			<a href="${ctx}/pro/productionPlan/import/template">下载模板</a>
+		</form>
+	</div>
+
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/pro/productionPlan/">生产指令列表</a></li>
 		<shiro:hasPermission name="pro:productionPlan:edit"><li><a href="${ctx}/pro/productionPlan/form">生产指令添加</a></li></shiro:hasPermission>
@@ -69,6 +83,7 @@
 		<label>指令编码 ：</label><form:input path="serialNum" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>产品名称：</label><form:input path="product.name" htmlEscape="false" maxlength="50" class="input-small"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+		&nbsp;<input id="btnImport" class="btn btn-primary" type="button" value="导入"/>
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">

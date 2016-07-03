@@ -93,6 +93,18 @@ public class ProductService extends BaseService {
 		return productDao.find(dc);
 	}
 	
+	public long countByName(String name) {
+		DetachedCriteria dc = productDao.createDetachedCriteria();
+		dc.add(Restrictions.eq("name", name));
+		return productDao.count(dc);
+	}
+	
+	public boolean existByName(String name) {
+		DetachedCriteria dc = productDao.createDetachedCriteria();
+		dc.add(Restrictions.eq("name", name));
+		return productDao.count(dc) > 0;
+	}	
+	
 	@Transactional(readOnly = false)
 	public void save(Product product) {
 		boolean isNew = false;

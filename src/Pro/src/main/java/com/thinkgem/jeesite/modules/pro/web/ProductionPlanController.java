@@ -3,14 +3,17 @@
  */
 package com.thinkgem.jeesite.modules.pro.web;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.print.attribute.HashPrintJobAttributeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -19,18 +22,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.drew.lang.StringUtil;
+import com.google.common.collect.Lists;
+import com.thinkgem.jeesite.common.beanvalidator.BeanValidators;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.common.utils.excel.ExportExcel;
+import com.thinkgem.jeesite.common.utils.excel.ImportExcel;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionPlan;
+import com.thinkgem.jeesite.modules.pro.entity.ProductionPlanExcel;
 import com.thinkgem.jeesite.modules.pro.entity.Stock;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
@@ -208,12 +220,105 @@ public class ProductionPlanController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "checkSerial")
 	public String checkSerial(String serialNum, String id) {
+		return String.valueOf(isSerialUnique(serialNum, id));
+	}
+	
+	private boolean isSerialUnique(String serialNum, String id){
 		long count = productionPlanService.countBySerialNum(serialNum);
+
 		if (StringUtils.isBlank(id)) {
-			return String.valueOf(count < 1);
+			return count < 1;
 		} else {
-			return String.valueOf(count < 2);
+			return count < 2;
 		}
 	}
 
+	@RequiresPermissions("pro:productionPlan:edit")
+    @RequestMapping(value = "import", method=RequestMethod.POST)
+    public String importFile(MultipartFile file, RedirectAttributes redirectAttributes) {
+		try {
+			ImportExcel ei = new ImportExcel(file, 1, 0);
+			List<ProductionPlanExcel> list = ei.getDataList(ProductionPlanExcel.class);
+			
+			Set<String> serialNums = new HashSet<String>();
+			Set<String> endDates =  new HashSet<String>();
+			String serialNum = null;
+			String endDate =  null;
+			List<Production> productionList = Lists.newArrayList();
+			Map<String, Integer> productNumber = new HashMap<String, Integer>();
+			
+			for (ProductionPlanExcel planExcel : list) {
+				if (StringUtils.isNotBlank(planExcel.getSerialNum())) {
+					serialNum = planExcel.getSerialNum();
+					serialNums.add(serialNum);
+				}
+				if (StringUtils.isNotBlank(planExcel.getEndDate())) {
+					endDate = planExcel.getEndDate();
+					endDates.add(endDate);
+				}
+				productNumber.put(planExcel.getProductName(), planExcel.getNumber());
+			}
+			
+			if (serialNums.size() != 1) {
+				addMessage(redirectAttributes, "导入失败！失败信息：批次不一致");
+				return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/?repage";
+			}
+			if (endDates.size() != 1) {
+				addMessage(redirectAttributes, "导入失败！失败信息：日期不一致");
+				return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/?repage";
+			}
+			if (productNumber.keySet().size() != list.size()) {
+				addMessage(redirectAttributes, "导入失败！失败信息：产品不能重复");
+				return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/?repage";
+			}
+			if (!isSerialUnique(serialNum, null)) {
+				addMessage(redirectAttributes, "导入失败！失败信息：批次与现有记录冲突");
+				return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/?repage";
+			}
+			
+			ProductionPlan plan = new ProductionPlan();
+			plan.setId(IdGen.uuid());
+			plan.setSerialNum(serialNum);
+			plan.setEndDate(DateUtils.parseDate(String.valueOf(Double.valueOf(endDate).intValue()), new String[]{"yyyyMMdd"}));
+
+			for (String productName : productNumber.keySet()) {
+				List<Product> products = productService.findByName(productName);
+				
+				if (products.size() != 1) {
+					throw new RuntimeException("产品不存在，或者不唯一");
+				}
+				
+				Production production = new Production();
+				production.setPlan(plan);
+				production.setProduct(products.get(0));
+				production.setSerialNum(serialNum + products.get(0).getSerialNum());
+				production.setNumber(productNumber.get(productName));
+				
+				productionList.add(production);
+			}
+			
+			productionPlanService.save(plan);
+			productionService.save(productionList);
+			
+			addMessage(redirectAttributes, "导入成功 !");
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "导入失败！失败信息："+e.getMessage());
+		}
+		return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/?repage";
+    }
+	
+	@RequiresPermissions("pro:productionPlan:view")
+    @RequestMapping(value = "import/template")
+    public String importFileTemplate(HttpServletResponse response, RedirectAttributes redirectAttributes) {
+		try {
+            String fileName = "生产指令导入模板.xlsx";
+    		List<ProductionPlanExcel> list = Lists.newArrayList();
+    		new ExportExcel("生产指令", ProductionPlanExcel.class, 2).setDataList(list).write(response, fileName).dispose();
+    		return null;
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "导入模板下载失败！失败信息："+e.getMessage());
+		}
+		return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/?repage";
+    }	
+	
 }
