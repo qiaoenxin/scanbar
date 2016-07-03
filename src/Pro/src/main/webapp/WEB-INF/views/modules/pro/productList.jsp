@@ -95,7 +95,7 @@
 						dataItem.showBom = showBom;
 					}
 					
-					var QRImg = Canvas2Image.qrcode(dataItem.serialNum,150,150);
+					var QRImg = Canvas2Image.qrcode(dataItem.name,150,150);
 					var QRHtml = QRImg.outerHTML;
 					dataItem.qrImg = QRHtml;
 					var html = myTemplate(dataItem);
