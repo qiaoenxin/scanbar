@@ -63,6 +63,9 @@
 						<c:if test="${productTree.product.bom.action eq '3'}">
 							【检查】
 						</c:if>
+						<c:if test="${productTree.product.bom.action eq '4'}">
+							【组装】
+						</c:if>
 						<c:if test="${productTree.product.bom.action eq '5'}">
 							PCO
 						</c:if>
