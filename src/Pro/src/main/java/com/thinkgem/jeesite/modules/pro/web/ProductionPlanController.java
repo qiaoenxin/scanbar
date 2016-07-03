@@ -279,7 +279,7 @@ public class ProductionPlanController extends BaseController {
 			ProductionPlan plan = new ProductionPlan();
 			plan.setId(IdGen.uuid());
 			plan.setSerialNum(serialNum);
-			plan.setEndDate(DateUtils.parseDate(String.valueOf(Double.valueOf(endDate).intValue()), new String[]{"yyyyMMdd"}));
+			plan.setEndDate(DateUtils.parseDate(endDate, new String[]{"yyyyMMdd"}));
 
 			for (String productName : productNumber.keySet()) {
 				List<Product> products = productService.findByName(productName);
@@ -313,7 +313,7 @@ public class ProductionPlanController extends BaseController {
 		try {
             String fileName = "生产指令导入模板.xlsx";
     		List<ProductionPlanExcel> list = Lists.newArrayList();
-    		new ExportExcel("生产指令", ProductionPlanExcel.class, 2).setDataList(list).write(response, fileName).dispose();
+    		new ExportExcel("生产指令(*请将单元格中数字设为文本格式)", ProductionPlanExcel.class, 2).setDataList(list).write(response, fileName).dispose();
     		return null;
 		} catch (Exception e) {
 			addMessage(redirectAttributes, "导入模板下载失败！失败信息："+e.getMessage());
