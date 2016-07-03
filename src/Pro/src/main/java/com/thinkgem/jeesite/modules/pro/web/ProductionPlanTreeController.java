@@ -21,7 +21,6 @@ import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.web.BaseController;
-import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
@@ -29,7 +28,6 @@ import com.thinkgem.jeesite.modules.pro.entity.page.ProductionPlanTreePage;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
-import com.thinkgem.jeesite.modules.pro.service.ProductionPlanService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionService;
 
 /**
@@ -97,7 +95,8 @@ public class ProductionPlanTreeController extends BaseController {
 			
 			ProductionPlanTreePage treePage = list.get(i);
 			double toatl = treePage.getNumber();
-			double snp = treePage.getProduct().getSnpNum();
+			double snp = treePage.getProduct().getRealSnpNum();
+			
 			int length = (int) Math.ceil(toatl/snp);
 			for (int j = 0; j < length; j++) {
 				ProductionDetail detail = new ProductionDetail();
@@ -108,7 +107,6 @@ public class ProductionPlanTreeController extends BaseController {
 				if(!"".equals(treePage.getTreeId())){
 					detail.setProductTree(new ProductTree(treePage.getTreeId()));
 				}
-				detail.setStatus(treePage.getProduct().getBom().getAction());
 				if (j == (length-1)) {
 					detail.setNumber((int) (toatl-snp*j));
 				}else{
@@ -127,7 +125,7 @@ public class ProductionPlanTreeController extends BaseController {
 		production.setIsProducing(Production.PRODUCTION_YES);
 		productionService.save(production);
         
-		return "redirect:"+Global.getAdminPath()+"/pro/productionPlanTree/list?productionId="+productionId;
+		return "redirect:"+Global.getAdminPath()+"/pro/productionPlan/list";
 	}
 	
 	
@@ -148,7 +146,7 @@ public class ProductionPlanTreeController extends BaseController {
 		for(ProductTree root : roots){
 			int totalNum = root.getNumber()*picinumber;
 			String id = IdGen.uuid();
-			list.add(new ProductionPlanTreePage(root.getId(),id,topId,root.getProduct(),totalNum,date,countComplateNum(details, root.getId())));
+			list.add(new ProductionPlanTreePage(root.getId(),id,topId,root.getProduct(),totalNum,toPreDate(date),countComplateNum(details, root.getId())));
 			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
 			for(ProductTree c : childrens){
 				recursiveChildren(id,c,list, totalNum, toPreDate(date), details);

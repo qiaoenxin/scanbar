@@ -55,7 +55,7 @@ public class ProductionPlanTreePage {
 		this.product = product;
 		this.date = date;
 		this.dateForShow = toCompleteDate(date);
-		this.printNum = toPrintNum(number, product.getSnpNum());
+		this.printNum = toPrintNum(number, product.getRealSnpNum());
 		this.completeNum = completeNum;
 	}
 	

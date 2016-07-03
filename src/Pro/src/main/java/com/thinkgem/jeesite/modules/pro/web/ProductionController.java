@@ -176,7 +176,7 @@ public class ProductionController extends BaseController {
 					detail.setNextPart("仓库");
 				}
 				
-				int remainder = detail.getNumber()%detail.getProduction().getProduct().getSnpNum();
+				int remainder = detail.getNumber()%detail.getProduct().getRealSnpNum();
 				detail.setRemainder(remainder);
 				productionDetailList.add(detail);
 			}else {
@@ -190,7 +190,7 @@ public class ProductionController extends BaseController {
 				
 				Product product = detail.getProduct();
 				
-				int remainder = detail.getNumber()%product.getSnpNum();
+				int remainder = detail.getNumber()%product.getRealSnpNum();
 				detail.setRemainder(remainder);
 				
 				List<ProductTree> childrens = productTreeService.findChildrensByProductId(product.getId());
@@ -206,7 +206,7 @@ public class ProductionController extends BaseController {
 			
 			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder","data","product","nextPart");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
-			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "serialNum", "name", "bomString", "machine");
+			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "serialNum", "name", "bomString", "machine", "realSnpNum");
 			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan", "product");
 			SimplePropertyPreFilter filter5 = new SimplePropertyPreFilter(ProductionPlan.class, "beginDate");
 			

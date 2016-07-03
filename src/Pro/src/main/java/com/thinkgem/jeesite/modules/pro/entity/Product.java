@@ -89,6 +89,15 @@ public class Product extends IdEntity<Product>
     private transient String showBom;
     
     private transient Bom bom;
+    
+    @Transient
+    public int getRealSnpNum(){
+    	if(null != this.getBom().getPrintSnpNum() && !Integer.valueOf(0).equals(this.getBom().getPrintSnpNum())){
+    		return this.getBom().getPrintSnpNum();
+    	}else{
+    		return snpNum;
+    	}
+    }
 
     public Product()
     {

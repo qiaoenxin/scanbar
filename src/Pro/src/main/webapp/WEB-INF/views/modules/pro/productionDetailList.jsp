@@ -45,6 +45,9 @@
 							var dataItem = data[i];
 							
 							dataItem.bom = JSON.parse(dataItem.product.bomString).properties;
+							if(dataItem.reminder != 0){
+								dataItem.product.realSnpNum = "";
+							}
 							
 							var imgSize = 100;
 							if(type="package"){
@@ -149,7 +152,7 @@ table.gridtable td {
 <tr style="height:80px;">
 	<td colspan="3" style="font-weight:bold;font-size:18px;text-align:center">{{product.machine}}</td>
 	<td colspan="2" style="font-weight:bold;font-size:18px;text-align:center">{{product.name}}</td>
-	<td style="font-weight:bold;font-size:18px">{{number}}</td>
+	<td style="font-weight:bold;font-size:18px">{{product.realSnpNum}}</td>
 	<td style="font-weight:bold;font-size:18px">{{remainder}}</td>
 </tr>
 <tr>
@@ -227,7 +230,7 @@ table.gridtable td {
 	<td colspan="2" style="font-weight:bold;font-size:14px">品番:{{product.name}}</td>
 </tr>
 <tr style="height:30px;">
-	<td style="width:50%;font-weight:bold;font-size:14px">SNP：{{number}} 尾数：{{remainder}}</td>
+	<td style="width:50%;font-weight:bold;font-size:14px">SNP：{{product.realSnpNum}} 尾数：{{remainder}}</td>
 	<td style="width:50%;font-weight:bold;font-size:14px">编号:</td>
 </tr>
 <tr style="height:210px;vertical-align: top;font-size:14px">
