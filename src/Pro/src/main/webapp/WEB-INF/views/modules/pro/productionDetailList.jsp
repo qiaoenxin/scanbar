@@ -45,7 +45,7 @@
 							var dataItem = data[i];
 							
 							dataItem.bom = JSON.parse(dataItem.product.bomString).properties;
-							if(dataItem.reminder != 0){
+							if(dataItem.remainder != 0){
 								dataItem.product.realSnpNum = "";
 							}
 							

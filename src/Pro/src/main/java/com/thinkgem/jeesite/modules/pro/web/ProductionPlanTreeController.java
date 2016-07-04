@@ -149,7 +149,7 @@ public class ProductionPlanTreeController extends BaseController {
 			list.add(new ProductionPlanTreePage(root.getId(),id,topId,root.getProduct(),totalNum,toPreDate(date),countComplateNum(details, root.getId())));
 			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
 			for(ProductTree c : childrens){
-				recursiveChildren(id,c,list, totalNum, toPreDate(date), details);
+				recursiveChildren(id,c,list, totalNum, toPreDate(toPreDate(date)), details);
 			}
 		}
 		
