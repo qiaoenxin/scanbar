@@ -36,6 +36,12 @@ public class InterfaceConfig {
 		
 		//测试客户端设置
 		interfaces.registerInterface(new InterfaceDef("test", "/test", Test.TestService.class, false));
+		
+		interfaces.registerInterface(new InterfaceDef("queryProduct", "/queryProduct", QueryProduct.QueryProductService.class, false));
+		
+		interfaces.registerInterface(new InterfaceDef("checkScan", "/checkScan", CheckScan.CheckScanService.class, false));
+		
+		
 	}
 	
 }

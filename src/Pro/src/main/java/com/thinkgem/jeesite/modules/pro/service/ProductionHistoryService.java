@@ -99,13 +99,4 @@ public class ProductionHistoryService extends BaseService {
 		return false;
 	}
 	
-	@Transactional
-	public ProductionHistory saveHistory(ProductionDetail productionDetail){
-		ProductionHistory history = new ProductionHistory();
-		history.setStatus(productionDetail.getStatus());
-		history.setProductionDetail(productionDetail);
-		detailService.save(productionDetail);
-		productionHistoryDao.save(history);
-		return history;
-	}
 }

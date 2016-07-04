@@ -13,6 +13,7 @@ import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
@@ -35,7 +36,11 @@ public class QuerySub {
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
 				return;
 			}
-			Product product = detail.getProduction().getProduct();
+			Product product = detail.getProduct();
+			/*
+			if(Product.FLOW_C.equals(product.getBom().getAction())){
+				
+			}*/
 			List<ProductTree> subs;
 			if(product.getAssy() == Product.ASSY_SIMPLE){
 				subs = new ArrayList<ProductTree>();

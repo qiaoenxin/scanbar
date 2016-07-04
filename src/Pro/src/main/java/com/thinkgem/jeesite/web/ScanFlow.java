@@ -9,8 +9,10 @@ import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
+import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
+import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
-import com.thinkgem.jeesite.modules.pro.entity.ProductionHistory;
+import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionHistoryService;
 import com.thinkgem.jeesite.modules.pro.service.ScanStockService;
@@ -24,11 +26,13 @@ public class ScanFlow {
 	
 	private static ProductionHistoryService historyService = SpringContextHolder.getBean(ProductionHistoryService.class);;
 	
+	private static ProductTreeService treeService = SpringContextHolder.getBean(ProductTreeService.class);
+	
 	public static class ScanFlowService extends BasicService<Request, Response>{
 		
 		@Override
 		protected void service(Request request, Response response) {
-			/*
+			
 			ProductionDetail detail = detailService.findByDetailNo(request.detailNo);
 			if(detail == null){
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
@@ -37,53 +41,24 @@ public class ScanFlow {
 			if(request.flow.equals(detail.getStatus())){
 				return;
 			}
-			Product product = detail.getProduction().getProduct();
-			if(product.getAssy() != Product.ASSY_SIMPLE){
-				product = detail.getProductTree().getProduct();
-				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "不支持组合品");
-				return;
-			}
-			List<Flow> flows = product.getFlows();
-			Flow statusFlow = null;
-			for(Flow flow : flows){
-				if(flow.getId().equals(detail.getStatus())){
-					statusFlow = flow;
-					break;
-				}
-			}
-			Flow next = null;
-			if(statusFlow != null){
-				next = statusFlow.getNext();
+			String flow = request.getFlow();
+			Product product = detail.getProduct();
+			Bom bom = product.getBom();
+			if(Bom.PRINTCARD_ZU_ZHUANG.equals(bom.getPrintCard())){
+				List<ProductTree> children = treeService.findChildrensByProductId(product.getId());
+				detail.setStatus(flow);
+				scanStockService.composeScan(detail, children);
+			}else if(Bom.PRINTCARD_ZHI_CHENG.equals(bom.getPrintCard())){
+				detail.setStatus(flow);
+				scanStockService.flowScan(detail);
 			}else{
-				if(!flows.isEmpty()){
-					next = flows.get(0);
-				}
-			}
-			if(next == null){
-				response.setResultAndReason(ReturnCode.FLOW_ERROR, "最后一个环节");
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "未知的扫描卡");
 				return;
 			}
-			if(next.getId().equals(request.getFlow())){
-				detail.setStatus(request.getFlow());
-				boolean saved = historyService.hasSaved(detail);
-				if(!saved){
-					ProductionHistory hitory = historyService.saveHistory(detail);
-					if(next.getId().equals("1") || next.getId().equals("2") ){
-						try {
-							scanStockService.fromTo(detail, statusFlow, next, hitory);
-						} catch (Exception e) {
-							response.setResultAndReason(ReturnCode.FLOW_ERROR, "入库异常");
-							return;
-						}
-					}
-				}
-				
-			}else{
-				response.setResultAndReason(ReturnCode.FLOW_ERROR, "流程不匹配");
-				return;
-			}*/
 		}
 	}
+	
+	
 	
 	public static class Request extends com.thinkgem.jeesite.common.jservice.api.Request{
 		

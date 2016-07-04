@@ -40,6 +40,8 @@ public class Product extends IdEntity<Product>
     public static final String FLOW_D = "1";
 
     public static final String FLOW_W = "2";
+    
+    public static final String FLOW_C = "4";
 
     /**
      * 原料
@@ -297,6 +299,10 @@ public class Product extends IdEntity<Product>
 
     public static class Bom
     {
+    	public static final String PRINTCARD_ZHI_CHENG = "制程卡";
+    	
+    	public static final String PRINTCARD_ZU_ZHUANG = "组装卡";
+    	
         // 是否打印样品卡
         private boolean isPrint;
 

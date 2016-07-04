@@ -19,6 +19,7 @@ public class Loss {
 	
 	private static ScanStockService scanStockService = SpringContextHolder.getBean(ScanStockService.class);
 	
+	
 	public static class LossService extends BasicService<Request, Response>{
 		
 		

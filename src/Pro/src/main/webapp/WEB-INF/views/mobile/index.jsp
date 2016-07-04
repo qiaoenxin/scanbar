@@ -55,8 +55,11 @@
 </head>
 <body>
 	<div class="btn-group-vertical" role="group">
+	<!-- 
 		<br>
-		<button class="btn btn-default" data-href="scanSave">扫描入库</button>
+		<button class="btn btn-default" data-href="scanSave">扫描入库</button>  -->
+		<br>
+		<button class="btn btn-default" data-href="check">检查比对</button>
 		<br>
 		<button class="btn btn-default" data-href="scanFlowInput" >流程扫描</button>
 		<br>

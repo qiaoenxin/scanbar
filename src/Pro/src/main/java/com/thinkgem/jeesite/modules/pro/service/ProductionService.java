@@ -72,6 +72,12 @@ public class ProductionService extends BaseService {
 		return productionDao.find(page, dc);
 	}
 	
+	@Transactional
+	public void updateFinishCount(int number, String id){
+		String hql = "update Production p set p.completeNum = p.completeNum + :num where p.id = :id";
+		productionDao.update(hql, new Parameter(new Object[][]{{"num", number}, {"id", id}}));
+	}
+	
 	@Transactional(readOnly = false)
 	public void save(Production production) {
 		productionDao.clear();

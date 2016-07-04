@@ -129,9 +129,6 @@ public class StockHistory extends IdEntity<StockHistory> {
 	public void setQueryEndDate(Date queryEndDate) {
 		this.queryEndDate = queryEndDate;
 	}
-	
-	
-	
 }
 
 

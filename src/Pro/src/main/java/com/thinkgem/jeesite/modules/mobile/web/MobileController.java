@@ -56,6 +56,16 @@ public class MobileController extends BaseController {
 	public String index(HttpServletRequest request, HttpServletResponse response, Model model) {
 		return "mobile/index";
 	}
+	
+	@RequestMapping(value = "sample")
+	public String sample(HttpServletRequest request, HttpServletResponse response, Model model) {
+		return "mobile/sample";
+	}
+	
+	@RequestMapping(value = "check")
+	public String check(HttpServletRequest request, HttpServletResponse response, Model model) {
+		return "mobile/check";
+	}
 
 	@RequestMapping(value = "login")
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
