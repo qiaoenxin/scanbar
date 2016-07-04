@@ -41,9 +41,21 @@ public class ScanFlow {
 			if(request.flow.equals(detail.getStatus())){
 				return;
 			}
+			
+			
 			String flow = request.getFlow();
 			Product product = detail.getProduct();
 			Bom bom = product.getBom();
+			if(!flow.equals(bom.getAction())){
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "工位与流程不匹配");
+				return;
+			}
+			
+			List<ProductTree> children = treeService.findChildrensByProductId(product.getId());
+			detail.setStatus(flow);
+			scanStockService.composeScan(detail, children);
+			
+			/*
 			if(Bom.PRINTCARD_ZU_ZHUANG.equals(bom.getPrintCard())){
 				List<ProductTree> children = treeService.findChildrensByProductId(product.getId());
 				detail.setStatus(flow);
@@ -54,7 +66,8 @@ public class ScanFlow {
 			}else{
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "未知的扫描卡");
 				return;
-			}
+			}*/
+			
 		}
 	}
 	

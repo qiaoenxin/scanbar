@@ -88,7 +88,7 @@ public class StockHistoryService extends BaseService {
 		if(StockBillsSchedule.isRunning){
 			throw new RuntimeException("扎帐中...，不允许入库操作");
 		}
-		stockDao.clear();
+//		stockDao.clear();
 		
 		//修改库存
 		Product product = stockHistory.getProduct();
@@ -105,7 +105,7 @@ public class StockHistoryService extends BaseService {
 			throw new RuntimeException();
 		}
 		if(StringUtils.toInteger(dict.getDescription())>0){//入库
-//			stockHistory.getNumber();
+			stockHistory.getNumber();
 		}else{//出库
 			stockHistory.setNumber(-stockHistory.getNumber());
 		}

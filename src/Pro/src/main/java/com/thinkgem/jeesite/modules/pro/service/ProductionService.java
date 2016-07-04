@@ -80,13 +80,11 @@ public class ProductionService extends BaseService {
 	
 	@Transactional(readOnly = false)
 	public void save(Production production) {
-		productionDao.clear();
 		productionDao.save(production);
 	}
 	
 	@Transactional(readOnly = false)
 	public void save(List<Production> productions) {
-		productionDao.clear();
 		productionDao.save(productions);
 	}
 	

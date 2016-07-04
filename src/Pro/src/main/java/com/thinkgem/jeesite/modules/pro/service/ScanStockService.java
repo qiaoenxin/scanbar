@@ -117,6 +117,8 @@ public class ScanStockService {
 			loss.setDetail(detail);
 			loss.setProduct(pro);
 			lossService.save(loss);
+			detail.setUnqualifiedNum(detail.getUnqualifiedNum() + value);
+			detailService.save(detail);
 			
 			StockHistory subHistory = new StockHistory();
 			subHistory.setNumber(value);
@@ -142,7 +144,7 @@ public class ScanStockService {
 		historyService.save(stockHistory);
 		for(ProductTree tree : children){
 			StockHistory sub = new StockHistory();
-			sub.setNumber(number * detail.getNumber());
+			sub.setNumber(number * tree.getNumber());
 			sub.setProduct(tree.getProduct());
 			sub.setType(StockHistory.TYPE_SCAN_DESC);
 			sub.setProductionDetail(detail);

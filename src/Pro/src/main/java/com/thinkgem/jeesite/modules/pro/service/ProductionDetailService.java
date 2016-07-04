@@ -47,14 +47,21 @@ public class ProductionDetailService extends BaseService {
 	
 	public Page<ProductionDetail> find(Page<ProductionDetail> page, ProductionDetail productionDetail) {
 		DetachedCriteria dc = productionDetailDao.createDetachedCriteria();
+		dc.createAlias("production", "pdt");
+		dc.createAlias("productTree", "pdtree");
+		dc.createAlias("pdtree.product", "treepd");
+		dc.createAlias("pdt.product", "pd");
 		if(StringUtils.isNotBlank(productionDetail.getSerialNum())){
 			dc.add(Restrictions.eq("serialNum", productionDetail.getSerialNum()));
 		}
 		if(productionDetail.getProduction()!=null && StringUtils.isNotBlank(productionDetail.getProduction().getSerialNum())){
-			dc.add(Restrictions.eq("production.serialNum", productionDetail.getProduction().getSerialNum()));
+			dc.add(Restrictions.eq("pdt.serialNum", productionDetail.getProduction().getSerialNum()));
 		}
-		if(productionDetail.getProduction()!=null&&productionDetail.getProduction().getProduct()!=null && StringUtils.isNotBlank(productionDetail.getProduction().getProduct().getName())){
-			dc.add(Restrictions.like("production.product.name", "%"+productionDetail.getProduction().getProduct().getName()+"%"));
+		
+		if(null != productionDetail.getProduction() && null != productionDetail.getProduction().getProduct() && StringUtils.isNotBlank(productionDetail.getProduction().getProduct().getName())){
+			String name = productionDetail.getProduction().getProduct().getName();
+			dc.add(Restrictions.disjunction().add( Restrictions.like("treepd.name", "%"+ name +"%"))
+					.add(Restrictions.like("pd.name", "%"+ name +"%")));
 		}
 		if(StringUtils.isNotBlank(productionDetail.getStatus())){
 			dc.add(Restrictions.eq("status", productionDetail.getStatus()));

@@ -47,11 +47,11 @@ public class CheckScan {
 			
 			Product productModal = products.get(0);
 			
-			if(product.getId().equals(productModal.getId())){
-				return;
-			}
 			
 			if(Product.FLOW_C.equals(request.flow)){
+				if(product.getId().equals(productModal.getId())){
+					return;
+				}
 				List<ProductTree> children = treeService.findChildrensByProductId(productModal.getId());
 				for(ProductTree tree: children){
 					if(tree.getProduct().getId().equals(productModal.getId())){
@@ -60,21 +60,24 @@ public class CheckScan {
 				}
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "组合品番错误");
 				return;
+			}else{
+				if(product.getId().equals(productModal.getId()) && request.flow.equals(productModal.getBom().getAction())){
+					return;
+				}
+				
+				
+				/*
+				Tree tree = new Tree(detail.getProduct());
+				tree.build();
+				boolean contains = tree.search(productModal);
+				if(contains){
+					return;
+				}*/
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "品番错误");
+				return;
+				
 			}
 			
-			if(!request.flow.equals(productModal.getBom().getAction())){
-				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "工位与样品不一致");
-				return;
-			}
-			
-			Tree tree = new Tree(detail.getProduct());
-			tree.build();
-			boolean contains = tree.search(productModal);
-			if(contains){
-				return;
-			}
-			response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "品番错误");
-			return;
 		}
 	}
 	
