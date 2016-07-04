@@ -106,11 +106,7 @@
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/pro/product/">产品管理列表</a></li>
 		<li><a href="${ctx}/pro/product/form?id=${product.id}">产品管理<shiro:hasPermission name="pro:product:edit">${not empty product.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="pro:product:edit">查看</shiro:lacksPermission></a></li>
-		<li class="active"><a
-			href="${ctx}/pro/productTree/form?id=${productFlow.id}">产品流管理<shiro:hasPermission
-					name="pro:productTree:edit">${not empty productFlow.id?'修改':'添加'}</shiro:hasPermission>
-				<shiro:lacksPermission name="pro:productTree:edit">查看</shiro:lacksPermission>
-		</a>
+		<li class="active"><a href="${ctx}/pro/product/productTreeForm?id=${product.id}">产品流管理添加</a>
 		</li>
 	</ul>
 	<br />
