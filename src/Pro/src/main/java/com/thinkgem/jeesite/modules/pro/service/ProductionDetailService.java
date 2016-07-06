@@ -9,6 +9,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,9 +49,9 @@ public class ProductionDetailService extends BaseService {
 	public Page<ProductionDetail> find(Page<ProductionDetail> page, ProductionDetail productionDetail) {
 		DetachedCriteria dc = productionDetailDao.createDetachedCriteria();
 		dc.createAlias("production", "pdt");
-		dc.createAlias("productTree", "pdtree");
-		dc.createAlias("pdtree.product", "treepd");
 		dc.createAlias("pdt.product", "pd");
+		dc.createAlias("productTree", "pdtree", JoinType.LEFT_OUTER_JOIN);
+		dc.createAlias("pdtree.product", "treepd", JoinType.LEFT_OUTER_JOIN);
 		if(StringUtils.isNotBlank(productionDetail.getSerialNum())){
 			dc.add(Restrictions.eq("serialNum", productionDetail.getSerialNum()));
 		}

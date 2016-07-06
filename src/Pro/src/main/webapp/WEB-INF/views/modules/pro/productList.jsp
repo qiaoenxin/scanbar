@@ -136,8 +136,8 @@
 		<label>名称 ：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-small"/>
 		<label>车种 ：</label><form:input path="machine" htmlEscape="false" maxlength="50" class="input-small"/>
 		&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
-		&nbsp;<input id="btnExport" class="btn btn-primary" type="button" value="导出"/>
-		&nbsp;<input id="btnImport" class="btn btn-primary" type="button" value="导入"/
+		<!-- &nbsp;<input id="btnExport" class="btn btn-primary" type="button" value="导出"/>
+		&nbsp;<input id="btnImport" class="btn btn-primary" type="button" value="导入"/> -->
 	</form:form>
 	<br>
 	<tags:message content="${message}"/>

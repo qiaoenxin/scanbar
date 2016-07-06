@@ -89,7 +89,7 @@
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>明细编号</th><th>产品</th><th>产品编号</th><th>数量</th><th>状态</th><th>打印</th></tr></thead>
+		<thead><tr><th>明细编号</th><th>产品</th><th>产品编号</th><th>总数</th><th>损耗数</th><th>状态</th><th>打印</th></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="productionDetail">
 			<tr>
@@ -97,6 +97,7 @@
 				<td>${productionDetail.product.name}</td>
 				<td>${productionDetail.product.serialNum}</td>
 				<td>${productionDetail.number}</td>
+				<td>${productionDetail.unqualifiedNum}</td>
 				<td>${fns:getDictLabel(productionDetail.status,'flow_type','')}</td>
 				<td>
 				<c:if test="${productionDetail.product.bom.printCard ==  '组装卡'}">

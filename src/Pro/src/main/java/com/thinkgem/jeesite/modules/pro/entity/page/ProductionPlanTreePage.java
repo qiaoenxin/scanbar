@@ -18,11 +18,12 @@ public class ProductionPlanTreePage {
 	private String dateForShow;
 	private String printNum;
 	private int completeNum;
+	private int unqualifiedNum;
 	
 	
 
 	public ProductionPlanTreePage() {
-		this(null, null, null, null, 0, null, 0);
+		this(null, null, null, null, 0, null, 0, 0);
 	}
 	
 
@@ -44,7 +45,7 @@ public class ProductionPlanTreePage {
 
 
 	public ProductionPlanTreePage(String treeId, String id, String parent,
-			Product product, int number, Date date,int completeNum) {
+			Product product, int number, Date date,int completeNum, int unqualifiedNum) {
 		super();
 		this.treeId = treeId;
 		this.id = id;
@@ -57,6 +58,7 @@ public class ProductionPlanTreePage {
 		this.dateForShow = toCompleteDate(date);
 		this.printNum = toPrintNum(number, product.getRealSnpNum());
 		this.completeNum = completeNum;
+		this.unqualifiedNum = unqualifiedNum;
 	}
 	
 	/**
@@ -170,6 +172,16 @@ public class ProductionPlanTreePage {
 
 	public void setCompleteNum(int completeNum) {
 		this.completeNum = completeNum;
+	}
+
+
+	public int getUnqualifiedNum() {
+		return unqualifiedNum;
+	}
+
+
+	public void setUnqualifiedNum(int unqualifiedNum) {
+		this.unqualifiedNum = unqualifiedNum;
 	}
 
 	

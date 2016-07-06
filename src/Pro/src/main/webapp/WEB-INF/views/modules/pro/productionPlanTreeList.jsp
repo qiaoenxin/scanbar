@@ -22,7 +22,7 @@
 <body>
 	<tags:message content="${message}"/>
 	<table id="treeTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>名称</th><th>数量</th><th>日期</th><th>打印</th><th>完成数量</th></tr></thead>
+		<thead><tr><th>名称</th><th>数量</th><th>日期</th><th>打印</th><th>完成数量</th><th>损耗数量</th></tr></thead>
 		<tbody>
 		<c:forEach items="${list}" var="productTree">
 			<tr  id="${productTree.id}"
@@ -32,6 +32,7 @@
 				<td>${productTree.dateForShow}</td>
 				<td>${productTree.printNum}</td>
 				<td>${productTree.completeNum}</td>
+				<td>${productTree.unqualifiedNum}</td>
 			</tr>
 		</c:forEach>
 		</tbody>

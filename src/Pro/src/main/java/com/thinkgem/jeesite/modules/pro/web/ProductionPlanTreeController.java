@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
@@ -84,9 +85,9 @@ public class ProductionPlanTreeController extends BaseController {
 		
 		Production production = productionService.get(productionId);
 		
-		if(Production.PRODUCTION_NO != production.getIsProducing()){
-			throw new RuntimeException();
-		}
+//		if(Production.PRODUCTION_NO != production.getIsProducing()){
+//			throw new RuntimeException();
+//		}
 		//计数产品，用于编号
 		int count = 0;
 		List<ProductionPlanTreePage> list = makePlanList(production, production.getPlan().getEndDate());
@@ -94,6 +95,11 @@ public class ProductionPlanTreeController extends BaseController {
 		for (int i = 0; i < list.size(); i++) {
 			
 			ProductionPlanTreePage treePage = list.get(i);
+			
+			if(treePage.getProduct().getType() == Product.TYPE_META){
+				continue;
+			}
+			
 			double toatl = treePage.getNumber();
 			double snp = treePage.getProduct().getRealSnpNum();
 			
@@ -141,12 +147,12 @@ public class ProductionPlanTreeController extends BaseController {
 			date = new Date();
 		}
 		String topId = IdGen.uuid();
-		list.add(new ProductionPlanTreePage("", topId, "", production.getProduct(), picinumber, date, countComplateNum(details, "")));
+		list.add(new ProductionPlanTreePage("", topId, "", production.getProduct(), picinumber, date, countComplateNum(details, ""),countUnqualifiedNum(details, "")));
 		List<ProductTree> roots = productTreeService.findChildrensByProductId(production.getProduct().getId());
 		for(ProductTree root : roots){
 			int totalNum = root.getNumber()*picinumber;
 			String id = IdGen.uuid();
-			list.add(new ProductionPlanTreePage(root.getId(),id,topId,root.getProduct(),totalNum,toPreDate(date),countComplateNum(details, root.getId())));
+			list.add(new ProductionPlanTreePage(root.getId(),id,topId,root.getProduct(),totalNum,toPreDate(date),countComplateNum(details, root.getId()),countUnqualifiedNum(details, root.getId())));
 			List<ProductTree> childrens = productTreeService.findChildrensByProductId(root.getProduct().getId());
 			for(ProductTree c : childrens){
 				recursiveChildren(id,c,list, totalNum, toPreDate(toPreDate(date)), details);
@@ -160,7 +166,7 @@ public class ProductionPlanTreeController extends BaseController {
 	
 	public void recursiveChildren(String parentId,ProductTree productTree,List<ProductionPlanTreePage> list, int number, Date date, List<ProductionDetail> details){
 		String id = IdGen.uuid();
-		list.add(new ProductionPlanTreePage(productTree.getId(),id,parentId,productTree.getProduct(),(productTree.getNumber() * number),date,countComplateNum(details, productTree.getId())));
+		list.add(new ProductionPlanTreePage(productTree.getId(),id,parentId,productTree.getProduct(),(productTree.getNumber() * number),date,countComplateNum(details, productTree.getId()),countUnqualifiedNum(details, productTree.getId())));
 		
 		List<ProductTree> childrens = productTreeService.findChildrensByProductId(productTree.getProduct().getId());
 		for(ProductTree c : childrens){
@@ -183,6 +189,28 @@ public class ProductionPlanTreeController extends BaseController {
 			
 			if(null != productionDetail.getProductTree() && productionDetail.getProductTree().getId().equals(treeId)){
 				count += productionDetail.getCompleteNum();
+			}
+			
+		}
+		
+		return count;
+	}
+	
+	/**
+	 * 统计损耗数量
+	 * @param list
+	 * @param treeId
+	 * @return
+	 */
+	private int countUnqualifiedNum(List<ProductionDetail> list, String treeId){
+		int count = 0;
+		for (ProductionDetail productionDetail : list) {
+			if(null == productionDetail.getProductTree() && "".equals(treeId)){
+				count += productionDetail.getUnqualifiedNum();
+			}
+			
+			if(null != productionDetail.getProductTree() && productionDetail.getProductTree().getId().equals(treeId)){
+				count += productionDetail.getUnqualifiedNum();
 			}
 			
 		}
