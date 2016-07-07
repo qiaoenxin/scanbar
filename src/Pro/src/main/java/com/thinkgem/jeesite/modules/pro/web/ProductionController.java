@@ -4,6 +4,7 @@
 package com.thinkgem.jeesite.modules.pro.web;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -176,6 +177,39 @@ public class ProductionController extends BaseController {
 					detail.setNextPart("仓库");
 				}
 				
+				if(detail.getProduct().getMerge()){
+					List<ProductionDetail> detailList = productionDetailService.findByProductionIdOrderBySerialNum(detail.getProduction().getId());
+					
+					Product product = detail.getProduct();
+					
+					int index = 0;
+					for (ProductionDetail productionDetail : detailList) {
+						if(productionDetail.getProduct().getId().equals(product.getId())){
+							index++;
+							if(productionDetail.getId().equals(detail.getId())){
+								break;
+							}
+						}
+					}
+					
+					StringBuilder serialNum = new StringBuilder();
+					serialNum.append(detail.getSerialNum());
+					List<ProductTree> ProductTrees = productTreeService.findChildrensByProductId(product.getId());
+					
+					Map<String, String> mapBom = detail.getProduct().getBom().getProperties();
+					for (ProductTree productTree : ProductTrees) {
+						if(null != productTree.getProduct() && null != productTree.getProduct().getBom().getProperties()){
+							mapBom.putAll(productTree.getProduct().getBom().getProperties());
+						}
+						serialNum.append("-");
+						serialNum.append(toMergeSerialNum(detailList, productTree.getProduct().getId(), index));
+					}
+					
+					product.getBom().setProperties(mapBom);
+					product.setBomString(product.getBom().toJson());
+					detail.setSerialNum(serialNum.toString());
+				}
+				
 				int remainder = detail.getNumber()%detail.getProduct().getRealSnpNum();
 				detail.setRemainder(remainder);
 				productionDetailList.add(detail);
@@ -220,6 +254,29 @@ public class ProductionController extends BaseController {
 	}
 	
 	
+	/**
+	 * 查询对应位置的位数号码
+	 * @param detailList
+	 * @param productId
+	 * @param index
+	 * @return
+	 */
+	private String toMergeSerialNum(List<ProductionDetail> detailList, String  productId, int index){
+		String result = null;
+		int childIndex = 0;
+		for (ProductionDetail productionDetail : detailList) {
+			if(productionDetail.getProduct().getId().equals(productId)){
+				childIndex++;
+			}
+			if(childIndex == index){
+				String number = productionDetail.getSerialNum();
+				result = number.substring(number.length()-4, number.length());
+				break;
+			}
+		}
+		
+		return result;
+	}
 	
 	
 	/**

@@ -27,8 +27,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/pro/device/">生产计划列表</a></li>
-		<li class="active"><a href="${ctx}/pro/device/form?id=${device.id}">生产计划<shiro:hasPermission name="pro:device:edit">${not empty device.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="pro:device:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/pro/device/">设备号列表</a></li>
+		<li class="active"><a href="${ctx}/pro/device/form?id=${device.id}">设备号<shiro:hasPermission name="pro:device:edit">${not empty device.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="pro:device:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="device" action="${ctx}/pro/device/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

@@ -84,7 +84,11 @@ public class ProductTreeController extends BaseController {
 			
 			// 查询下面的子节点
 			for(ProductTree c : childrens){
-				recursiveChildren(id,c,list, c.getNumber());
+				if (productInfo.getId().equals(c.getParent().getId())) {
+					recursiveChildren(id,c,list, 1);
+				}else{
+					recursiveChildren(id,c,list, c.getNumber());
+				}
 			}
 		}
 		page.setList(list);

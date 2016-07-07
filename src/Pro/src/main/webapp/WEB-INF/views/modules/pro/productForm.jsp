@@ -148,6 +148,15 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">是否合并:</label>
+			<div class="controls">
+				<select id="isMerge" name="merge" value="${product.merge}">
+					<option value="true" <c:if test="${product.merge}">selected</c:if>>是</option>
+					<option value="false"  <c:if test="${!product.merge}">selected</c:if>>否</option>
+				</select>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">样品打印:</label>
 			<div class="controls">
 				<select id="isPrint" name="bom.print" value="${product.bom.print}">

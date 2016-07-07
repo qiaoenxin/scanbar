@@ -47,6 +47,14 @@ public class ProductionDetailService extends BaseService {
 		return productionDetailDao.find(dc);
 	}
 	
+	public List<ProductionDetail> findByProductionIdOrderBySerialNum(String productionId){
+		DetachedCriteria dc = productionDetailDao.createDetachedCriteria();
+		dc.add(Restrictions.eq("production.id", productionId));
+		dc.add(Restrictions.eq(ProductionDetail.FIELD_DEL_FLAG, ProductionDetail.DEL_FLAG_NORMAL));
+		dc.addOrder(Order.desc("serialNum"));
+		return productionDetailDao.find(dc);
+	}
+	
 	public Page<ProductionDetail> find(Page<ProductionDetail> page, ProductionDetail productionDetail) {
 		DetachedCriteria dc = productionDetailDao.createDetachedCriteria();
 		dc.createAlias("production", "pdt");

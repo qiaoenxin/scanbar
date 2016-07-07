@@ -73,6 +73,8 @@ public class Product extends IdEntity<Product>
     private String unit;// 数量单位
 
     private String machine; // 车型
+    
+    private boolean merge;
 
     private String bomString;
 
@@ -176,7 +178,15 @@ public class Product extends IdEntity<Product>
         this.machine = machine;
     }
 
-    @ExcelField(title = "车种", align = 2, sort = 70)
+    public boolean getMerge() {
+		return merge;
+	}
+
+	public void setMerge(boolean merge) {
+		this.merge = merge;
+	}
+
+	@ExcelField(title = "车种", align = 2, sort = 70)
     public String getField1()
     {
         return field1;

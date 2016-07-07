@@ -158,7 +158,7 @@ table.gridtable td {
 </tr>
 <tr>
 	<td>HPC&nbsp;/&nbsp;{{bom.HPC}} </td>
-	<td colspan="2">端末&nbsp;{{bom.duanMo}}&nbsp;{{bom.ISO}} </td>
+	<td colspan="2">端末&nbsp;{{bom.duanMo}}&nbsp;&nbsp;ISO&nbsp;{{bom.ISO}} </td>
 	<td>烘护套&nbsp;{{bom.hongHuTao}}</td>
 	<td>印字&nbsp;{{bom.yinZi}}</td>
 	<td colspan="2">标识（{{bom.biaoShi}}）</td>
