@@ -9,6 +9,7 @@ import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
@@ -54,6 +55,17 @@ public class ScanFlow {
 			
 			
 			if(request.flow.equals(detail.getStatus())){
+				return;
+			}
+			
+			String status  = null;
+			for(ProductionDetail cur : details){
+				if(StringUtils.isEmpty(cur.getStatus())){
+					status = cur.getProduct().getBom().getAction();
+				}
+			}
+			if(!request.flow.equals(status)){
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "工序错误");
 				return;
 			}
 			

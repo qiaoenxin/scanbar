@@ -10,6 +10,7 @@ import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
 import com.thinkgem.jeesite.common.utils.SpringContextHolder;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
@@ -61,6 +62,16 @@ public class CheckScan {
 			
 			Product productModal = products.get(0);
 			
+			String status  = null;
+			for(ProductionDetail cur : details){
+				if(StringUtils.isEmpty(cur.getStatus())){
+					status = cur.getProduct().getBom().getAction();
+				}
+			}
+			if(!request.flow.equals(status)){
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "工序错误");
+				return;
+			}
 			
 			if(Product.FLOW_C.equals(request.flow)){
 				if(product.getId().equals(productModal.getId())){
@@ -75,21 +86,13 @@ public class CheckScan {
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "组合品番错误");
 				return;
 			}else{
+				
 				if(product.getId().equals(productModal.getId()) && request.flow.equals(productModal.getBom().getAction())){
 					return;
 				}
 				
-				
-				/*
-				Tree tree = new Tree(detail.getProduct());
-				tree.build();
-				boolean contains = tree.search(productModal);
-				if(contains){
-					return;
-				}*/
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "品番错误");
 				return;
-				
 			}
 			
 		}
