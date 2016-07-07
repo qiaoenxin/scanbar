@@ -3,6 +3,8 @@ package com.thinkgem.jeesite.web;
 
 
 
+import java.util.List;
+
 import com.thinkgem.jeesite.common.jservice.api.BasicService;
 import com.thinkgem.jeesite.common.jservice.api.ParameterDef;
 import com.thinkgem.jeesite.common.jservice.api.ReturnCode;
@@ -25,14 +27,28 @@ public class Loss {
 		
 		@Override
 		protected void service(Request request, Response response) {
-			ProductionDetail detail = detailService.findByDetailNo(request.detailNo);
-			if(detail == null){
+			List<ProductionDetail> details = detailService.findComDetail(request.detailNo);
+			ProductionDetail detail = null;
+			for(ProductionDetail cur : details){
+				if(cur.getProduct().getBom().getAction().equals(request.flow)){
+					detail = cur;
+					break;
+				}
+			}
+			
+			if(details.isEmpty()){
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
 				return;
 			}
+			
+			if(detail == null){
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "工位不匹配");
+				return;
+			}
+			
 			try {
 				String[] products = request.products.split(";");
-				scanStockService.saveStock(detail, products);
+				scanStockService.saveLossStock(detail, products, details);
 			} catch (Exception e) {
 				logger.error(e.toString(), e);
 				response.setResultAndReason(ReturnCode.DB_ERROR, "数据库操作错误");
@@ -48,6 +64,9 @@ public class Loss {
 		@ParameterDef(required = true)
 		private String products;
 		
+		@ParameterDef(required = true)
+		private String flow;
+		
 		public String getDetailNo(){
 			return detailNo;
 		}
@@ -62,6 +81,14 @@ public class Loss {
 
 		public void setProducts(String products) {
 			this.products = products;
+		}
+
+		public String getFlow() {
+			return flow;
+		}
+
+		public void setFlow(String flow) {
+			this.flow = flow;
 		}
 	}
 	

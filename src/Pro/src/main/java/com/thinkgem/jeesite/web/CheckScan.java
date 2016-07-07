@@ -31,11 +31,25 @@ public class CheckScan {
 		
 		@Override
 		protected void service(Request request, Response response) {
-			ProductionDetail detail = detailService.findByDetailNo(request.detailNo);
-			if(detail == null){
+			List<ProductionDetail> details = detailService.findComDetail(request.detailNo);
+			ProductionDetail detail = null;
+			for(ProductionDetail cur : details){
+				if(cur.getProduct().getBom().getAction().equals(request.flow)){
+					detail = cur;
+					break;
+				}
+			}
+			
+			if(details.isEmpty()){
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
 				return;
 			}
+			
+			if(detail == null){
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "工位不匹配");
+				return;
+			}
+			
 			Product product = detail.getProduct();
 			
 			List<Product> products = productService.findByName(request.productNo);

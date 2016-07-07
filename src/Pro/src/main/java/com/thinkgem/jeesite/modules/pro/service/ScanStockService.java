@@ -101,25 +101,31 @@ public class ScanStockService {
 	 * 生产报损失
 	 * @param detail
 	 * @param products
+	 * @param details 
 	 * @throws Exception
 	 */
 	@Transactional
-	public void saveStock(ProductionDetail detail, String[] products) throws Exception{
+	public void saveLossStock(ProductionDetail detail, String[] products, List<ProductionDetail> details) throws Exception{
+		List<String> pruductIds = new ArrayList<String>();
+		int detaiValue = 0;
 		for(String pruduct: products){
 			String[] splits = pruduct.split(",");
 			Product pro = productService.get(splits[0]);
+			pruductIds.add(pro.getId());
 			int value = StringUtils.toInteger(splits[1]);
 			if(value == 0){
 				continue;
+			}
+			if(detail.getProduct().getId().equals(pro.getId())){
+				detaiValue = value;
+				detail.setUnqualifiedNum(detail.getUnqualifiedNum() + detaiValue);
+				detailService.save(detail);
 			}
 			Loss loss = new Loss();
 			loss.setNumber(value);
 			loss.setDetail(detail);
 			loss.setProduct(pro);
 			lossService.save(loss);
-			detail.setUnqualifiedNum(detail.getUnqualifiedNum() + value);
-			detailService.save(detail);
-			
 			StockHistory subHistory = new StockHistory();
 			subHistory.setNumber(value);
 			subHistory.setProduct(pro);
@@ -127,7 +133,21 @@ public class ScanStockService {
 			subHistory.setProductionDetail(detail);
 			subHistory.setRemarks("loss:" + loss.getId());
 			historyService.save(subHistory);
-			
+		}
+		
+		if(detaiValue == 0){
+			return;
+		}
+		
+		for(ProductionDetail temp : details){
+			if(pruductIds.contains(temp.getProduct().getId())){
+				continue;
+			}
+			if(!StringUtils.isEmpty(temp.getStatus())){
+				continue;
+			}
+			detail.setNumber(detail.getNumber() - detaiValue);
+			detailService.save(detail);
 		}
 	}
 	
@@ -163,41 +183,6 @@ public class ScanStockService {
 		productionHistoryService.save(productionHistory);
 	}
 	
-	@Transactional
-	public void flowScan(ProductionDetail detail){
-		Product product = detail.getProduct();
-		if(detail.getProduct().getBom().getAction().equals(detail.getStatus())){
-			int number = detail.getNumber() - detail.getUnqualifiedNum();
-			detail.setCompleteNum(number);
-			List<ProductTree> children = treeService.findChildrensByProductId(product.getId());
-			if(!children.isEmpty()){
-				List<Buffer> list = new ArrayList<ScanStockService.Buffer>();
-				findLeaf(detail.getNumber(), children, list);
-				for(Buffer leaf : list){
-					StockHistory sub = new StockHistory();
-					sub.setNumber(leaf.num);
-					sub.setProduct(leaf.product);
-					sub.setType(StockHistory.TYPE_SCAN_DESC);
-					sub.setProductionDetail(detail);
-					historyService.save(sub);
-				}
-			}
-			StockHistory stockHistory = new StockHistory();
-			stockHistory.setNumber(number);
-			stockHistory.setProduct(product);
-			stockHistory.setType(StockHistory.TYPE_SCAN_ADD);
-			stockHistory.setProductionDetail(detail);
-			historyService.save(stockHistory);
-		}
-		detailService.save(detail);
-		if(detail.getProduct().getId().equals(detail.getProduction().getProduct().getId())){
-			productionService.updateFinishCount(detail.getNumber(), detail.getProduction().getId());
-		}
-		ProductionHistory productionHistory = new ProductionHistory();
-		productionHistory.setProductionDetail(detail);
-		productionHistory.setStatus(detail.getStatus());
-		productionHistoryService.save(productionHistory);
-	}
 
 	static class Buffer{
 		

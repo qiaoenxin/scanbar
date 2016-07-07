@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.pro.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.Criterion;
@@ -100,4 +101,25 @@ public class ProductionDetailService extends BaseService {
 		return list.get(0);
 	}
 	
+	public List<ProductionDetail> findComDetail(String detailNo) {
+		String[] splits = detailNo.split("-");
+		String full = splits[0];
+		List<ProductionDetail> details = new ArrayList<ProductionDetail>();
+		ProductionDetail detail =  findByDetailNo(full);
+		if(detail == null){
+			return details;
+		}
+		details.add(detail);
+		for(int i = 1; i < splits.length; i++){
+			String tail = splits[i];
+			String NO = full.substring(0, full.length() - tail.length()) + tail;
+			ProductionDetail temp = findByDetailNo(NO);
+			if(temp == null){
+				details.clear();
+				return details;
+			}
+			details.add(temp);
+		}
+		return details;
+	}
 }

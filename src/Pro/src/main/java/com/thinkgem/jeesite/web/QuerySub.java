@@ -31,27 +31,35 @@ public class QuerySub {
 		
 		@Override
 		protected void service(Request request, Response response) {
-			ProductionDetail detail = detailService.findByDetailNo(request.detailNo);
-			if(detail == null){
+			
+			List<ProductionDetail> details = detailService.findComDetail(request.detailNo);
+			ProductionDetail detail = null;
+			for(ProductionDetail cur : details){
+				if(cur.getProduct().getBom().getAction().equals(request.flow)){
+					detail = cur;
+					break;
+				}
+			}
+			
+			if(details.isEmpty()){
 				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "找不到订单号");
 				return;
 			}
-			Product product = detail.getProduct();
-			/*
-			if(Product.FLOW_C.equals(product.getBom().getAction())){
-				
-			}*/
-			List<ProductTree> subs;
-			if(product.getAssy() == Product.ASSY_SIMPLE){
-				subs = new ArrayList<ProductTree>();
-				ProductTree tree = new ProductTree();
-				tree.setNumber(detail.getNumber());
-				tree.setProduct(product);
-				subs.add(tree);
-			}else{
-				subs = treeService.findSubTree(detail.getProductTree().getProduct());
+			
+			if(detail == null){
+				response.setResultAndReason(ReturnCode.DB_NOT_FIND_DATA, "工位不匹配");
+				return;
 			}
-			response.setData(subs);
+			
+			Product product = detail.getProduct();
+			List<ProductTree> list = new ArrayList<ProductTree>();
+			ProductTree tree = new ProductTree();
+			tree.setNumber(detail.getNumber());
+			tree.setProduct(product);
+			list.add(tree);
+			List<ProductTree> subs = treeService.findSubTree(detail.getProductTree().getProduct());
+			list.addAll(subs);
+			response.setData(list);
 			response.setJsonFilter(new SimplePropertyPreFilter(ProductTree.class, "product", "number"), new SimplePropertyPreFilter(Product.class,"id", "serialNum","name"));
 		}
 	}
@@ -61,12 +69,23 @@ public class QuerySub {
 		@ParameterDef(required=true, maxLength=250)
 		private String detailNo;
 		
+		@ParameterDef(required=true, maxLength=250)
+		private String flow;
+		
 		public String getDetailNo() {
 			return detailNo;
 		}
 
 		public void setDetailNo(String detailNo) {
 			this.detailNo = detailNo;
+		}
+
+		public String getFlow() {
+			return flow;
+		}
+
+		public void setFlow(String flow) {
+			this.flow = flow;
 		}
 	}
 	

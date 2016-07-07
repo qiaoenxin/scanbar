@@ -17,7 +17,12 @@
 <script src="${ctxStatic }/bootstrap/3.3.5/js/custom.js"></script>
 
 <script>
-
+	var flowId = getSetting("flowId");
+	if(!flowId){
+		alert("请先设置工位： 设置》工位");
+		history.go(-1);
+		return;
+	}
 	var detailNo = '';
 	$(document).ready(function(){
 		
@@ -41,6 +46,7 @@
 	function init(){
 		var data = {};
 		data.detailNo = detailNo;
+		data.flow = flowId;
 		var url = "/interface/querySub";
 		ajax(url,data,"GET",function(data){
 			var code = data.result;
@@ -68,8 +74,12 @@
 		html += '</li>';
 		return html;
 	}
-	
+	var finished = false;
 	function submit(){
+		if(finished){
+			mAlert("已经提交成功， 无需提交");
+			return;
+		}
 		var products = new Array();
 		$('#list').find('li').each(function(i,dom){
 			var jDom = $(dom);
@@ -84,7 +94,7 @@
 		var data = {};
 		data.detailNo = detailNo;
 		data.products = products;
-		
+		data.flow = data
 		ajax(url,data,"POST",function(data){
 			var code = data.result;
 			auth(code);
@@ -92,6 +102,7 @@
 				var code = data.result;
 				auth(code);
 				if(code==0){
+					finished = true;
 					mAlert("提交成功");
 				 }else{
 				 	mAlert(data.reason);
