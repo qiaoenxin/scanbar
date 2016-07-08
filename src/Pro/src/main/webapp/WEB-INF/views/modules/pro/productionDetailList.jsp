@@ -44,6 +44,7 @@
 							var myTemplate = Handlebars.compile($(tplId).html());
 							var dataItem = data[i];
 							
+							dataItem.date = dataItem.date.substring(0,10);
 							dataItem.bom = JSON.parse(dataItem.product.bomString).properties;
 							if(dataItem.remainder != 0){
 								dataItem.product.realSnpNum = "";
@@ -151,14 +152,14 @@ table.gridtable td {
 	<td>尾数</td>
 </tr>
 <tr style="height:80px;">
-	<td colspan="3" style="font-weight:bold;font-size:18px;text-align:center">{{product.machine}}</td>
-	<td colspan="2" style="font-weight:bold;font-size:18px;text-align:center">{{product.name}}</td>
+	<td colspan="3" style="font-weight:bold;font-size:25px;text-align:center">{{product.machine}}</td>
+	<td colspan="2" style="font-weight:bold;font-size:25px;text-align:center">{{product.name}}</td>
 	<td style="font-weight:bold;font-size:18px">{{product.realSnpNum}}</td>
 	<td style="font-weight:bold;font-size:18px">{{remainder}}</td>
 </tr>
 <tr>
 	<td>HPC&nbsp;/&nbsp;{{bom.HPC}} </td>
-	<td colspan="2">端末&nbsp;{{bom.duanMo}}&nbsp;&nbsp;ISO&nbsp;{{bom.ISO}} </td>
+	<td colspan="2">端末&nbsp;{{bom.duanMo}}&nbsp;&nbsp;{{bom.ISO}} </td>
 	<td>烘护套&nbsp;{{bom.hongHuTao}}</td>
 	<td>印字&nbsp;{{bom.yinZi}}</td>
 	<td colspan="2">标识（{{bom.biaoShi}}）</td>
@@ -192,7 +193,7 @@ table.gridtable td {
 <tr>
 	<td colspan="2">*</td>
 	<td colspan="2">*</td>
-	<td colspan="3">*</td>
+	<td colspan="3">{{date}}</td>
 </tr>
 <tr>
 	<td colspan="3">日期/名字</td>

@@ -238,7 +238,7 @@ public class ProductionController extends BaseController {
 				productionDetailList.add(detail);
 			}
 			
-			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder","data","product","nextPart");
+			SimplePropertyPreFilter filter1 = new SimplePropertyPreFilter(ProductionDetail.class, "serialNum","production", "productTree", "number","remainder","data","product","nextPart","date");
 			SimplePropertyPreFilter filter2 = new SimplePropertyPreFilter(ProductTree.class, "product");
 			SimplePropertyPreFilter filter3 = new SimplePropertyPreFilter(Product.class, "serialNum", "name", "bomString", "machine", "realSnpNum");
 			SimplePropertyPreFilter filter4 = new SimplePropertyPreFilter(Production.class, "priority","plan", "product");

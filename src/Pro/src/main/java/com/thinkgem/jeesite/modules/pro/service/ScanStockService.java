@@ -133,21 +133,14 @@ public class ScanStockService {
 			subHistory.setProductionDetail(detail);
 			subHistory.setRemarks("loss:" + loss.getId());
 			historyService.save(subHistory);
-		}
-		
-		if(detaiValue == 0){
-			return;
-		}
-		
-		for(ProductionDetail temp : details){
-			if(pruductIds.contains(temp.getProduct().getId())){
-				continue;
+
+			for(ProductionDetail temp : details){
+				if(!StringUtils.isEmpty(temp.getStatus())){
+					continue;
+				}
+				detail.setNumber(detail.getNumber() - detaiValue);
+				detailService.save(detail);
 			}
-			if(!StringUtils.isEmpty(temp.getStatus())){
-				continue;
-			}
-			detail.setNumber(detail.getNumber() - detaiValue);
-			detailService.save(detail);
 		}
 	}
 	
