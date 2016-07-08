@@ -94,7 +94,7 @@
 		var data = {};
 		data.detailNo = detailNo;
 		data.products = products;
-		data.flow = data
+		data.flow = flowId;
 		ajax(url,data,"POST",function(data){
 			var code = data.result;
 			auth(code);
