@@ -120,6 +120,7 @@ public class ScanStockService {
 			if(detail.getProduct().getId().equals(pro.getId())){
 				detaiValue = value;
 				detail.setUnqualifiedNum(detail.getUnqualifiedNum() + detaiValue);
+				detail.setNumber(detail.getNumber() - detaiValue);
 				detailService.save(detail);
 			}
 			Loss loss = new Loss();
@@ -134,19 +135,19 @@ public class ScanStockService {
 			subHistory.setProductionDetail(detail);
 			subHistory.setRemarks("loss:" + loss.getId());
 			historyService.save(subHistory);
-			
-			List<ProductionDetail> detailList = Lists.newArrayList();
-			for(ProductionDetail temp : details){
-				if(!StringUtils.isEmpty(temp.getStatus())){
-					continue;
-				}
-				temp.setNumber(detail.getNumber() - detaiValue);
-				
-				detailList.add(temp);
-			}
-			
-			detailService.save(detailList);
 		}
+		
+		List<ProductionDetail> detailList = Lists.newArrayList();
+		for(ProductionDetail temp : details){
+			if(!StringUtils.isEmpty(temp.getStatus())){
+				continue;
+			}
+			temp.setNumber(detail.getNumber() - detaiValue);
+			
+			detailList.add(temp);
+		}
+		
+		detailService.save(detailList);
 	}
 	
 	@Transactional
