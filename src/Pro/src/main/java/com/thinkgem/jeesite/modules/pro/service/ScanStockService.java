@@ -139,9 +139,15 @@ public class ScanStockService {
 		
 		List<ProductionDetail> detailList = Lists.newArrayList();
 		for(ProductionDetail temp : details){
+			
 			if(!StringUtils.isEmpty(temp.getStatus())){
 				continue;
 			}
+			
+			if(pruductIds.contains(temp.getId())){
+				continue;
+			}
+			
 			temp.setNumber(detail.getNumber() - detaiValue);
 			
 			detailList.add(temp);
