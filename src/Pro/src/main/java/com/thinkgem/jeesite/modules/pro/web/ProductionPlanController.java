@@ -113,7 +113,7 @@ public class ProductionPlanController extends BaseController {
 			}
 		}
 
-		// 所有种类为成品的产品
+		// 所有种类为成品或者半成品的产品
 		List<Product> productList = productService.findAllEndProduct();
 		model.addAttribute("productList", productList);
 

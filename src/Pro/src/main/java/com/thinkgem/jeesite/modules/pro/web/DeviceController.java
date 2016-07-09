@@ -87,7 +87,7 @@ public class DeviceController extends BaseController {
 			return form(device, model);
 		}
 		deviceService.save(device);
-		addMessage(redirectAttributes, "保存生产计划'" +device.getDeviceKey() + "'成功");
+		addMessage(redirectAttributes, "保存设备号'" +device.getDeviceKey() + "'成功");
 		return "redirect:"+Global.getAdminPath()+"/pro/device/?repage";
 	}
 	
@@ -95,7 +95,7 @@ public class DeviceController extends BaseController {
 	@RequestMapping(value = "delete")
 	public String delete(String id, RedirectAttributes redirectAttributes) {
 		deviceService.delete(id);
-		addMessage(redirectAttributes, "删除生产计划成功");
+		addMessage(redirectAttributes, "删除设备号成功");
 		return "redirect:"+Global.getAdminPath()+"/pro/device/?repage";
 	}
 

@@ -7,9 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%
+<%-- <%
 	InitProduct init = new InitProduct();
 	init.init();
-%>
+%> --%>
 </body>
 </html>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Loss;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
@@ -133,14 +134,18 @@ public class ScanStockService {
 			subHistory.setProductionDetail(detail);
 			subHistory.setRemarks("loss:" + loss.getId());
 			historyService.save(subHistory);
-
+			
+			List<ProductionDetail> detailList = Lists.newArrayList();
 			for(ProductionDetail temp : details){
 				if(!StringUtils.isEmpty(temp.getStatus())){
 					continue;
 				}
-				detail.setNumber(detail.getNumber() - detaiValue);
-				detailService.save(detail);
+				temp.setNumber(detail.getNumber() - detaiValue);
+				
+				detailList.add(temp);
 			}
+			
+			detailService.save(detailList);
 		}
 	}
 	
@@ -149,7 +154,8 @@ public class ScanStockService {
 		
 		Product product = detail.getProduct();
 		StockHistory stockHistory = new StockHistory();
-		int number = detail.getNumber() - detail.getUnqualifiedNum();
+//		int number = detail.getNumber() - detail.getUnqualifiedNum();
+		int number = detail.getNumber();
 		stockHistory.setNumber(number);
 		stockHistory.setProduct(product);
 		stockHistory.setType(StockHistory.TYPE_SCAN_ADD);

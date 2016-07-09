@@ -50,7 +50,8 @@ public class ProductService extends BaseService {
 	}
 	
 	public List<Product> findAllEndProduct(){
-		return findAllByType(Product.TYPE_PRODUCT);
+		String hql = "from Product where delFlag=:p1 and (type=:p2 or type=:p3)";
+		return productDao.find(hql, new Parameter(Product.DEL_FLAG_NORMAL,Product.TYPE_PRODUCT,Product.TYPE_MID_PRODUCT));
 	}
 	
 	public Page<Product> find(Page<Product> page, Product product) {
