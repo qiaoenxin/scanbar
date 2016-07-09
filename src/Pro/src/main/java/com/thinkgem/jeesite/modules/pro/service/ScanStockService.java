@@ -137,6 +137,10 @@ public class ScanStockService {
 			historyService.save(subHistory);
 		}
 		
+		if(detaiValue == 0){
+			return;
+		}
+		
 		List<ProductionDetail> detailList = Lists.newArrayList();
 		for(ProductionDetail temp : details){
 			
