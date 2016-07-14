@@ -4,7 +4,6 @@
 package com.thinkgem.jeesite.modules.pro.web;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -30,26 +28,22 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.utils.IdGen;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
-import com.thinkgem.jeesite.modules.sys.entity.User;
-import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import com.thinkgem.jeesite.modules.pro.entity.Product;
-import com.thinkgem.jeesite.modules.pro.entity.Product.Bom;
 import com.thinkgem.jeesite.modules.pro.entity.ProductTree;
 import com.thinkgem.jeesite.modules.pro.entity.Production;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionDetail;
 import com.thinkgem.jeesite.modules.pro.entity.ProductionPlan;
-import com.thinkgem.jeesite.modules.pro.entity.Stock;
 import com.thinkgem.jeesite.modules.pro.entity.page.ProductTreePage;
 import com.thinkgem.jeesite.modules.pro.service.ProductService;
 import com.thinkgem.jeesite.modules.pro.service.ProductTreeService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionDetailService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionPlanService;
 import com.thinkgem.jeesite.modules.pro.service.ProductionService;
-import com.thinkgem.jeesite.modules.pro.service.StockService;
+import com.thinkgem.jeesite.modules.sys.entity.User;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
  * 生产管理Controller
@@ -194,15 +188,23 @@ public class ProductionController extends BaseController {
 					
 					StringBuilder serialNum = new StringBuilder();
 					serialNum.append(detail.getSerialNum());
-					List<ProductTree> ProductTrees = productTreeService.findChildrensByProductId(product.getId());
+					
+					List<Product> childrensProduct = Lists.newArrayList();
+					findChildrensRecursively(product, childrensProduct);
 					
 					Map<String, String> mapBom = detail.getProduct().getBom().getProperties();
-					for (ProductTree productTree : ProductTrees) {
-						if(null != productTree.getProduct() && null != productTree.getProduct().getBom().getProperties()){
-							mapBom.putAll(productTree.getProduct().getBom().getProperties());
+					if(null == mapBom){
+						mapBom = new HashMap<String, String>();
+					}
+					for (Product childProduct : childrensProduct) {
+						if(childProduct.getType() == Product.TYPE_META){
+							continue;
+						}
+						if(null != childProduct.getBom().getProperties()){
+							mapBom.putAll(childProduct.getBom().getProperties());
 						}
 						serialNum.append("-");
-						serialNum.append(toMergeSerialNum(detailList, productTree.getProduct().getId(), index));
+						serialNum.append(toMergeSerialNum(detailList, childProduct.getId(), index));
 					}
 					
 					product.getBom().setProperties(mapBom);
@@ -253,6 +255,23 @@ public class ProductionController extends BaseController {
 		return "";
 	}
 	
+	
+	 /**
+     * 递归获取所有的子点
+     * 
+     * @param product 产品
+     * @param list 添加list
+     * @see
+     */
+    private void findChildrensRecursively(Product product,List<Product> list){
+        List<ProductTree> productTrees = productTreeService.findChildrensByProductId(product.getId());
+        
+        for (ProductTree productTree : productTrees)
+        {   
+        	list.add(productTree.getProduct());
+        	findChildrensRecursively(productTree.getProduct(), list);
+        }
+    }
 	
 	/**
 	 * 查询对应位置的位数号码

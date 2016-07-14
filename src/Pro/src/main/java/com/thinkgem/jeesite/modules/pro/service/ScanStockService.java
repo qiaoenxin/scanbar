@@ -148,11 +148,11 @@ public class ScanStockService {
 				continue;
 			}
 			
-			if(pruductIds.contains(temp.getId())){
+			if(pruductIds.contains(temp.getProduct().getId())){
 				continue;
 			}
 			
-			temp.setNumber(detail.getNumber() - detaiValue);
+			temp.setNumber(temp.getNumber() - detaiValue);
 			
 			detailList.add(temp);
 		}
